@@ -1,8 +1,15 @@
 #pragma once
 #include <iostream>
 using namespace std;
-
-class Stack
+inline void c_print()
+{
+    cout << " \nConstructor is called\n";
+}
+inline void d_print()
+{
+    cout << " \nDestructor is called\n";
+}
+class stack
 {
 
 private:
@@ -11,11 +18,18 @@ private:
     int TOP;
 
 public:
-    Stack(int s = 10)
+    stack(int s = 10)
     {
         SIZE = s;
         TOP = -1;
         DATA = new int[SIZE];
+        c_print();
+    }
+
+    ~stack()
+    {
+        delete[] DATA;
+        d_print();
     }
 
     void push(int value)
@@ -50,5 +64,21 @@ public:
 
     {
         return TOP + 1;
+    }
+    // stack s_swap(stack &obj)
+    // {
+    //     while (!empty())
+    //     {
+    //         TOP = 0;
+    //         swap(this->DATA[TOP] = obj.DATA[TOP]);
+    //         TOP++;
+    //     }
+    // }
+
+    void swap(stack &other)
+    {
+        std::swap(DATA, other.DATA);
+        std::swap(SIZE, other.SIZE);
+        std::swap(TOP, other.TOP);
     }
 };

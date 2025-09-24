@@ -1,7 +1,7 @@
 #include "stack.h"
 int main()
 {
-    Stack stk(10);
+    stack stk(10);
     stk.push(1);
     stk.push(2);
     stk.push(3);
