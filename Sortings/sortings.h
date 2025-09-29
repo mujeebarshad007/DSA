@@ -55,14 +55,14 @@ void Insertion_Sort(int arr[], const int &n)
 {
     for (int i = 1; i < n - 1; i++)
     {
-        int piv = arr[i];
-        int j = i;
-        while (j > 0 && piv < arr[j - 1])
+        int j = i - 1;
+        int x = arr[i];
+        while (j > -1 && arr[j] > x)
         {
-            arr[j] = arr[j - 1];
+            arr[j + 1] = arr[j];
             j--;
         }
-        arr[i] = piv;
+        arr[j + 1] = x;
     }
 }
 
