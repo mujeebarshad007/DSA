@@ -1,17 +1,26 @@
-int *arr1 = new int[n];
-for (int i = 0; i < n; i++)
+#include <iostream>
+#include <chrono>
+#include "sortings.h"
+int main()
 {
-    arr1[i] = rand(); // random value
-}
-// yahan arr1 ko sort karo (algo 1)
-delete[] arr1;
+    int size = 5;
+    int arr[size] = {5, 4, 3, 2, 1};
+    auto start = std::chrono::high_resolution_clock::now();
+    Insertion_Sort(arr, size);
+    auto end = std::chrono::high_resolution_clock::now();
+    auto t1 = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start);
 
-int *arr2 = new int[n];
-for (int i = 0; i < n; i++)
-{
-    arr2[i] = rand();
-}
-// yahan arr2 ko sort karo (algo 2)
-delete[] arr2;
+    start = std::chrono::high_resolution_clock::now();
+    Bubble_Sort(arr, size);
+    end = std::chrono::high_resolution_clock::now();
+    auto t2 = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start);
 
-// same for bubble, insertion
+    start = std::chrono::high_resolution_clock::now();
+    Right_Selection_Sort(arr, size);
+    end = std::chrono::high_resolution_clock::now();
+    auto t3 = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start);
+    std ::cout << " The Time of Insertion Sort is : " << t1.count() << std::endl;
+    std ::cout << " The Time of Bubble Sort is : " << t2.count() << std::endl;
+    std ::cout << " The Time of Selction Sort is : " << t3.count() << std::endl;
+    return 0;
+}

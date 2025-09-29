@@ -53,7 +53,7 @@ void Right_Selection_Sort(int arr[], const int &n)
 }
 void Insertion_Sort(int arr[], const int &n)
 {
-    for (int i = 1; i < n - 1; i++)
+    for (int i = 1; i < n; i++)
     {
         int j = i - 1;
         int x = arr[i];
