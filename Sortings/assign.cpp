@@ -1,5 +1,6 @@
+#include <iostream>
 #include <chrono>
-#include <ctime>
+#include <ctime> //Header file which gives access to time and adte functions
 #include <fstream>
 #include "sortings.h"
 int main(int argc, char *argv[])
@@ -17,8 +18,9 @@ int main(int argc, char *argv[])
 
         // Making Arrays ;
 
-        // Implementing RANDOM Array Aprroach
-        // Wrong Selection Sort for RANDOM Array
+        // Using Array Approach
+        //  Implementing RANDOM Array Aprroach
+        //  Wrong Selection Sort for RANDOM Array
         long long int time1 = 0;
         for (int i = 0; i < 10; i++)
         {
@@ -27,7 +29,7 @@ int main(int argc, char *argv[])
             auto start = std::chrono::high_resolution_clock::now();
             Wrong_Selection_Sort(arr1, n);
             auto end = std::chrono::high_resolution_clock::now();
-            auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+            auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start); // Auto Duration means let compiler Decide what type of duration is
             time1 += duration.count();
             delete[] arr1;
             delete[] Ran1;
