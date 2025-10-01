@@ -1,6 +1,6 @@
 #include <iostream>
 #include <chrono>
-#include <ctime> //Header file which gives access to time and adte functions
+#include <ctime> //Header file which gives access to time and date functions
 #include <fstream>
 #include "sortings.h"
 int main(int argc, char *argv[])
@@ -8,19 +8,18 @@ int main(int argc, char *argv[])
     srand(time(0));
     if (argc < 3)
     {
-        std::cout << "Usage: Size of Array, Name Of CSV FILE\n";
+        std::cout << "Usage: Size of Array,   Name Of CSV FILE\n";
     }
     else
     {
         int n;
-        n = atoi(argv[1]);              // Taking The size of the array from command line
-        std::string filename = argv[2]; // Taking The Name of the CSV from command line
+        n = atoi(argv[1]);                  // Taking The size of the array from command line
+        std::string CSV_FILENAME = argv[2]; // Taking The Name of the CSV from command line
 
         // Making Arrays ;
-
         // Using Array Approach
-        //  Implementing RANDOM Array Aprroach
-        //  Wrong Selection Sort for RANDOM Array
+        // Implementing RANDOM Array Aprroach
+        // Wrong Selection Sort for RANDOM Array
         long long int time1 = 0;
         for (int i = 0; i < 10; i++)
         {
@@ -209,7 +208,7 @@ int main(int argc, char *argv[])
         // The Writing Section Starts From Here
 
         std::ofstream file;
-        file.open(filename, std::ios::app);
+        file.open(CSV_FILENAME, std::ios::app); // Appending If New Data is added
         if (!file)
         {
             std::cout << "file not opened";
@@ -219,22 +218,22 @@ int main(int argc, char *argv[])
 
             file << "Algorithm,Size, Type,Average Time Taken (microseconds)\n";
 
-            // Wrong Selection Sort
+            // Wrong Selection Sort Data
             file << "Wrong Selection Sorting," << n << ",RAND," << avg1 << "\n";
             file << "Wrong Selection Sorting," << n << ",ASC," << avg5 << "\n";
             file << "Wrong Selection Sorting," << n << ",DESC," << avg9 << "\n";
 
-            // Right Selection Sort
+            // Right Selection Sort Data
             file << "Right Selection Sorting," << n << ",RAND," << avg2 << "\n";
             file << "Right Selection Sorting," << n << ",ASC," << avg6 << "\n";
             file << "Right Selection Sorting," << n << ",DESC," << avg10 << "\n";
 
-            // Insertion Sort
+            // Insertion Sort Data
             file << "Insertion Sorting," << n << ",RAND," << avg3 << "\n";
             file << "Insertion Sorting," << n << ",ASC," << avg7 << "\n";
             file << "Insertion Sorting," << n << ",DESC," << avg11 << "\n";
 
-            // Bubble Sort
+            // Bubble Sort Data
             file << "Bubble Sorting," << n << ",RAND," << avg4 << "\n";
             file << "Bubble Sorting," << n << ",ASC," << avg8 << "\n";
             file << "Bubble Sorting," << n << ",DESC," << avg12 << "\n";
