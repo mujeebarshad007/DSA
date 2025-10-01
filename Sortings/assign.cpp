@@ -27,7 +27,8 @@ int main(int argc, char *argv[])
             auto start = std::chrono::high_resolution_clock::now();
             Wrong_Selection_Sort(arr1, n);
             auto end = std::chrono::high_resolution_clock::now();
-            time1 += std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
+            auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+            time1 += duration.count();
             delete[] arr1;
             delete[] Ran1;
         }
@@ -42,7 +43,8 @@ int main(int argc, char *argv[])
             auto start = std::chrono::high_resolution_clock::now();
             Right_Selection_Sort(arr2, n);
             auto end = std::chrono::high_resolution_clock::now();
-            time2 += std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
+            auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+            time2 += duration.count();
             delete[] arr2;
             delete[] Ran2;
         }
@@ -57,7 +59,8 @@ int main(int argc, char *argv[])
             auto start = std::chrono::high_resolution_clock::now();
             Insertion_Sort(arr3, n);
             auto end = std::chrono::high_resolution_clock::now();
-            time3 += std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
+            auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+            time3 += duration.count();
             delete[] arr3;
             delete[] Ran3;
         }
