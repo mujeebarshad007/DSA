@@ -74,7 +74,8 @@ int main(int argc, char *argv[])
             auto start = std::chrono::high_resolution_clock::now();
             Bubble_Sort(arr4, n);
             auto end = std::chrono::high_resolution_clock::now();
-            time4 += std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
+            auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+            time4 += duration.count();
             delete[] arr4;
             delete[] Ran4;
         }
@@ -89,7 +90,8 @@ int main(int argc, char *argv[])
             auto start = std::chrono::high_resolution_clock::now();
             Wrong_Selection_Sort(arr_1, n);
             auto end = std::chrono::high_resolution_clock::now();
-            time5 += std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
+            auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+            time5 += duration.count();
             delete[] arr_1;
             delete[] Asc1;
         }
@@ -103,7 +105,8 @@ int main(int argc, char *argv[])
             auto start = std::chrono::high_resolution_clock::now();
             Right_Selection_Sort(arr_2, n);
             auto end = std::chrono::high_resolution_clock::now();
-            time6 += std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
+            auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+            time6 += duration.count();
             delete[] arr_2;
             delete[] Asc2;
         }
@@ -117,7 +120,8 @@ int main(int argc, char *argv[])
             auto start = std::chrono::high_resolution_clock::now();
             Insertion_Sort(arr_3, n);
             auto end = std::chrono::high_resolution_clock::now();
-            time7 += std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
+            auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+            time7 += duration.count();
             delete[] arr_3;
             delete[] Asc3;
         }
@@ -132,7 +136,8 @@ int main(int argc, char *argv[])
             auto start = std::chrono::high_resolution_clock::now();
             Bubble_Sort(arr_4, n);
             auto end = std::chrono::high_resolution_clock::now();
-            time8 += std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
+            auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+            time8 += duration.count();
             delete[] arr_4;
             delete[] Asc4;
         }
@@ -147,7 +152,8 @@ int main(int argc, char *argv[])
             auto start = std::chrono::high_resolution_clock::now();
             Wrong_Selection_Sort(arr_5, n);
             auto end = std::chrono::high_resolution_clock::now();
-            time9 += std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
+            auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+            time9 += duration.count();
             delete[] arr_5;
             delete[] Des1;
         }
@@ -161,7 +167,8 @@ int main(int argc, char *argv[])
             auto start = std::chrono::high_resolution_clock::now();
             Right_Selection_Sort(arr_6, n);
             auto end = std::chrono::high_resolution_clock::now();
-            time10 += std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
+            auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+            time10 += duration.count();
             delete[] arr_6;
             delete[] Des2;
         }
@@ -175,7 +182,8 @@ int main(int argc, char *argv[])
             auto start = std::chrono::high_resolution_clock::now();
             Insertion_Sort(arr_7, n);
             auto end = std::chrono::high_resolution_clock::now();
-            time11 += std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
+            auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+            time11 + duration.count();
             delete[] arr_7;
             delete[] Des3;
         }
@@ -189,14 +197,14 @@ int main(int argc, char *argv[])
             auto start = std::chrono::high_resolution_clock::now();
             Bubble_Sort(arr_8, n);
             auto end = std::chrono::high_resolution_clock::now();
-            time12 += std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
+            auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+            time12 += duration.count();
             delete[] arr_8;
             delete[] Des4;
         }
         auto avg12 = time12 / 10;
-        // delete[] Ran;
-        // delete[] Asc;
-        // delete[] Des;
+
+        // The Writing Section Starts From Here
 
         std::ofstream file;
         file.open(filename, std::ios::app);
@@ -229,7 +237,7 @@ int main(int argc, char *argv[])
             file << "Bubble Sorting," << n << ",ASC," << avg8 << "\n";
             file << "Bubble Sorting," << n << ",DESC," << avg12 << "\n";
 
-            std::cout << "Results are successfully Written. Good Luck . " << filename << "\n";
+            std::cout << "Results are successfully Written. Good Luck . " << "\n";
             file.close();
         }
         return 0;
