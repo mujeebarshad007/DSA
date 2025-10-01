@@ -215,7 +215,7 @@ int main(int argc, char *argv[])
         else
         {
 
-            file << "Algorithm,Array Size,Array Type,Average Time Taken (microseconds)\n";
+            file << "Algorithm,Size, Type,Average Time Taken (microseconds)\n";
 
             // Wrong Selection Sort
             file << "Wrong Selection Sorting," << n << ",RAND," << avg1 << "\n";

@@ -1,5 +1,4 @@
 #pragma
-#include <iostream>
 void Bubble_Sort(int arr[], const int &n)
 {
     int flag;
@@ -68,37 +67,37 @@ void Insertion_Sort(int arr[], const int &n)
 
 int *make_Random_Array(int n)
 {
-    int *arr = new int[n];
+    int *R_arr = new int[n];
     for (int i = 0; i < n; i++)
     {
-        arr[i] = rand() % 10000 + 1;
+        R_arr[i] = rand() % 100000 + 1;
     }
-    return arr;
+    return R_arr;
 }
 int *make_Ascending_Array(int n)
 {
-    int *arr = new int[n];
+    int *array = new int[n];
 
     for (int i = 0; i < n; i++)
     {
-        arr[i] = i + 1;
+        array[i] = i + 1;
     }
-    return arr;
+    return array;
 }
 int *make_Descending_Array(int n)
 {
-    int *arr = new int[n];
+    int *array = new int[n];
 
     for (int i = 0; i < n; i++)
     {
-        arr[i] = n - i;
+        array[i] = n - i;
     }
-    return arr;
+    return array;
 }
 int *copy_Array(int *arr, int n)
 {
-    int *copy = new int[n];
+    int *copy_Array1 = new int[n];
     for (int i = 0; i < n; i++)
-        copy[i] = arr[i];
-    return copy;
+        copy_Array1[i] = arr[i];
+    return copy_Array1;
 }
