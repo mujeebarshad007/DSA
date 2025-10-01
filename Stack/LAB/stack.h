@@ -1,79 +1,67 @@
 #pragma once
 #include <iostream>
-using namespace std;
-inline void c_print()
-{
-    cout << " \nConstructor is called\n";
-}
-inline void d_print()
-{
-    cout << " \nDestructor is called\n";
-}
+template <typename T>
 class stack
 {
-
 private:
-    int *DATA;
+    T *DATA;
     int SIZE;
     int TOP;
 
 public:
-    stack(int s = 10)
+    template <typename U>
+    friend bool operator==(const stack<U> &, const stack<U> &);
+    template <typename U>
+    friend bool operator<(const stack<U> &, const stack<U> &);
+
+    stack(int s = 60)
     {
         SIZE = s;
         TOP = -1;
-        DATA = new int[SIZE];
-        c_print();
+        DATA = new T[SIZE];
     }
 
     ~stack()
     {
         delete[] DATA;
-        d_print();
     }
 
-    void push(int value)
+    void push(const T &value)
     {
-
+        if (TOP + 1 == SIZE)
+        {
+            throw std::overflow_error("Stack overflow");
+        }
         DATA[++TOP] = value;
     }
+
     void pop()
-
     {
-
+        if (empty())
+        {
+            throw std::underflow_error("Stack underflow");
+        }
         TOP--;
     }
-    bool empty()
 
+    bool empty() const
     {
-        if (TOP == -1)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        return TOP == -1;
     }
-    int top()
 
+    T top() const
     {
+        if (empty())
+        {
+            throw std::underflow_error("Stack is empty");
+        }
         return DATA[TOP];
     }
-    int size()
 
+    int size() const
     {
         return TOP + 1;
     }
-    // stack s_swap(stack &obj)
-    // {
-    //     while (!empty())
-    //     {
-    //         TOP = 0;
-    //         swap(this->DATA[TOP] = obj.DATA[TOP]);
-    //         TOP++;
-    //     }
-    // }
 
     void swap(stack &other)
     {
@@ -82,3 +70,42 @@ public:
         std::swap(TOP, other.TOP);
     }
 };
+template <typename U>
+bool operator==(const stack<U> &lhs, const stack<U> &rhs)
+{
+
+    if (lhs.size() != rhs.size())
+        return false;
+
+    for (int i = 0; i <= lhs.TOP; i++)
+    {
+        if (lhs.DATA[i] != rhs.DATA[i])
+        {
+            return false;
+        }
+    }
+    return true;
+}
+template <typename U>
+bool operator<(const stack<U> &lhs, const stack<U> &rhs)
+{
+
+    int n;
+    if (lhs.size() < rhs.size())
+        n = lhs.size();
+    else
+        n = rhs.size();
+
+    for (int i = 0; i < n; i++)
+    {
+        if (lhs.DATA[i] < rhs.DATA[i])
+            return true;
+        else if (lhs.DATA[i] > rhs.DATA[i])
+            return false;
+    }
+
+    if (lhs.size() < rhs.size())
+        return true;
+    else
+        return false;
+}
