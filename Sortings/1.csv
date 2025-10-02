@@ -1,13 +1,13 @@
-Algorithm,Array Size,Array Type,Average Time Taken (microseconds)
-Wrong Selection Sorting,500,RAND,5374
-Wrong Selection Sorting,500,ASC,371
-Wrong Selection Sorting,500,DESC,1279
-Right Selection Sorting,500,RAND,916
-Right Selection Sorting,500,ASC,355
-Right Selection Sorting,500,DESC,287
-Insertion Sorting,500,RAND,296
-Insertion Sorting,500,ASC,1
-Insertion Sorting,500,DESC,0
-Bubble Sorting,500,RAND,1573
-Bubble Sorting,500,ASC,1
-Bubble Sorting,500,DESC,1140
+Algorithm,Size, Type,Average Time Taken (microseconds)
+Wrong Selection Sorting,100,RAND,239
+Wrong Selection Sorting,100,ASC,89
+Wrong Selection Sorting,100,DESC,288
+Right Selection Sorting,100,RAND,85
+Right Selection Sorting,100,ASC,78
+Right Selection Sorting,100,DESC,77
+Insertion Sorting,100,RAND,39
+Insertion Sorting,100,ASC,1
+Insertion Sorting,100,DESC,69
+Bubble Sorting,100,RAND,208
+Bubble Sorting,100,ASC,1
+Bubble Sorting,100,DESC,273

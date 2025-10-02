@@ -24,13 +24,11 @@ int main(int argc, char *argv[])
         for (int i = 0; i < 10; i++)
         {
             int *Ran1 = make_Random_Array(n);
-            int *arr1 = copy_Array(Ran1, n);
             auto start = std::chrono::high_resolution_clock::now();
-            Wrong_Selection_Sort(arr1, n);
+            Wrong_Selection_Sort(Ran1, n);
             auto end = std::chrono::high_resolution_clock::now();
             auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start); // Auto Duration means let compiler Decide what type of duration is
             time1 += duration.count();
-            delete[] arr1;
             delete[] Ran1;
         }
         auto avg1 = time1 / 10;
@@ -40,13 +38,11 @@ int main(int argc, char *argv[])
         for (int i = 0; i < 10; i++)
         {
             int *Ran2 = make_Random_Array(n);
-            int *arr2 = copy_Array(Ran2, n);
             auto start = std::chrono::high_resolution_clock::now();
-            Right_Selection_Sort(arr2, n);
+            Right_Selection_Sort(Ran2, n);
             auto end = std::chrono::high_resolution_clock::now();
             auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
             time2 += duration.count();
-            delete[] arr2;
             delete[] Ran2;
         }
         auto avg2 = time2 / 10;
@@ -56,13 +52,11 @@ int main(int argc, char *argv[])
         for (int i = 0; i < 10; i++)
         {
             int *Ran3 = make_Random_Array(n);
-            int *arr3 = copy_Array(Ran3, n);
             auto start = std::chrono::high_resolution_clock::now();
-            Insertion_Sort(arr3, n);
+            Insertion_Sort(Ran3, n);
             auto end = std::chrono::high_resolution_clock::now();
             auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
             time3 += duration.count();
-            delete[] arr3;
             delete[] Ran3;
         }
         auto avg3 = time3 / 10;
@@ -71,13 +65,11 @@ int main(int argc, char *argv[])
         for (int i = 0; i < 10; i++)
         {
             int *Ran4 = make_Random_Array(n);
-            int *arr4 = copy_Array(Ran4, n);
             auto start = std::chrono::high_resolution_clock::now();
-            Bubble_Sort(arr4, n);
+            Bubble_Sort(Ran4, n);
             auto end = std::chrono::high_resolution_clock::now();
             auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
             time4 += duration.count();
-            delete[] arr4;
             delete[] Ran4;
         }
         auto avg4 = time4 / 10;
@@ -87,13 +79,11 @@ int main(int argc, char *argv[])
         for (int i = 0; i < 10; i++)
         {
             int *Asc1 = make_Ascending_Array(n);
-            int *arr_1 = copy_Array(Asc1, n);
             auto start = std::chrono::high_resolution_clock::now();
-            Wrong_Selection_Sort(arr_1, n);
+            Wrong_Selection_Sort(Asc1, n);
             auto end = std::chrono::high_resolution_clock::now();
             auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
             time5 += duration.count();
-            delete[] arr_1;
             delete[] Asc1;
         }
         auto avg5 = time5 / 10;
@@ -102,13 +92,11 @@ int main(int argc, char *argv[])
         for (int i = 0; i < 10; i++)
         {
             int *Asc2 = make_Ascending_Array(n);
-            int *arr_2 = copy_Array(Asc2, n);
             auto start = std::chrono::high_resolution_clock::now();
-            Right_Selection_Sort(arr_2, n);
+            Right_Selection_Sort(Asc2, n);
             auto end = std::chrono::high_resolution_clock::now();
             auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
             time6 += duration.count();
-            delete[] arr_2;
             delete[] Asc2;
         }
         auto avg6 = time6 / 10;
@@ -117,13 +105,11 @@ int main(int argc, char *argv[])
         for (int i = 0; i < 10; i++)
         {
             int *Asc3 = make_Ascending_Array(n);
-            int *arr_3 = copy_Array(Asc3, n);
             auto start = std::chrono::high_resolution_clock::now();
-            Insertion_Sort(arr_3, n);
+            Insertion_Sort(Asc3, n);
             auto end = std::chrono::high_resolution_clock::now();
             auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
             time7 += duration.count();
-            delete[] arr_3;
             delete[] Asc3;
         }
         auto avg7 = time7 / 10;
@@ -133,13 +119,11 @@ int main(int argc, char *argv[])
         for (int i = 0; i < 10; i++)
         {
             int *Asc4 = make_Ascending_Array(n);
-            int *arr_4 = copy_Array(Asc4, n);
             auto start = std::chrono::high_resolution_clock::now();
-            Bubble_Sort(arr_4, n);
+            Bubble_Sort(Asc4, n);
             auto end = std::chrono::high_resolution_clock::now();
             auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
             time8 += duration.count();
-            delete[] arr_4;
             delete[] Asc4;
         }
         auto avg8 = time8 / 10;
@@ -149,13 +133,11 @@ int main(int argc, char *argv[])
         for (int i = 0; i < 10; i++)
         {
             int *Des1 = make_Descending_Array(n);
-            int *arr_5 = copy_Array(Des1, n);
             auto start = std::chrono::high_resolution_clock::now();
-            Wrong_Selection_Sort(arr_5, n);
+            Wrong_Selection_Sort(Des1, n);
             auto end = std::chrono::high_resolution_clock::now();
             auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
             time9 += duration.count();
-            delete[] arr_5;
             delete[] Des1;
         }
         auto avg9 = time9 / 10;
@@ -164,13 +146,11 @@ int main(int argc, char *argv[])
         for (int i = 0; i < 10; i++)
         {
             int *Des2 = make_Descending_Array(n);
-            int *arr_6 = copy_Array(Des2, n);
             auto start = std::chrono::high_resolution_clock::now();
-            Right_Selection_Sort(arr_6, n);
+            Right_Selection_Sort(Des2, n);
             auto end = std::chrono::high_resolution_clock::now();
             auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
             time10 += duration.count();
-            delete[] arr_6;
             delete[] Des2;
         }
         auto avg10 = time10 / 10;
@@ -179,13 +159,11 @@ int main(int argc, char *argv[])
         for (int i = 0; i < 10; i++)
         {
             int *Des3 = make_Descending_Array(n);
-            int *arr_7 = copy_Array(Des3, n);
             auto start = std::chrono::high_resolution_clock::now();
-            Insertion_Sort(arr_7, n);
+            Insertion_Sort(Des3, n);
             auto end = std::chrono::high_resolution_clock::now();
             auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-            time11 + duration.count();
-            delete[] arr_7;
+            time11 += duration.count();
             delete[] Des3;
         }
         auto avg11 = time11 / 10;
@@ -194,13 +172,11 @@ int main(int argc, char *argv[])
         for (int i = 0; i < 10; i++)
         {
             int *Des4 = make_Descending_Array(n);
-            int *arr_8 = copy_Array(Des4, n);
             auto start = std::chrono::high_resolution_clock::now();
-            Bubble_Sort(arr_8, n);
+            Bubble_Sort(Des4, n);
             auto end = std::chrono::high_resolution_clock::now();
             auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
             time12 += duration.count();
-            delete[] arr_8;
             delete[] Des4;
         }
         auto avg12 = time12 / 10;
