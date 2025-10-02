@@ -94,10 +94,3 @@ int *make_Descending_Array(int n)
     }
     return array;
 }
-int *copy_Array(int *arr, int n)
-{
-    int *copy_Array1 = new int[n];
-    for (int i = 0; i < n; i++)
-        copy_Array1[i] = arr[i];
-    return copy_Array1;
-}
