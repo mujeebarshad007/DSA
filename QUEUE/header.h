@@ -108,8 +108,9 @@ public:
     ~queue()
     {
         while (!empty())
-        {
-            pop();
-        }
+            while (!empty())
+            {
+                pop();
+            }
     }
 };
