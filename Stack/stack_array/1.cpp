@@ -1,30 +1,21 @@
 #include "stak.h"
 int main()
 {
-    stack s(2);
-    try
-    {
-        s.push(1);
-        s.push(2);
-        s.push(3);
-    }
-    catch (char *msg)
-    {
-        std::cout << msg << std::endl;
-    }
+    stack<int> stk1(10);
 
-    std ::cout << "The Top ELement Of this Stack is " << s.top() << std::endl;
-    std ::cout << "The Size Of this Stack is " << s.size() << std::endl;
+    stk1.push(1);
+    stk1.push(2);
+    stk1.push(3);
+    stk1.push(4);
+    stk1.push(5);
 
-    try
+    stack<int> stk2 = stk1; // copy Constructor
+    stk2.push(40);
+    while (!stk2.empty())
     {
-
-        s.pop();
+        std::cout << stk2.top() << " ";
+        stk2.pop();
     }
-    catch (char *msg)
-    {
-        std::cout << msg << std::endl;
-    }
-
+    std::cout << std::endl;
     return 0;
 }
