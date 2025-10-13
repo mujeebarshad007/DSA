@@ -11,7 +11,7 @@ int main()
 
     std ::cout << "The Size of the Stack is " << s.size() << std::endl;
     std ::cout << "The TOp of the Stack is " << s.TOP() << std::endl;
-    std ::cout << "The Stack is " << std::endl;
+    std ::cout << "The Stack is Given as  " << std::endl;
 
     while (!s.empty())
     {
@@ -26,6 +26,15 @@ int main()
     catch (const char *msg)
     {
         std::cout << msg << std::endl;
+    }
+
+    if (s.empty())
+    {
+        std::cout << "Yes Its Empty \n";
+    }
+    else
+    {
+        std::cout << "Not its not empty\n";
     }
     return 0;
 }

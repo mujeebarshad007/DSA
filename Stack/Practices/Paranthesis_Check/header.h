@@ -60,38 +60,38 @@ public:
         }
     }
 
-    // int isbalance(const char *msg)
-    // {
-    //     for (int i = 0; msg[i] != '\0'; i++)
-    //     {
-    //         if (msg[i] == '(')
-    //         {
-    //             push(msg[i]);
-    //         }
-    //         else
-    //         {
-    //             if (msg[i] == ')')
-    //             {
-    //                 if (empty())
-    //                 {
-    //                     return 0;
-    //                 }
-    //                 else
-    //                 {
-    //                     pop();
-    //                 }
-    //             }
-    //         }
-    //     }
-    //     if (empty())
-    //     {
-    //         return 1;
-    //     }
-    //     else
-    //     {
-    //         return 0;
-    //     }
-    // } Optional Added
+    int isbalance(const char *msg)
+    {
+        for (int i = 0; msg[i] != '\0'; i++)
+        {
+            if (msg[i] == '(')
+            {
+                push(msg[i]);
+            }
+            else
+            {
+                if (msg[i] == ')')
+                {
+                    if (empty())
+                    {
+                        return 0;
+                    }
+                    else
+                    {
+                        pop();
+                    }
+                }
+            }
+        }
+        if (empty())
+        {
+            return 1;
+        }
+        else
+        {
+            return 0;
+        }
+    }
     ~stack()
     {
 
