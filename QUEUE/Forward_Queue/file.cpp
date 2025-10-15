@@ -16,7 +16,8 @@ int main()
     f.push_front(3);
 
     std::cout << "\n";
-    f.Resize(2);
+    f.Remove_value(2);
+    // f.Unique(2);
     while (!f.empty())
     {
         std::cout << f.front() << " ";
