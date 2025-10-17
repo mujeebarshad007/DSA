@@ -182,6 +182,39 @@ int main(int argc, char *argv[])
         std::cin.getline(infix, 100);
     }
 
+    if (strcmp(infix, "-Help") == 0 || strcmp(infix, "-help") == 0)
+    {
+        system("clear");
+        char ch;
+        std::cout << "\t\t  ____________________________________________________________________________________________" << std::endl;
+        std::cout << "\t\t |                                                                                            |" << std::endl;
+        std::cout << "\t\t |                          Welcome to the Calculator using Stack                             |" << std::endl;
+        std::cout << "\t\t |                                                                                            |" << std::endl;
+        std::cout << "\t\t |                              Usage: ./a.out expression                                     |" << std::endl;
+        std::cout << "\t\t |                           Example ./a.out 101-2*(3+1)+2^2                                  |" << std::endl;
+        std::cout << "\t\t |                                                                                            |" << std::endl;
+        std::cout << "\t\t |                                        About                                               |" << std::endl;
+        std::cout << "\t\t |                    Evaluates mathematical expressions containing                           |" << std::endl;
+        std::cout << "\t\t |                    Supports multi-digit numbers (e.g., 101, 256).                          |" << std::endl;
+        std::cout << "\t\t |                  Handles operator precedence and brackets correctly                        |" << std::endl;
+        std::cout << "\t\t |                                                                                            |" << std::endl;
+        std::cout << "\t\t |                                    Interactive Mode                                        |" << std::endl;
+        std::cout << "\t\t |       If you run the program without any expression,it will ask you to enter one           |" << std::endl;
+        std::cout << "\t\t |                                                                                            |" << std::endl;
+        std::cout << "\t\t |                           Enter 0 to exit the program Please.                              |" << std::endl;
+        std::cout << "\t\t |____________________________________________________________________________________________|" << std::endl;
+
+        std::cin >> ch;
+        if (ch == '0')
+        {
+            exit(0);
+        }
+        else
+        {
+            std ::cout << " Press 0 please to exit \n";
+            return 1;
+        }
+    }
     // Validate input first
     if (!valid(infix))
     {
