@@ -3,19 +3,18 @@
 #include <stack>
 #include <cstring>
 #include <cmath>
-
 int isoperand(char x)
 {
-    if (x == '+' || x == '-' || x == '*' || x == '/' || x == '(' || x == ')' || x == '^')
+    if (x == '+' || x == '-' || x == '*' || x == '/' || x == '(' || x == ')' || x == '^') // This will return if the given character is operand or not
     {
         return 0;
     }
     else
         return 1;
 }
-
-int precedence_check(char x)
+int precedence_check(char x) // checking precedence by using numbers as a return
 {
+
     if (x == '+' || x == '-')
     {
         return 1;
@@ -34,7 +33,6 @@ int precedence_check(char x)
 }
 bool Balanced(const char *expression)
 {
-
     std::stack<char> st;
     for (int i = 0; expression[i] != '\0'; ++i)
     {
@@ -46,7 +44,10 @@ bool Balanced(const char *expression)
         {
             if (st.empty())
                 return false;
-            st.pop();
+            else
+            {
+                st.pop();
+            }
         }
     }
     return st.empty();
@@ -76,13 +77,19 @@ char *convert_to_postfix(char *infix)
             {
                 postfix[j++] = st.top();
                 st.pop();
+            }
+
+            if (!st.empty() && st.top() == '(')
+            {
                 st.pop();
             }
+            i++;
         }
         else
         {
 
-            while (!st.empty() || precedence_check(infix[i]) < precedence_check(st.top()) || precedence_check(infix[i]) == precedence_check(st.top()))
+            while (!st.empty() && ((precedence_check(infix[i]) < precedence_check(st.top())) ||
+                                   (precedence_check(infix[i]) == precedence_check(st.top()) && infix[i] != '^')))
             {
                 postfix[j++] = st.top();
                 st.pop();
@@ -97,6 +104,25 @@ char *convert_to_postfix(char *infix)
     }
     postfix[j] = '\0';
     return postfix;
+}
+
+bool valid(const char *expression)
+{
+    for (int i = 0; expression[i] != '\0'; ++i)
+    {
+        char c = expression[i];
+
+        if (c >= '0' && c <= '9')
+            continue;
+
+        // checking valid operators and parentheses
+        if (c == '+' || c == '-' || c == '*' || c == '/' || c == '^' || c == '(' || c == ')')
+            continue;
+
+        return false;
+    }
+
+    return true;
 }
 
 int Evaluation(char *postfix)
@@ -144,28 +170,38 @@ int Evaluation(char *postfix)
 int main(int argc, char *argv[])
 {
 
+    char infix[100];
+    // Take input
     if (argc > 1)
     {
-        // char infix[100];
-        char *postfix = convert_to_postfix(argv[1]);
-        std::cout << "Postfix expression: " << postfix << std::endl;
-
-        int result = Evaluation(postfix);
-        std::cout << " Result is " << result << std::endl;
-        delete[] postfix;
+        strcpy(infix, argv[1]);
     }
-    else if (argc == 1)
+    else
     {
-        char infix_1[100];
         std::cout << "Enter infix expression: ";
-        std::cin >> infix_1;
-
-        char *postfix_1 = convert_to_postfix(infix_1);
-        std::cout << "Postfix expression: " << postfix_1 << std::endl;
-
-        int result_1 = Evaluation(postfix_1);
-        std::cout << " Result is " << result_1 << std::endl;
-        delete[] postfix_1;
+        std::cin.getline(infix, 100);
     }
+
+    // Validate input first
+    if (!valid(infix))
+    {
+        std::cout << " Invalid expression! Please use only digits and parentheses.\n";
+        return 1;
+    }
+
+    //  Check balanced parentheses
+    if (!Balanced(infix))
+    {
+        std::cout << "Unbalanced . !\n";
+        return 1;
+    }
+
+    char *postfix = convert_to_postfix(infix);
+    std::cout << " Postfix expression: " << postfix << std::endl;
+
+    int result = Evaluation(postfix);
+    std::cout << " Result is: " << result << std::endl;
+
+    delete[] postfix;
     return 0;
 }
