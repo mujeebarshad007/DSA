@@ -1,5 +1,6 @@
 #pragma once
 #include "node.h"
+#include <climits>
 
 template <typename T>
 class stack
@@ -58,6 +59,27 @@ public:
             delete temp;
             n--;
         }
+    }
+    int get_min()
+    {
+        int min_value = INT_MAX;
+
+        while (!empty())
+        {
+            node<T> *temp;
+            temp = top;
+            if (temp->value < min_value)
+            {
+                node<T> *temp1;
+                min_value = temp->value;
+                temp1 = top;
+                top = top->next;
+                delete temp1;
+            }
+            top = top->next;
+        }
+
+        return min_value;
     }
 
     // int isbalance(const char *msg)

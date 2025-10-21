@@ -108,7 +108,6 @@ char *convert_to_postfix(char *infix)
 
 bool valid(const char *expression)
 {
-
     for (int i = 0; expression[i] != '\0'; ++i)
     {
         char c = expression[i];
