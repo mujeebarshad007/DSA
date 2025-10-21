@@ -103,6 +103,7 @@
     "chrono": "cpp",
     "ctime": "cpp",
     "ratio": "cpp",
-    "cstring": "cpp"
+    "cstring": "cpp",
+    "stack": "cpp"
   }
 }
