@@ -1,4 +1,4 @@
-#include "stak.h"
+#include "stack.h"
 int main()
 {
     stack<int> stk1(10);
