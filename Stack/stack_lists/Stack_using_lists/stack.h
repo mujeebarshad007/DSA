@@ -3,14 +3,14 @@
 #include <climits>
 
 template <typename T>
-class stack
+class Stack
 {
 private:
     node<T> *top;
     int n;
 
 public:
-    stack() // TODO DESTRUCTOR MAKE
+    Stack() // TODO DESTRUCTOR MAKE
     {
         top = nullptr;
         n = 0;
@@ -60,50 +60,38 @@ public:
             n--;
         }
     }
-    // ...existing code...
+
     stack &operator=(const stack &other)
     {
-        if (this == &other)
-            return *this;
 
-        // clear current stack
         while (!empty())
             pop();
 
-        // if other is empty, done
         if (other.top == nullptr)
         {
             top = nullptr;
-            n = 0;
+
             return *this;
         }
 
-        // copy nodes one-by-one preserving order (head/top stays the same)
-        node<T> *src = other.top;
-        node<T> *newnode = new node<T>;
-        newnode->value = src->value;
-        newnode->next = nullptr;
-        top = newnode;
-        node<T> *tail = newnode;
-        src = src->next;
-        int count = 1;
-
-        while (src != nullptr)
+        top = new node;
+        top->val = other.top->val;
+        node *current_this;
+        node *c_other;
+        current_this = top;
+        c_other = other.top->link;
+        while (c_other != nullptr)
         {
-            node<T> *nn = new node<T>;
-            nn->value = src->value;
-            nn->next = nullptr;
-            tail->next = nn;
-            tail = nn;
-            src = src->next;
-            ++count;
+            node *temp = new node;
+            temp->val = c_other->val;
+            temp->link = nullptr;
+            current_this->link = temp;
+            current_this = temp;
+            c_other = c_other->link;
         }
-
-        n = count;
         return *this;
     }
-    // ...existing code...
-    int get_min()
+    T get_min()
     {
         int min_value = INT_MAX;
 
@@ -157,7 +145,7 @@ public:
     //         return 0;
     //     }
     // } Optional Added
-    ~stack()
+    ~Stack()
     {
 
         while (!empty())

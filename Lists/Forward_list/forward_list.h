@@ -94,26 +94,33 @@ public:
 
     Forward_list<T> &operator=(const Forward_list<T> &rhs)
     {
-        this->clear(); // clear function to clear lhs list
-        node<T> *rtemp, *nn, *prev;
-        rtemp = this->H; // pointing the rtemp to dummy node of rhs
-        prev = H;        // pointing the prev to dummy node of lhs
+        if (this == &rhs)
+            return *this;
+
+        this->clear();
+
+        node<T> *rtemp = rhs.H->next;
+        node<T> *prev = this->H;
+
         while (rtemp != nullptr)
         {
-            nn = new node<T>;         // create new node in lhs
-            nn->value = rtemp->value; // copy value of rhs to lhs
-            nn->next = nullptr;       // fill the new made node with null ptr
-            prev->next = nn;          // link prev node to next node
-            rtemp = rtemp->next;      // link rtemp to next node
-            prev = nn;                // move prev pointer to next node bcz always prev should point to prev node to establish link
+            node<T> *nn = new node<T>;
+            nn->value = rtemp->value;
+            nn->next = nullptr;
+
+            prev->next = nn; // link it
+            prev = nn;       // move prev forward
+            rtemp = rtemp->next;
         }
+
+        return *this;
     }
 
     iterator begin() const
     {
         iterator it;
         it.ptr = H->next;
-        return it;
+        T return it;
     }
     iterator end() const
     {
