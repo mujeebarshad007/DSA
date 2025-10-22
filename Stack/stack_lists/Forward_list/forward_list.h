@@ -1,5 +1,6 @@
 #pragma once
 #include "node.h"
+
 template <typename T>
 class Forward_list
 {
@@ -45,6 +46,13 @@ public:
         return (H->next == nullptr);
     }
 
+    void clear() const
+    {
+        while (!empty())
+        {
+            pop_front();
+        }
+    }
     class iterator
     {
     private:
@@ -86,8 +94,7 @@ public:
 
     Forward_list<T> &operator=(const Forward_list<T> &rhs)
     {
-        // clear() // clear function to clear lhs list
-
+        this->clear(); // clear function to clear lhs list
         node<T> *rtemp, *nn, *prev;
         rtemp = this->H; // pointing the rtemp to dummy node of rhs
         prev = H;        // pointing the prev to dummy node of lhs
@@ -101,6 +108,7 @@ public:
             prev = nn;                // move prev pointer to next node bcz always prev should point to prev node to establish link
         }
     }
+
     iterator begin() const
     {
         iterator it;
@@ -120,36 +128,27 @@ public:
         it.ptr = H;
         return it;
     }
-    iterator before_begin()
-    {
-        iterator it;
-        it.ptr = H;
-        return it;
-    }
-
     iterator insert_after(const iterator &pos, const T &val)
     {
-        if (pos.ptr == nullptr)
-            return end();
-        node<T> *newnode = new node<T>;
-        newnode->value = val;
-        newnode->next = pos.ptr->next;
-        pos.ptr->next = newnode;
+
+        node<T> *temp = new node<T>; // make new node
+        temp->value = val;           // insert value
+        temp->next = pos.ptr->next;  // establish link to next node
+        pos.ptr->next = temp;        // pos to added node link
         ++n;
         iterator it;
-        it.ptr = newnode;
+        it.ptr = temp; // assign it.ptr to temp to return it as a iterator
         return it;
     }
 
     iterator erase_after(const iterator &pos)
     {
-        if (pos.ptr == nullptr || pos.ptr->next == nullptr)
-            return end();
-        node<T> *to_delete = pos.ptr->next;
-        pos.ptr->next = to_delete->next;
+
+        node<T> *temp = pos.ptr->next;
+        pos.ptr->next = temp->next;
         iterator it;
         it.ptr = pos.ptr->next;
-        delete to_delete;
+        delete temp;
         --n;
         return it;
     }

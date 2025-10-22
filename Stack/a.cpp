@@ -11,11 +11,13 @@ int main()
         q.push(i);
         s.push(i * 2);
     }
+
     while (!s.empty())
     {
         q.push(s.top());
         s.pop();
     }
+
     while (!q.empty())
     {
         cout << s.top() << " ";

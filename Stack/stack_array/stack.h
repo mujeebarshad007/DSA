@@ -73,11 +73,8 @@ public:
         TOP = other.TOP;
         SIZE = other.SIZE;
 
-        if (DATA != nullptr)
-        {
-            delete[] DATA;
-            DATA = new T[SIZE];
-        }
+        delete[] DATA;
+        DATA = new T[SIZE];
         for (int i = 0; i <= TOP; i++)
         {
             DATA[i] = other.DATA[i];

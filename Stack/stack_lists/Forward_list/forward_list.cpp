@@ -9,18 +9,20 @@ int main()
     f.push_front(30);
 
     Forward_list<int>::iterator it;
-    it = f.begin();
+    // it = f.begin();
     // ++it;
 
     // std::cout << " THe Value of iterator is " << *it << std ::endl;
     // *it = *it + 1;
     // std::cout << " THe Value of iterator is " << *it << std ::endl;
 
+    it = f.insert_after(f.begin(), 90);
     while (it != f.end())
     {
         std ::cout << *it << " ";
         ++it;
     }
     std::cout << std::endl;
+
     return 0;
 }
