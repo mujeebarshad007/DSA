@@ -133,6 +133,7 @@ public:
     {
         iterator it;
         it.ptr = H;
+
         return it;
     }
     iterator insert_after(const iterator &pos, const T &val)

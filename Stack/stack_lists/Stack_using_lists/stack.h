@@ -61,36 +61,49 @@ public:
         }
     }
 
-    stack &operator=(const stack &other)
+    stack &operator=(const stack &rhs)
     {
+        // 1️⃣ Self-assignment check
+        if (this == &rhs)
+            return *this;
 
+        // 2️⃣ Clear current stack
         while (!empty())
             pop();
 
-        if (other.top == nullptr)
+        // 3️⃣ If rhs stack is empty
+        if (rhs.top == nullptr)
         {
             top = nullptr;
-
             return *this;
         }
 
+        // 4️⃣ Start copying nodes
+        node *rtemp = rhs.top; // pointer to walk through rhs
+        node *prev = nullptr;  // track the last created node
+
+        // 5️⃣ Create first node
         top = new node;
-        top->val = other.top->val;
-        node *current_this;
-        node *c_other;
-        current_this = top;
-        c_other = other.top->link;
-        while (c_other != nullptr)
+        top->val = rtemp->val;
+        top->link = nullptr;
+        prev = top;
+        rtemp = rtemp->link;
+
+        // 6️⃣ Copy rest of nodes
+        while (rtemp != nullptr)
         {
-            node *temp = new node;
-            temp->val = c_other->val;
-            temp->link = nullptr;
-            current_this->link = temp;
-            current_this = temp;
-            c_other = c_other->link;
+            node *nn = new node;
+            nn->val = rtemp->val;
+            nn->link = nullptr;
+
+            prev->link = nn; // connect new node
+            prev = nn;       // move forward
+            rtemp = rtemp->link;
         }
+
         return *this;
     }
+
     T get_min()
     {
         int min_value = INT_MAX;
