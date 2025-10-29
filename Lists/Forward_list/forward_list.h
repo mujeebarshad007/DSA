@@ -120,7 +120,7 @@ public:
     {
         iterator it;
         it.ptr = H->next;
-        T return it;
+        return it;
     }
     iterator end() const
     {
@@ -139,13 +139,13 @@ public:
     iterator insert_after(const iterator &pos, const T &val)
     {
 
-        node<T> *temp = new node<T>; // make new node
-        temp->value = val;           // insert value
-        temp->next = pos.ptr->next;  // establish link to next node
-        pos.ptr->next = temp;        // pos to added node link
+        node<T> *temp = new node<T>;
+        temp->value = val;
+        temp->next = pos.ptr->next;
+        pos.ptr->next = temp;
         ++n;
         iterator it;
-        it.ptr = temp; // assign it.ptr to temp to return it as a iterator
+        it.ptr = temp;
         return it;
     }
 
@@ -160,4 +160,59 @@ public:
         --n;
         return it;
     }
+
+    void merge(Forward_list &other)
+    {
+        node<T> *p1, *p2;
+        node<T> *temp1, *temp2;
+
+        p1 = this->H;
+        p2 = other.H;
+
+        while (p1->next != nullptr && p2->next != nullptr)
+        {
+            if (p1->next->value > p2->next->value)
+            {
+
+                temp1 = p1->next;
+                temp2 = p2->next->next;
+
+                p1->next = p2->next;
+                p2->next->next = temp1;
+                p2->next = temp2;
+            }
+            else
+            {
+                p1 = p1->next;
+            }
+        }
+
+        if (p1->next == nullptr)
+            p1->next = p2->next;
+
+        other.H->next = nullptr;
+    }
+    void splice_after(iterator pos, Forward_list &other)
+    {
+        node<T> *p1, *p2;
+        node<T> *temp1, *temp2;
+        p1 = pos.ptr;
+
+        p2 = other.H;
+        while (p1->next != nullptr && p2->next != nullptr)
+        {
+            temp1 = p1->next;
+            temp2 = p2->next->next;
+
+            p1->next = p2->next;
+            p2->next->next = temp1;
+            p2->next = temp2;
+        }
+        if (p1->next == nullptr)
+            p1->next = p2->next;
+        other.H->next = nullptr;
+    }
+
+    // SORT
+    // REVERSE NOT DONE
 };
