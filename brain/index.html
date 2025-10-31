@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale1.0">
+        <title>The Tech-Enhanced Brain</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap"
+            rel="stylesheet">
+
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+
+        <div class="tooltip" id="tooltip"></div>
+
+        <div class="container">
+            <header>
+                <h1>The HUMAN Brain Processing Parts</h1>
+                <p>Hover over a region of the brain to learn about its function.
+                    Click a region or a button below to jump to the full
+                    details.</p>
+            </header>
+
+            <div class="brain-container">
+
+                <img src="brain.JPG"
+                    alt="Interactive Brain Schematic"
+                    class="brain-img">
+
+                <a class="hotspot"
+                    id="cognitive-hotspot"
+                    href="#perceptual-details"
+                    data-info="Perceptual Processing: This is how we see the world. It processes visual information from the eyes, recognizing faces, colors, and shapes.">
+                </a>
+
+                <!-- Memory (Bottom-right glow) -->
+                <a class="hotspot"
+                    id="perceptual-hotspot"
+                    href="#memory-details"
+                    data-info="Memory Hub: Responsible for forming and retrieving short-term and long-term memories. It's also involved in emotion and understanding language.">
+                </a>
+
+                <!-- Cognitive (Top-right glow) -->
+                <a class="hotspot"
+                    id="motor-hotspot"
+                    href="#cognitive-details"
+                    data-info="Cognitive Processing: The 'thinking' part. Responsible for problem-solving, planning, decision-making, and conscious thought.">
+                </a>
+
+                <!-- Motor (Bottom-central glow) -->
+                <a class="hotspot"
+                    id="memory-hotspot"
+                    href="#motor-details"
+                    data-info="Motor Control: The 'movement' center. This area controls all voluntary muscle movements, from walking to typing.">
+                </a>
+
+            </div>
+
+            <div class="button-container">
+                <a href="#cognitive-details"
+                    class="detail-button active">Cognitive</a>
+                <a href="#perceptual-details"
+                    class="detail-button">Perceptual</a>
+                <a href="#motor-details" class="detail-button">Motor</a>
+                <a href="#memory-details" class="detail-button">Memory</a>
+            </div>
+
+            <!-- --- DETAILS SECTION --- -->
+            <div class="details-container">
+
+                <section id="cognitive-details" class="detail-section active">
+                    <h2>Cognitive Processing</h2>
+                    <p>The cognitive center, primarily located in the prefrontal
+                        cortex, is the brain's executive suite. It's where
+                        higher-order thinking happens. This includes logical
+                        reasoning, abstract thought, and goal-setting. In tech,
+                        this is like the CPU and the main application logic,
+                        processing raw data to make intelligent decisions and
+                        plan future actions.</p>
+                    <p>When you're debugging code, planning a project, or
+                        designing a system, you are heavily using this part of
+                        your brain. It's the "control" in "control flow."</p>
+                </section>
+
+                <section id="perceptual-details" class="detail-section">
+                    <h2>Perceptual Processing</h2>
+                    <p>Primarily handled by the occipital lobe, this is the
+                        brain's high-powered graphics card. It takes the raw
+                        electrical signals from your eyes and interprets them
+                        into a rich, 3D model of the world. It processes color,
+                        depth, motion, and object recognition in real-time.</p>
+                    <p>In technology, this is analogous to computer vision (CV)
+                        models, which can identify objects in photos, or the
+                        rendering engine of a video game that builds a visual
+                        world from data.</p>
+                </section>
+
+                <section id="motor-details" class="detail-section">
+                    <h2>Motor Control</h2>
+                    <p>The motor cortex is a strip of tissue that acts as the
+                        final output controller. It sends signals down the
+                        spinal cord to more than 600 muscles, coordinating them
+                        with incredible precision. This is what allows you to
+                        type, use a mouse, or even just maintain your posture
+                        while you work.</p>
+                    <p>This system is like the driver or API that sends the
+                        final, processed commands to the hardware—telling the
+                        printer to print, the robot arm to move, or the screen
+                        to display a pixel.</p>
+                </section>
+
+                <section id="memory-details" class="detail-section">
+                    <h2>Memory Hub</h2>
+                    <p>Involving key structures like the hippocampus and
+                        temporal lobe, this is the brain's storage system. It
+                        functions as both high-speed RAM (short-term and working
+                        memory) and a massive hard drive (long-term memory).
+                        It's responsible for encoding new information and
+                        retrieving old files when you need them.</p>
+                    <p>In tech, this is your database, your file system, and
+                        your RAM all working together. Every time you remember a
+                        syntax, recall a solution to a bug, or learn a new
+                        framework, you are accessing and modifying this powerful
+                        system.</p>
+                </section>
+
+            </div>
+        </div>
+
+        <script src="script.js" defer></script>
+
+    </body>
+</html>

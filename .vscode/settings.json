@@ -105,5 +105,6 @@
     "ratio": "cpp",
     "cstring": "cpp",
     "stack": "cpp"
-  }
+  },
+  "liveServer.settings.port": 5501
 }

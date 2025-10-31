@@ -1,0 +1,43 @@
+body {
+}
+
+
+.tooltip {
+position: absolute;
+background: rgba(0, 0, 0, 0.8);
+color: #fff;
+padding: 10px;
+border-radius: 8px;
+pointer-events: none;
+opacity: 0;
+transform: translate(-50%, -100%);
+transition: opacity 0.2s ease, transform 0.2s ease;
+max-width: 250px;
+font-size: 14px;
+text-align: left;
+}
+
+
+.tooltip.visible {
+opacity: 1;
+transform: translate(-50%, -120%);
+}
+
+
+.info-panel {
+background: rgba(255, 255, 255, 0.05);
+padding: 20px;
+margin-top: 30px;
+border-radius: 10px;
+backdrop-filter: blur(5px);
+}
+
+
+.info-panel h2 {
+color: #00ffff;
+}
+
+
+.info-panel p {
+color: #e2e8f0;
+}
