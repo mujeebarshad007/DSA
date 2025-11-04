@@ -230,7 +230,7 @@ public:
     {
         reverse_iterator it;
         it.ptr = H;
-        return it;
+        sss return it;
     }
     // list<T> &operator=(const list<T> &rhs)
     // {
