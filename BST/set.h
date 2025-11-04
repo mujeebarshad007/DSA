@@ -16,60 +16,68 @@ public:
         H->is_nill = true;
         n = 0;
     }
-    void insert(const<key_type> &key)
+    void insert(const key_type &key)
     {
         tnode<key_type> *nn, *temp;
+        nn = new tnode<key_type>;
+        nn->left = H;
+        nn->right = H;
+        nn->parent = H;
+        nn->key = key;
+        nn->is_nill = false;
+
+        if (H->parent == H)
+        {
+            H->parent = nn;
+            H->left = nn;
+            H->right = nn;
+            nn->parent = H;
+            ++n;
+            return;
+        }
+        temp = H->parent;
+        while (1)
+        {
+            if ((key < temp->key))
+            {
+                if (temp->left != H)
+                {
+                    temp = temp->left;
+                }
+                else
+                {
+                    temp->left = nn;
+                    nn->parent = temp;
+                    break;
+                }
+            }
+            else if ((key > temp->key))
+            {
+                if (temp->right != H)
+                {
+                    temp = temp->right;
+                }
+                else
+                {
+                    temp->right = nn;
+                    nn->parent = temp;
+                    break;
+                }
+            }
+            else
+            {
+                delete nn;
+                throw " Duplicate Values";
+            }
+        }
+        if (key < H->left->key)
+        {
+            H->left = nn;
+        }
+        else if (key > H->right->key)
+        {
+            H->right = nn;
+        }
+        ++n;
     }
 };
-// void insert(const key_type &key)
-//     {
-//         tnode<key_type> *nn = new tnode<key_type>;
-//         nn->key = key;
-//         nn->left = nn->right = nn->parent = H;
-//         nn->is_nill = false;
-
-//         if (H->parent == H)  // tree empty
-//         {
-//             H->parent = H->left = H->right = nn;
-//             nn->parent = H;
-//             return;
-//         }
-
-//         tnode<key_type> *temp = H->parent;  // start from root
-//         while (true)
-//         {
-//             if (key < temp->key)
-//             {
-//                 if (temp->left != H)
-//                     temp = temp->left;
-//                 else
-//                 {
-//                     temp->left = nn;
-//                     nn->parent = temp;
-//                     break;
-//                 }
-//             }
-//             else if (key > temp->key)
-//             {
-//                 if (temp->right != H)
-//                     temp = temp->right;
-//                 else
-//                 {
-//                     temp->right = nn;
-//                     nn->parent = temp;
-//                     break;
-//                 }
-//             }
-//             else
-//             {
-//                 delete nn;
-//                 throw "Duplicate key";
-//             }
-//         }
-
-//         // update smallest and largest trackers
-//         if (key < H->left->key)
-//             H->left = nn;
-//         if (key > H->right->key)
-//             H->right = nn;
-//     }
