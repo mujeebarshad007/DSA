@@ -1,4 +1,5 @@
 #include "dnode.h"
+#include "algorithm"
 template <typename T>
 
 class list
@@ -254,6 +255,62 @@ public:
 
         other.H->next = H;
     }
+
+    void splice(iterator pos, list &other)
+    {
+        if (other.H->next == other.H)
+            return;
+
+        dnode<T> *p1 = pos.ptr;
+        dnode<T> *first = other.H->next;
+        dnode<T> *last = first;
+
+        while (last->next != other.H)
+        {
+            last = last->next;
+        }
+
+        last->next = p1->next;
+        if (p1->next != H)
+        {
+            p1->next->prev = last;
+        }
+
+        p1->next = first;
+        first->prev = p1;
+
+        other.H->next = other.H;
+        other.H->prev = other.H;
+    }
+    void remove(const T &val)
+    {
+
+        if (H->next == H)
+        {
+            return;
+        }
+        dnode<T> *temp;
+        temp = H->next;
+        while (temp != H)
+        {
+            dnode<T> *temp2;
+            temp2 = temp->next;
+            if (temp->value == val)
+            {
+                temp->prev->next = temp->next;
+                temp->next->prev = temp->prev;
+                delete temp;
+            }
+
+            temp = temp2;
+        }
+    }
+
+    void swap(list &other)
+    {
+        std::swap(H, other.H);
+    }
+
     iterator begin()
     {
         iterator it;

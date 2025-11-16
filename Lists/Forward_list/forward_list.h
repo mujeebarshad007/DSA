@@ -195,23 +195,20 @@ public:
     }
     void splice_after(iterator pos, Forward_list &other)
     {
-        node<T> *p1, *p2;
-        node<T> *temp1, *temp2;
-        p1 = pos.ptr;
-
-        p2 = other.H;
-        while (p1->next != nullptr && p2->next != nullptr)
+        node<T> *p1 = pos.ptr;
+        node<T> *p2 = other.H;
+        if (p2->next == nullptr)
+            return;
+        node<T> *first = p2->next;
+        node<T> *last = first;
+        while (last->next != nullptr)
         {
-            temp1 = p1->next;
-            temp2 = p2->next->next;
-
-            p1->next = p2->next;
-            p2->next->next = temp1;
-            p2->next = temp2;
+            last = last->next;
         }
-        if (p1->next == nullptr)
-            p1->next = p2->next;
-        other.H->next = nullptr;
+
+        last->next = p1->next;
+        p1->next = first;
+        p2->next = nullptr;
     }
 
     // SORT
