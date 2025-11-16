@@ -32,13 +32,25 @@ public:
     {
         return n;
     }
-    // void clear()
-    // {
-    //     while (!empty)
-    //     {
-    //         pop.front();
-    //     }
-    // }
+    void clear()
+    { // if (!empty())
+        // {
+
+        dnode<T> *nn;
+        nn = new dnode<T>;
+        nn->value = val;
+        nn->next = H->next;
+        nn->prev = H;
+        H->next = nn;
+        nn->next->prev = nn;
+        ++n;
+        // else
+        //     throw "list is Empty";
+        S while (!(H->next == H && H->prev == H))
+        {
+            pop.front();
+        }
+    }
 
     void push_front(const T &val)
     {

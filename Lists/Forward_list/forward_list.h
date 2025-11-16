@@ -157,6 +157,7 @@ public:
         iterator it;
         it.ptr = pos.ptr->next;
         delete temp;
+
         --n;
         return it;
     }
@@ -215,4 +216,7 @@ public:
 
     // SORT
     // REVERSE NOT DONE
+    void reverse()
+    {
+    }
 };
