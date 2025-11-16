@@ -5,6 +5,16 @@ class set
 private:
     tnode<key_type> *H;
     int n;
+    tnode<key_type> *successor(tnode<key_type> *ptr)
+    {
+        tnode<key_type> temp;
+        temp = ptr->right;
+        while (temp->left != H)
+        {
+            temp = temp->left;
+        }
+        return temp;
+    }
 
 public:
     set()
@@ -19,77 +29,44 @@ public:
     class iterator
     {
     private:
-        tnode<key_type> *node;
-        tnode<key_type> *H;
+        tnode<key_type> *ptr;
         template <typename U>
         friend class set;
 
     public:
-        iterator(tnode<key_type> *n, tnode<key_type> *h)
+        iterator()
         {
-            node = n;
-            H = h;
+            ptr = nullptr;
         }
 
         key_type &operator*()
         {
-            return node->key;
-        }
-
-        iterator &operator++()
-        {
-            if (node->right != H)
-            {
-                node = node->right;
-                while (node->left != H)
-                    node = node->left;
-            }
-            else
-            {
-                tnode<key_type> *parent = node->parent;
-                while (parent != H && node == parent->right)
-                {
-                    node = parent;
-                    parent = parent->parent;
-                }
-                node = parent;
-            }
-            return *this;
+            return ptr->key;
         }
 
         bool operator!=(const iterator &other) const
         {
-            return node != other.node;
+            return ptr != other.ptr;
         }
-        bool operator==(const iterator &it) const
-        {
-            return node == it.node;
-        }
-        key_type *operator->() { return &(node->key); }
+
+        key_type *operator->() { return &(ptr->key); }
     };
     iterator begin()
     {
-        return iterator(H->left, H);
-    }
-    iterator end()
-    {
-        return iterator(H, H);
-    }
-    iterator find(const key_type &key)
-    {
-        tnode<key_type> *temp = H->parent;
-        while (temp != H)
-        {
-            if (key < temp->key)
-                temp = temp->left;
-            else if (key > temp->key)
-                temp = temp->right;
-            else
-                return iterator(temp, H);
-        }
-        return end();
+        iterator it;
+        if (H->parent == H)
+            it.ptr = H;
+        else
+            it.ptr = H->left;
+        return it;
     }
 
+    iterator end()
+    {
+        iterator it;
+        it.ptr = H;
+        return it;
+    }
     void insert(const key_type &key)
     {
         tnode<key_type> *nn, *temp;
@@ -163,48 +140,113 @@ public:
         return n;
     }
 
-    int count(const key_type &key) const // checks if any duplicate is there or not
+    iterator erase(iterator pos)
     {
-
-        tnode<key_type> *temp;
-        temp = H->parent;
-        while (temp != H)
+        tnode<key_type> *to_del, *lc, *rc, *succ, *succ_p, *succ_r;
+        to_del = pos.ptr;
+        // Case 1: Leaf node ko remove kar rahe
+        if (to_del == H->parent) // mean hamare pass root node hai bss as a leaf node
         {
-            if (key < temp->key)
+            H->parent = H;
+            H->left = H;
+            H->right = H;
+            delete to_del;
+        }
+        else if (to_del->left == H && to_del->right == H)
+        {
+            if (to_del->parent->left == to_del)
             {
-                temp = temp->left;
+                to_del->parent->left = H;
             }
-            else if (key > temp->key)
+            else
+                to_del->parent->right = H;
+            delete to_del;
+        }
+
+        // Case 2: Node ka bss left child hai
+        else if (to_del == H->parent && to_del->left != H && to_del->right == H) // matlb root node hai aur uska left hai bss
+        {
+            to_del->left->parent = H;
+            delete to_del;
+        }
+        else if (to_del->left != H && to_del->right == H)
+        {
+            lc = to_del->left;
+            if (to_del == to_del->parent->left)
             {
-                temp = temp->right;
+                to_del->parent->left = lc;
             }
             else
             {
-                return 1;
+                to_del->parent->right = lc;
             }
+            lc->parent = to_del->parent;
+            delete to_del;
         }
-        return 0;
-    }
-    bool contains(const key_type &key) const // checks if any duplicate is there or not
-    {
 
-        tnode<key_type> *temp;
-        temp = H->parent;
-        while (temp != H)
+        // Case 3 only node and have right child
+        else if (to_del == H->parent && to_del->right != H && to_del->left == H) // matlb root node hai aur uska right hai bss
         {
-            if (key < temp->key)
+            to_del->right->parent = H;
+            delete to_del;
+        }
+        else if (to_del->right != H && to_del->left == H)
+        {
+            rc = to_del->right;
+            if (to_del == to_del->parent->left)
             {
-                temp = temp->left;
-            }
-            else if (key > temp->key)
-            {
-                temp = temp->right;
+                to_del->parent->left = rc;
             }
             else
             {
-                return true; // means duplicate is found
+                to_del->parent->right = rc;
+            }
+            rc->parent = to_del->parent;
+        }
+
+        // Case 4 Jab dono nodes hote hain delete node k;
+        else
+        {
+            succ = successor(to_del);
+            succ_p = succ->parent;
+            succ_r = succ->right;
+            if (to_del->parent->left = to_del)
+            {
+                to_del->parent->left = succ;
+            }
+            else if (to_del->parent->right = to_del)
+            {
+                to_del->parent->right = succ;
+            }
+
+            else if (to_del->left != H)
+            {
+                to_del->left->parent = succ;
+            }
+            else if (to_del->right != H)
+            {
+                to_del->right->parent = succ;
+            }
+            else if (to_del->right = succ)
+            {
+                succ_r->parent = succ->parent;
+                succ->left = to_del->left;
+            }
+            else
+            {
+                succ->parent->left = succ_r;
+                if (succ r_ != H)
+                {
+                    succ_r->parent = succ_p;
+
+                    // remaining links banaye hein
+                    succ->parent = to_del->parent;
+                    succ->left = to_del->left;
+                    succ->right = to_del->right;
+                }
+                delete to_del;
             }
         }
-        return false; // hamein key nahi mili
+        --n;
     }
 };
