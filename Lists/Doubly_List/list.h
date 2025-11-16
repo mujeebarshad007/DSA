@@ -33,25 +33,12 @@ public:
         return n;
     }
     void clear()
-    { // if (!empty())
-        // {
-
-        dnode<T> *nn;
-        nn = new dnode<T>;
-        nn->value = val;
-        nn->next = H->next;
-        nn->prev = H;
-        H->next = nn;
-        nn->next->prev = nn;
-        ++n;
-        // else
-        //     throw "list is Empty";
-        S while (!(H->next == H && H->prev == H))
+    {
+        while (H->next != H && H->prev != H)
         {
-            pop.front();
+            pop_front();
         }
     }
-
     void push_front(const T &val)
     {
         // if (!empty())
@@ -133,7 +120,7 @@ public:
             return *this;
         }
 
-        iterator &operator++(int)
+        iterator operator++(int)
         {
             iterator temp;
             temp = *this;
@@ -208,6 +195,65 @@ public:
         --pos;
         return pos;
     }
+    iterator erase(iterator pos)
+    {
+        dnode<T> *temp;
+        temp = pos.ptr;
+        if (temp->prev == H) // handling first node issue
+        {
+            pos.ptr->next->prev = H;
+            H->next = temp->next;
+        }
+        else if (temp->next == H) // handling last node
+        {
+            pos.ptr->prev->next = H;
+            H->prev = pos.ptr->prev;
+        }
+        else
+        {
+            pos.ptr->prev->next = temp->next; /// handling any node issue
+            pos.ptr->next->prev = temp->prev;
+        }
+        iterator it;
+        it.ptr = temp->next;
+        delete temp;
+        --n;
+        return it;
+    }
+
+    void merge(list &other)
+    {
+        dnode<T> *p1, *p2;
+        dnode<T> *temp1, *temp2;
+
+        p1 = this->H;
+        p2 = other.H;
+
+        while (p1->next != H && p2->next != H)
+        {
+            if (p1->next->value > p2->next->value)
+            {
+
+                temp1 = p1->next;
+                temp2 = p2->next->next;
+
+                p1->nex->prev = p2->next;
+                p1->next = p2->next;
+                p2->next->next = temp1;
+                p2->next->prev = p1;
+                p2->next = temp2;
+            }
+            else
+            {
+                p1 = p1->next;
+            }
+        }
+
+        if (p1->next == H)
+            p1->next = p2->next;
+
+        other.H->next = H;
+    }
     iterator begin()
     {
         iterator it;
@@ -242,10 +288,6 @@ public:
     {
         reverse_iterator it;
         it.ptr = H;
-        sss return it;
+        return it;
     }
-    // list<T> &operator=(const list<T> &rhs)
-    // {
-
-    // }
 };
