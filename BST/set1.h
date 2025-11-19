@@ -253,6 +253,7 @@ public:
 
     void insert_r(const key_type &key)
     {
+
         if (H->parent == H)
         {
             tnode<key_type> *nn = new tnode<key_type>;
