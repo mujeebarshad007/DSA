@@ -32,36 +32,121 @@ public:
         tnode<key_type> *ptr;
 
     public:
-        iterator()
+        iterator &operator++()
         {
-            ptr = nullptr;
+            if (!ptr->right->is_nill)
+            {
+                ptr = ptr->right;
+                while (!ptr->left->is_nill)
+                {
+                    ptr = ptr->left;
+                }
+            }
+            else if ((ptr->parent->left == ptr))
+            {
+                ptr = ptr->parent;
+            }
+            else
+            {
+
+                while ((ptr != ptr->parent->left) && (!ptr->parent->is_nill))
+                {
+                    ptr = ptr->parent;
+                }
+                ptr = ptr->parent;
+            }
+            return *this;
         }
 
-        key_type &operator*()
+        key_type &operator*() const
         {
             return this->ptr->key;
         }
 
         bool operator!=(const iterator &rhs) const
         {
-            return (this.ptr != rhs.ptr);
+            return (this->ptr != rhs.ptr);
         }
         bool operator==(const iterator &rhs) const
         {
-            return (this.ptr == rhs.ptr);
+            return (this->ptr == rhs.ptr);
+        }
+    };
+    class reverse_iterator
+    {
+    private:
+        tnode<key_type> *ptr;
+        friend class set;
+
+    public:
+        reverse_iterator &operator++()
+        {
+            if (!ptr->left->is_nill)
+            {
+                ptr = ptr->left;
+                while (!ptr->right->is_nill)
+                {
+                    ptr = ptr->right;
+                }
+            }
+            else if ((ptr->parent->right == ptr))
+            {
+                ptr = ptr->parent;
+            }
+            else
+            {
+
+                while ((ptr != ptr->parent->right) && (!ptr->parent->is_nill))
+                {
+                    ptr = ptr->parent;
+                }
+                ptr = ptr->parent;
+            }
+            return *this;
+        }
+
+        key_type &operator*() const
+        {
+            return this->ptr->key;
+        }
+        bool operator==(const reverse_iterator &rhs) const
+        {
+            return (this->ptr == rhs.ptr);
+        }
+        bool operator!=(const reverse_iterator &rhs) const
+        {
+            return this->ptr != rhs.ptr;
         }
     };
 
+    reverse_iterator r_begin()
+    {
+        reverse_iterator it;
+        tnode<key_type> *temp = H->right;
+        if (temp == H)
+        {
+            it.ptr = H;
+            return it;
+        }
+        it.ptr = temp;
+        return it;
+    }
+    reverse_iterator r_end()
+    {
+        reverse_iterator it;
+        it.ptr = H;
+        return it;
+    }
     iterator begin()
     {
         iterator it;
-        it = H->left;
+        it.ptr = H->left;
         return it;
     }
     iterator end()
     {
         iterator it;
-        it = H;
+        it.ptr = H;
         return it;
     }
 
@@ -75,7 +160,7 @@ public:
         return n;
     }
 
-    pair<iterator, bool> insert(const key_type &key)
+    void insert(const key_type &key)
     {
         tnode<key_type> *nn, *temp;
         nn = new tnode<key_type>;
@@ -112,7 +197,7 @@ public:
             {
                 if (temp->right != H)
                 {
-                    temp = temp->left;
+                    temp = temp->right;
                 }
                 else
                 {
@@ -136,6 +221,24 @@ public:
             H->right = nn;
         }
         ++n;
+    }
+
+    void insert_r(const key_type &key)
+    {
+        tnode<key_type> *nn, *temp;
+        nn = new tnode<key_type>;
+        nn->left = nn->right = nn->parent = H;
+        nn->key = key;
+        nn->is_nill = false;
+
+        if (H->parent == H)
+        {
+            nn->parent = H;
+            H->left = nn;
+            H->right = nn;
+            H->parent = nn;
+            return;
+        }
     }
 
     iterator erase(iterator pos)
@@ -233,5 +336,8 @@ public:
             delete to_del;
         }
         --n;
+        iterator ret;
+        ret.ptr = H; // or set to the next node if you want
+        return ret;
     }
 };

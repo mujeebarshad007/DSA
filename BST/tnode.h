@@ -2,8 +2,7 @@
 template <typename key_type>
 struct tnode
 {
-    key_type *parent;
-    key_type *left, *right;
+    tnode<key_type> *parent, *left, *right;
     bool is_nill;
     key_type key;
 
