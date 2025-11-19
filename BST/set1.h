@@ -5,7 +5,35 @@ class set
 private:
     tnode<key_type> *H;
     int n;
-
+    tnode<key_type> *insert_rec(tnode<key_type> *ptr, const key_type &key)
+    {
+        if (ptr == H)
+        {
+            tnode<key_type> *nn = new tnode<key_type>;
+            nn->left = nn->right = nn->parent = H;
+            nn->key = key;
+            nn->is_nill = false;
+            ++n;
+            return nn;
+        }
+        if (key < ptr->key)
+        {
+            tnode<key_type> *pnn = insert_rec(ptr->left, key);
+            pnn->parent = ptr;
+            ptr->left = pnn;
+        }
+        else if (key > ptr->key)
+        {
+            tnode<key_type> *pnn = insert_rec(ptr->right, key);
+            pnn->parent = ptr;
+            ptr->right = pnn;
+        }
+        else
+        {
+            throw "duplicate value";
+        }
+        return ptr;
+    }
     tnode<key_type> *successor(tnode<key_type> *ptr)
     {
         tnode<key_type> temp;
@@ -225,22 +253,26 @@ public:
 
     void insert_r(const key_type &key)
     {
-        tnode<key_type> *nn, *temp;
-        nn = new tnode<key_type>;
-        nn->left = nn->right = nn->parent = H;
-        nn->key = key;
-        nn->is_nill = false;
-
         if (H->parent == H)
         {
-            nn->parent = H;
-            H->left = nn;
-            H->right = nn;
-            H->parent = nn;
+            tnode<key_type> *nn = new tnode<key_type>;
+            nn->left = nn->right = nn->parent = H;
+            nn->key = key;
+            nn->is_nill = false;
+            H->left = H->right = H->parent = nn;
+            ++n;
             return;
         }
+        H->parent = insert_rec(H->parent, key);
+        tnode<key_type> *temp = H->parent;
+        while (temp->left != H)
+            temp = temp->left;
+        H->left = temp;
+        temp = H->parent;
+        while (temp->right != H)
+            temp = temp->right;
+        H->right = temp;
     }
-
     iterator erase(iterator pos)
     {
         tnode<key_type> *to_del, *lc, *rc, *succ, *succ_p, *succ_r;
