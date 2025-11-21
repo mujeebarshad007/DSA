@@ -83,7 +83,7 @@ public:
         temp->next->prev = H;
         delete temp;
         --n;
-        // }
+        // }h
         // else
         // {
         // throw "list is Empty";
@@ -106,7 +106,6 @@ public:
     {
     private:
         dnode<T> *ptr;
-        template <typename U>
         friend class list;
 
     public:
@@ -149,6 +148,10 @@ public:
         {
             return this->ptr != rhs.ptr;
         }
+        bool operator==(const iterator &rhs) const
+        {
+            return this->ptr == rhs.ptr;
+        }
     };
     class reverse_iterator
     {
@@ -183,6 +186,25 @@ public:
             return this->ptr != rhs.ptr;
         }
     };
+    list<T> &operator=(const list<T> &rhs)
+    {
+        if (this == &rhs)
+            return *this;
+
+        while (H->next != H)
+        {
+            pop_front();
+        }
+
+        dnode<T> *p = rhs.H->next;
+        while (p != rhs.H)
+        {
+            push_back(p->value);
+            p = p->next;
+        }
+
+        return *this;
+    }
 
     iterator insert(iterator pos, const T &val)
     {
@@ -305,6 +327,107 @@ public:
             temp = temp2;
         }
     }
+    void unique()
+    {
+        dnode<T> *p1, *p2;
+        p1 = H->next;
+        while (p1->next != H)
+        {
+            p2 = p1->next;
+            if (p2 == H)
+            {
+                break;
+            }
+            if (p1->value == p2->value)
+            {
+                p1->next = p2->next;
+                p2->next->prev = p1;
+                delete p2;
+            }
+            else
+            {
+                p1 = p1->next;
+            }
+        }
+    }
+
+    void resize(int new_n, const T &val = T())
+    {
+        while (n < new_n)
+        {
+            dnode<T> *nn = new dnode<T>;
+            nn->value = val;
+            nn->next = H;
+            nn->prev = H->prev;
+            H->prev->next = nn;
+            H->prev = nn;
+            ++n;
+        }
+
+        while (n > new_n)
+        {
+            if (!empty())
+            {
+                dnode<T> *temp = H->prev;
+                H->prev = temp->prev;
+                temp->prev->next = H;
+                delete temp;
+                --n;
+            }
+        }
+    }
+    void reverse()
+    {
+        if (empty() || n == 1)
+            return;
+
+        dnode<T> *p1 = H->next;
+        dnode<T> *p2 = nullptr;
+
+        // Swap next and prev for all nodes
+        do
+        {
+            p2 = p1->next;
+            p1->next = p1->prev;
+            p1->prev = p2;
+            p1 = p2;
+        } while (p1 != H);
+
+        p2 = H->next;
+        H->next = H->prev;
+        H->prev = p2;
+    }
+
+    void sort()
+    {
+        if (empty() || n == 1)
+            return;
+
+        bool swapped;
+        dnode<T> *p1;
+        dnode<T> *p2 = H->prev; // end mein jaa rahe
+
+        do
+        {
+            swapped = false;
+            p1 = H->next;
+
+            while (p1->next != H && p1->next != p2->next)
+            {
+                if (p1->value > p1->next->value)
+                {
+
+                    T temp = p1->value;
+                    p1->value = p1->next->value;
+                    p1->next->value = temp;
+                    swapped = true;
+                }
+                p1 = p1->next;
+            }
+
+            p2 = p2->prev;
+        } while (swapped);
+    }
 
     void swap(list &other)
     {
@@ -346,5 +469,11 @@ public:
         reverse_iterator it;
         it.ptr = H;
         return it;
+    }
+
+    ~list()
+    {
+        clear();
+        delete H;
     }
 };

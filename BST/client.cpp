@@ -10,7 +10,7 @@ int main()
     s.insert_r(15);
     s.insert_r(12);
 
-    std::cout << "Elements in set (c-order): ";
+    std::cout << "By using the Forward Iterator iss: \n";
     set<int>::iterator it = s.begin();
 
     while (it != s.end())
@@ -19,14 +19,15 @@ int main()
         ++it;
     }
     std::cout << "\n";
-    // set<int>::reverse_iterator r_it;
-    // r_it = s.r_begin();
-    // while (r_it != s.r_end())
+    std::cout << "By using The Reverse Iterator is : \n";
+    set<int>::reverse_iterator r_it;
+    r_it = s.r_begin();
+    while (r_it != s.r_end())
 
-    // {
-    //     std::cout << *r_it << " ";
-    //     ++r_it;
-    // }
-    // std ::cout << std::endl;
+    {
+        std::cout << *r_it << " ";
+        ++r_it;
+    }
+    std ::cout << std::endl;
     return 0;
 }

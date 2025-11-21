@@ -3,104 +3,189 @@
 
 int main()
 {
-    list<int> l;
-    try
-    {
-        l.push_back(1);
-        l.push_back(2);
-        l.push_back(3);
-        l.push_back(2);
-        l.push_back(5);
-    }
-    catch (const char *msg)
-    {
-        std::cout << msg;
-    }
-    list<int> g;
-    try
-    {
-        g.push_back(9);
-        g.push_back(8);
-        g.push_back(7);
-    }
-    catch (const char *msg)
-    {
-        std::cout << msg;
-    }
+    std::cout << "--- Executing Validation Suite ---\n";
 
+    list<int> L, G;
+
+    L.push_front(20);
+    L.push_front(10);
+    L.push_front(10);
+    L.push_front(10);
+    L.push_front(30);
+    L.push_front(40);
+    // G = L;
+    std::cout << "Front: " << L.front() << std::endl;
+    std::cout << "Back: " << L.back() << std::endl;
+
+    // Print list
+    std::cout << "List after pushes: ";
     list<int>::iterator it;
-    list<int>::iterator it2;
-    // std::cout << " THe List 1 is : ";
-    // it = l.begin();
-    // while (it != l.end())
-    // {
-    //     std::cout << *it << " ";
-    //     ++it;
-    // }
-    // std::cout << std::endl;
-
-    // std::cout << " THe List 2 is : ";
-    // it2 = g.begin();
-    // while (it2 != g.end())
-    // {
-    //     std::cout << *it2 << " ";
-    //     ++it2;
-    // }
-    // std::cout << std::endl;
-    // it = l.begin();
-    // ++it;
-    // ++it;
-    // l.insert(it, 20);
-    // it = l.begin();
-    // std::cout << std::endl;
-
-    // ++it;
-    // l.erase(it);
-    // it = l.begin();
-    // while (it != l.end())
-    // {
-    //     std::cout << *it << " ";
-    //     ++it;
-    // }
-
-    // l.remove(2);
-    // std::cout << " THe List 1 is : ";
-    // it = l.begin();
-    // while (it != l.end())
-    // {
-    //     std::cout << *it << " ";
-    //     ++it;
-    // }
-
-    // it = l.begin();
-    // ++it;
-    // ++it;
-    // l.splice(it, g);
-    // it = l.begin();
-    // while (it != l.end())
-    // {
-    //     std::cout << *it << " ";
-    //     ++it;
-    // }
-
-    it = l.begin();
-    it2 = g.begin();
-
-    l.swap(g);
-    it = l.begin();
-    while (it != l.end())
+    it = L.begin();
+    while (it != L.end())
     {
         std::cout << *it << " ";
         ++it;
     }
-    // list<int>::reverse_iterator r_it;
-    // r_it = l.r_begin();
-    // while (r_it != l.r_end())
+    std::cout << std::endl;
 
+    // // Pop ops
+    // L.pop_front();
+    // L.pop_back();
+
+    // std::cout << "After pop_front + pop_back: ";
+    // it = L.begin();
+    // while (it != L.end())
     // {
-    //     std::cout << *r_it << " ";
-    //     ++r_it;
+    //     std::cout << *it << " ";
+    //     ++it;
     // }
-    // std ::cout << std::endl;
+    // std::cout << std::endl;
+
+    // // Insert test
+    // list<int>::iterator it1 = L.begin();
+    // ++it1;
+    // L.insert(it1, 99);
+
+    // std::cout << "After insert(99): ";
+    // it = L.begin();
+    // while (it != L.end())
+    // {
+    //     std::cout << *it << " ";
+    //     ++it;
+    // }
+    // std::cout << std::endl;
+
+    // // Erase test
+    // list<int>::iterator it2 = L.begin();
+    // L.erase(it2);
+
+    // std::cout << "After erase(begin): ";
+    // it = L.begin();
+    // while (it != L.end())
+    // {
+    //     std::cout << *it << " ";
+    //     ++it;
+    // }
+    // std::cout << std::endl;
+
+    // // Reverse traversal
+    // std::cout << "Reverse traversal: ";
+    // list<int>::reverse_iterator rit;
+    // rit = L.r_begin();
+    // while (rit != L.r_end())
+    // {
+    //     std::cout << *rit << " ";
+    //     ++rit;
+    // }
+    // std::cout << std::endl;
+
+    // // Remove test
+    // L.remove(99);
+
+    // std::cout << "After remove(99): ";
+    // it = L.begin();
+    // while (it != L.end())
+    // {
+    //     std::cout << *it << " ";
+    //     ++it;
+    // }
+    // std::cout << std::endl;
+
+    // // Splice test
+    // list<int> B;
+    // B.push_back(111);
+    // B.push_back(222);
+    // B.push_back(333);
+
+    // list<int>::iterator pos = L.begin();
+    // L.splice(pos, B);
+
+    // std::cout << "After splice into L: ";
+    // it = L.begin();
+    // while (it != L.end())
+    // {
+    //     std::cout << *it << " ";
+    //     ++it;
+    // }
+    // std::cout << std::endl;
+
+    // std::cout << "B after splice: ";
+    // it = B.begin();
+    // while (it != B.end())
+    // {
+    //     std::cout << *it << " ";
+    //     ++it;
+    // }
+    // std::cout << std::endl;
+
+    // // Swap test
+    // list<int> C;
+    // C.push_back(500);
+    // C.push_back(600);
+
+    // std::cout << "Before swap, L: ";
+    // it = L.begin();
+    // while (it != L.end())
+    // {
+    //     std::cout << *it << " ";
+    //     ++it;
+    // }
+
+    // std::cout << "\nBefore swap, C: ";
+    // it = C.begin();
+    // while (it != C.end())
+    // {
+    //     std::cout << *it << " ";
+    //     ++it;
+    // }
+    // std::cout << std::endl;
+
+    // L.swap(C);
+
+    // std::cout << "After swap, L: ";
+    // it = L.begin();
+    // while (it != L.end())
+    // {
+    //     std::cout << *it << " ";
+    //     ++it;
+    // }
+
+    // std::cout << "\nAfter swap, C: ";
+    // it = C.begin();
+    // while (it != C.end())
+    // {
+    //     std::cout << *it << " ";
+    //     ++it;
+    // }
+    std::cout << std::endl;
+
+    // unique
+    // L.unique();
+
+    // std::cout << "After UNique: ";
+    // it = L.begin();
+    // while (it != L.end())
+    // {
+    //     std::cout << *it << " ";
+    //     ++it;
+    // }
+    // std::cout << std::endl;
+
+    // Resize
+    // L.sort();
+    // it = L.begin();
+    // while (it != L.end())
+    // {
+    //     std::cout << *it << " ";
+    //     ++it;
+    // }
+    // std::cout << std::endl;
+
+    // // Clear test
+    // C.clear();
+    // std::cout << "C after clear: " << (C.empty() ? "EMPTY" : "NOT EMPTY") << std::endl;
+
+    // std::cout << "--- Validation Suite Completed ---\n";
+
     return 0;
 }
