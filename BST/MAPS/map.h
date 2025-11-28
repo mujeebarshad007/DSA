@@ -1,43 +1,14 @@
-#include "tnode.h"
-template <typename key_type>
-class set
+#include "mnode.h"
+template <typename key_type, typename T>
+class map
 {
 private:
-    tnode<key_type> *H;
+    mnode<key_type, T> *H;
     int n;
-    tnode<key_type> *insert_rec(tnode<key_type> *ptr, const key_type &key)
+
+    mnode<key_type, T> *successor(mnode<key_type, T> *ptr)
     {
-        if (ptr == H)
-        {
-            tnode<key_type> *nn = new tnode<key_type>;
-            nn->left = nn->right = nn->parent = H;
-            nn->key = key;
-            nn->is_nill = false;
-            ++n;
-            return nn;
-        }
-        if (key < ptr->key)
-        {
-            tnode<key_type> *pnn = insert_rec(ptr->left, key);
-            pnn->parent = ptr;
-            ptr->left = pnn;
-        }
-        else if (key > ptr->key)
-        {
-            tnode<key_type> *pnn = insert_rec(ptr->right, key);
-            pnn->parent = ptr;
-            ptr->right = pnn;
-        }
-        else
-        {
-            throw "duplicate value";
-        }
-        return ptr;
-    }
-    tnode<key_type> *successor(tnode<key_type> *ptr)
-    {
-        tnode<key_type> temp;
-        temp = ptr->right;
+        mnode<key_type, T> *temp = ptr->right;
         while (temp->left != H)
         {
             temp = temp->left;
@@ -46,9 +17,9 @@ private:
     }
 
 public:
-    set()
+    map()
     {
-        H = new tnode<key_type>;
+        H = new mnode<key_type, T>;
         n = 0;
         H->left = H->right = H->parent = H;
         H->is_nill = true;
@@ -56,8 +27,8 @@ public:
     class iterator
     {
     private:
-        friend class set;
-        tnode<key_type> *ptr;
+        friend class map;
+        mnode<key_type, T> *ptr;
 
     public:
         iterator &operator++()
@@ -86,11 +57,15 @@ public:
             return *this;
         }
 
-        key_type &operator*() const
+        std::pair<key_type, T> &operator*() const
         {
-            return this->ptr->key;
+            return this->ptr->data;
         }
 
+        std::pair<key_type, T> *operator->() const
+        {
+            return &(ptr->data);
+        }
         bool operator!=(const iterator &rhs) const
         {
             return (this->ptr != rhs.ptr);
@@ -103,8 +78,8 @@ public:
     class reverse_iterator
     {
     private:
-        tnode<key_type> *ptr;
-        friend class set;
+        mnode<key_type, T> *ptr;
+        friend class map;
 
     public:
         reverse_iterator &operator++()
@@ -133,13 +108,17 @@ public:
             return *this;
         }
 
-        key_type &operator*() const
+        std::pair<key_type, T> &operator*() const
         {
-            return this->ptr->key;
+            return this->ptr->data;
         }
         bool operator==(const reverse_iterator &rhs) const
         {
             return (this->ptr == rhs.ptr);
+        }
+        std::pair<key_type, T> *operator->() const
+        {
+            return &(ptr->data);
         }
         bool operator!=(const reverse_iterator &rhs) const
         {
@@ -150,7 +129,7 @@ public:
     reverse_iterator r_begin()
     {
         reverse_iterator it;
-        tnode<key_type> *temp = H->right;
+        mnode<key_type, T> *temp = H->right;
         if (temp == H)
         {
             it.ptr = H;
@@ -188,12 +167,13 @@ public:
         return n;
     }
 
-    void insert(const key_type &key)
+    std::pair<iterator, bool> insert(const std::pair<key_type, T> &data)
     {
-        tnode<key_type> *nn, *temp;
-        nn = new tnode<key_type>;
+        mnode<key_type, T> *nn, *temp;
+
+        nn = new mnode<key_type, T>;
         nn->left = nn->right = nn->parent = H;
-        nn->key = key;
+        nn->data = data;
         nn->is_nill = false;
 
         if (H->parent == H)
@@ -202,18 +182,20 @@ public:
             H->left = nn;
             H->right = nn;
             H->parent = nn;
-            return;
+            ++n;
+
+            iterator it;
+            it.ptr = nn;
+            return {it, true};
         }
+
         temp = H->parent;
         while (1)
         {
-
-            if (key < temp->key)
+            if (data.first < temp->data.first)
             {
                 if (temp->left != H)
-                {
                     temp = temp->left;
-                }
                 else
                 {
                     temp->left = nn;
@@ -221,12 +203,10 @@ public:
                     break;
                 }
             }
-            else if (key > temp->key)
+            else if (data.first > temp->data.first)
             {
                 if (temp->right != H)
-                {
                     temp = temp->right;
-                }
                 else
                 {
                     temp->right = nn;
@@ -236,47 +216,30 @@ public:
             }
             else
             {
-                throw "duplicate value";
+
+                temp->data.second = data.second;
                 delete nn;
+                iterator it;
+                it.ptr = temp;
+                return {it, false};
             }
         }
-        if (key < H->left->key)
-        {
+
+        if (data.first < H->left->data.first)
             H->left = nn;
-        }
-        else if (key > H->right->key)
-        {
+        else if (data.first > H->right->data.first)
             H->right = nn;
-        }
+
         ++n;
+
+        iterator it;
+        it.ptr = nn;
+        return {it, true};
     }
 
-    void insert_r(const key_type &key)
-    {
-
-        if (H->parent == H)
-        {
-            tnode<key_type> *nn = new tnode<key_type>;
-            nn->left = nn->right = nn->parent = H;
-            nn->key = key;
-            nn->is_nill = false;
-            H->left = H->right = H->parent = nn;
-            ++n;
-            return;
-        }
-        H->parent = insert_rec(H->parent, key);
-        tnode<key_type> *temp = H->parent;
-        while (temp->left != H)
-            temp = temp->left;
-        H->left = temp;
-        temp = H->parent;
-        while (temp->right != H)
-            temp = temp->right;
-        H->right = temp;
-    }
     iterator erase(iterator pos)
     {
-        tnode<key_type> *to_del, *lc, *rc, *succ, *succ_p, *succ_r;
+        mnode<key_type, T> *to_del, *lc, *rc, *succ, *succ_p, *succ_r;
         to_del = pos.ptr;
         // case 1: Delteing Leaf node
         if (to_del->left == H && to_del->right == H)
@@ -330,30 +293,25 @@ public:
             succ_p = succ->parent;
             succ_r = succ->right;
 
-            // 1. Link parent of to_del → succ
             if (to_del->parent->left == to_del)
                 to_del->parent->left = succ;
             else
                 to_del->parent->right = succ;
 
-            // 2. If successor is DIRECT right child of to_del
             if (succ == to_del->right)
             {
-                // Just attach left child
+
                 succ->left = to_del->left;
                 if (to_del->left != H)
                     to_del->left->parent = succ;
             }
             else
             {
-                // Successor is deeper in right subtree
 
-                // Fix successor parent → successor right
                 succ_p->left = succ_r;
                 if (succ_r != H)
                     succ_r->parent = succ_p;
 
-                // Now attach children of to_del to successor
                 succ->left = to_del->left;
                 succ->right = to_del->right;
 
@@ -363,14 +321,53 @@ public:
                     to_del->right->parent = succ;
             }
 
-            // Finally set successor's parentleft
             succ->parent = to_del->parent;
-
+            succ->data = to_del->data;
             delete to_del;
+            if (to_del == H->parent)
+            {
+
+                if (H->parent->is_nill)
+                {
+                    H->parent = H;
+                }
+            }
         }
         --n;
         iterator ret;
-        ret.ptr = H; // or set to the next node if you want
+        ret.ptr = H;
         return ret;
+    }
+
+    iterator find(const key_type &key)
+    {
+        iterator r;
+        r.ptr = H->parent; // start from root
+
+        while (r.ptr != H)
+        {
+            if (key == r.ptr->data.first)
+                break;
+            else if (key < r.ptr->data.first)
+                r.ptr = r.ptr->left;
+            else
+                r.ptr = r.ptr->right;
+        }
+
+        return r;
+    }
+    T &at(const key_type &key)
+    {
+        iterator it;
+        it = find(key);
+        if (it == end())
+            throw("out of range");
+        return it.ptr->data.second;
+    }
+    T &operator[](const key_type &key)
+    {
+        std::pair<iterator, bool> res;
+        res = insert({key, T()});
+        return res.first.ptr->data.second;
     }
 };

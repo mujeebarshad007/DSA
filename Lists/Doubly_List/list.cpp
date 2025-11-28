@@ -3,16 +3,22 @@
 
 int main()
 {
-    std::cout << "--- Executing Validation Suite ---\n";
 
     list<int> L, G;
+    try
+    {
+        L.push_front(20);
+        L.push_front(10);
+        L.push_front(10);
+        L.push_front(10);
+        L.push_front(30);
+        L.push_front(40);
+    }
+    catch (char *msg)
+    {
 
-    L.push_front(20);
-    L.push_front(10);
-    L.push_front(10);
-    L.push_front(10);
-    L.push_front(30);
-    L.push_front(40);
+        std::cout << msg;
+    }
     // G = L;
     std::cout << "Front: " << L.front() << std::endl;
     std::cout << "Back: " << L.back() << std::endl;
@@ -181,11 +187,9 @@ int main()
     // }
     // std::cout << std::endl;
 
-    // // Clear test
+    // Clear test
     // C.clear();
     // std::cout << "C after clear: " << (C.empty() ? "EMPTY" : "NOT EMPTY") << std::endl;
-
-    // std::cout << "--- Validation Suite Completed ---\n";
 
     return 0;
 }
