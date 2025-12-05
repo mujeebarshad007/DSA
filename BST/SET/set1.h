@@ -282,8 +282,10 @@ public:
             =->right;
         H->right = ;
     }
-    iterator erase(iterator pos)
+    iterator erase(iterator pos) // pahle void se kia tha
     {
+        iterator ret;
+        ret.ptr = successor(to_del);
         tnode<key_type> *to_del, *lc, *rc, *succ, *succ_p, *succ_r;
         to_del = pos.ptr;
         // case 1: Delteing Leaf node
@@ -343,7 +345,7 @@ public:
             else
                 to_del->parent->right = succ;
 
-            // 2. If successor is DIRECT right child of to_del
+            // agar successor direct right child hai ro_del ka
             if (succ == to_del->right)
             {
                 succ->left = to_del->left;
@@ -367,7 +369,7 @@ public:
                     to_del->right->parent = succ;
             }
 
-            // Finally set successor's parentleft
+            // Finally set successor's parent left
             succ->parent = to_del->parent;
 
             delete to_del;
@@ -381,8 +383,6 @@ public:
             }
         }
         --n;
-        iterator ret;
-        ret.ptr = H; // or set to the next node if you want
         return ret;
     }
 };
