@@ -52,6 +52,71 @@ private:
         }
         return temp;
     }
+    mnode<key_type, T> *right_Rotate(mnode<__key_t, T> *y)
+
+    {
+        mnode<key_type, T> *x = y->left;
+        mnode<key_type, T> *T2 = x->right;
+
+        x->right = y;
+        y->left = T2;
+
+        if (T2 != H)
+        {
+            T2->parent = y;
+        }
+        else
+        {
+            x->parent = y->parent;
+            y->parent = x;
+
+            change_Height(y);
+            change_Height(x);
+        }
+        return x;
+    }
+
+    mnode<key_type, T> *left_Rotate(mnode<__key_t, T> *x)
+    {
+        mnode<key_type, T> *y = x->right;
+        mnode<key_type, T> *T2 = y->left;
+        y->left = x;
+        x->right = T2;
+        if (T2 != H)
+        {
+            T2->parent = x;
+        }
+        else
+        {
+            y->parent = x->parent;
+            x->parent = y;
+
+            change_Height(x);
+            change_Height(y);
+        }
+        return y;
+    }
+    mnode<key_type, T> *Balance_Node(mnode<__key_t, T> *p)
+    {
+        change_Height(p);
+        int bf = get_balance(p);
+
+        // if the left is heavy then
+        if (bf > 1)
+        {
+            if (get_balance(p->left) < 0)
+                p->left = left_Rotate(p->left);
+            return right_Rotate(p);
+        }
+
+        // if the left is heavy then
+        if (bf < -1)
+        {
+            if (get_balance(p->right) > 0)
+                p->right = right_Rotate(p->right);
+            return left_Rotate(p);
+        }
+    }
 
 public:
     map()
@@ -212,6 +277,7 @@ public:
         nn->left = nn->right = nn->parent = H;
         nn->data = data;
         nn->is_nill = false;
+        nn->height = 1;
 
         if (H->parent == H)
         {
@@ -268,6 +334,21 @@ public:
             H->right = nn;
 
         ++n;
+
+        // balancing AVL
+        mnode<key_type, T> *current = nn->parent;
+        while (current != H)
+        {
+            current = Balance_Node(current);
+            if (current->parent == H)
+            {
+                H->parent = current;
+            }
+            else
+            {
+                current = current->parent;
+            }
+        }
 
         iterator it;
         it.ptr = nn;
