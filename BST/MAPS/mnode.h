@@ -10,5 +10,6 @@ struct mnode
     mnode()
     {
         is_nill = false;
+        height = 1;
     }
 };

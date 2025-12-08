@@ -359,17 +359,17 @@ public:
     {
         mnode<key_type, T> *to_del, *lc, *rc, *succ, *succ_p, *succ_r;
         to_del = pos.ptr;
-        // case 1: Delteing Leaf node
+
+        mnode<key_type, T> *start_balance = to_del->parent; // balancing from parent
+        // case 1: Deleteing Leaf node
         if (to_del->left == H && to_del->right == H)
         {
             if (to_del->parent->left == to_del)
             {
                 to_del->parent->left = H;
             }
-            else if (to_del->parent->right == to_del)
-            {
+            else
                 to_del->parent->right = H;
-            }
             delete to_del;
         }
         // CASE 2: Node Having one Child->Having left only
@@ -378,7 +378,6 @@ public:
             lc = to_del->left;
             if (to_del->parent->left == to_del)
             {
-
                 to_del->parent->left = lc;
             }
             else
@@ -408,47 +407,23 @@ public:
         else
         {
             succ = successor(to_del);
+            to_del->data = succ->data;
             succ_p = succ->parent;
             succ_r = succ->right;
 
-            if (to_del->parent->left == to_del)
-                to_del->parent->left = succ;
-            else
-                to_del->parent->right = succ;
-
-            if (succ == to_del->right)
-            {
-
-                succ->left = to_del->left;
-                if (to_del->left != H)
-                    to_del->left->parent = succ;
-            }
-            else
-            {
-
+            if (succ_p->left == succ)
                 succ_p->left = succ_r;
-                if (succ_r != H)
-                    succ_r->parent = succ_p;
+            else
+                succ_p->right = succ_r;
 
-                succ->left = to_del->left;
-                succ->right = to_del->right;
-
-                if (to_del->left != H)
-                    to_del->left->parent = succ;
-                if (to_del->right != H)
-                    to_del->right->parent = succ;
-            }
-
-            succ->parent = to_del->parent;
-            succ->data = to_del->data;
-            delete to_del;
-            if (to_del == H->parent)
+            delete succ;
+            mnode<key_type, T> *current = succ_p;
+            while (current != H)
             {
-
-                if (H->parent->is_nill)
-                {
-                    H->parent = H;
-                }
+                current = Balance_Node(current);
+                if (current->parent == H)
+                    H->parent = current;
+                current = current->parent;
             }
         }
         --n;
