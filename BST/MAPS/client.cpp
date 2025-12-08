@@ -6,11 +6,11 @@ int main()
 
     map<int, std::string> m;
 
-    std::cout << "Size: " << m.size() << std::endl;
     m.insert({1, "Mujeeb"});
     m.insert({3, "Niko"});
     m.insert({2, "Dangling"});
     m.insert({4, "Ptr"});
+    std::cout << "Size: " << m.size() << std::endl;
 
     try
     {

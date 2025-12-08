@@ -52,8 +52,7 @@ private:
         }
         return temp;
     }
-    mnode<key_type, T> *right_Rotate(mnode<__key_t, T> *y)
-
+    mnode<key_type, T> *right_Rotate(mnode<key_type, T> *y)
     {
         mnode<key_type, T> *x = y->left;
         mnode<key_type, T> *T2 = x->right;
@@ -61,42 +60,32 @@ private:
         x->right = y;
         y->left = T2;
 
+        x->parent = y->parent;
+        y->parent = x;
         if (T2 != H)
-        {
             T2->parent = y;
-        }
-        else
-        {
-            x->parent = y->parent;
-            y->parent = x;
-
-            change_Height(y);
-            change_Height(x);
-        }
+        change_Height(y);
+        change_Height(x);
         return x;
     }
 
-    mnode<key_type, T> *left_Rotate(mnode<__key_t, T> *x)
+    mnode<key_type, T> *left_Rotate(mnode<key_type, T> *x)
     {
         mnode<key_type, T> *y = x->right;
         mnode<key_type, T> *T2 = y->left;
         y->left = x;
         x->right = T2;
-        if (T2 != H)
-        {
-            T2->parent = x;
-        }
-        else
-        {
-            y->parent = x->parent;
-            x->parent = y;
 
-            change_Height(x);
-            change_Height(y);
-        }
+        y->parent = x->parent;
+        x->parent = y;
+
+        if (T2 != H)
+            T2->parent = x;
+        change_Height(x);
+        change_Height(y);
         return y;
     }
-    mnode<key_type, T> *Balance_Node(mnode<__key_t, T> *p)
+    mnode<key_type, T> *Balance_Node(mnode<key_type, T> *p)
     {
         change_Height(p);
         int bf = get_balance(p);
@@ -116,6 +105,7 @@ private:
                 p->right = right_Rotate(p->right);
             return left_Rotate(p);
         }
+        return p;
     }
 
 public:
@@ -147,7 +137,7 @@ public:
     {
         if (this != &other)
         {
-            ();
+            clear();
             typename map<key_type, T>::iterator it;
             it = other.begin();
             while (it != other.end())
@@ -274,12 +264,14 @@ public:
     reverse_iterator r_begin()
     {
         reverse_iterator it;
-        mnode<key_type, T> *temp = H->right;
+        mnode<key_type, T> *temp = H->parent;
         if (temp == H)
         {
             it.ptr = H;
             return it;
         }
+        while (!temp->right->is_nill)
+            temp = temp->right;
         it.ptr = temp;
         return it;
     }
@@ -292,7 +284,15 @@ public:
     iterator begin()
     {
         iterator it;
-        it.ptr = H->left;
+        mnode<key_type, T> *temp = H->parent;
+        if (temp == H)
+        {
+            it.ptr = H;
+            return it;
+        }
+        while (!temp->left->is_nill)
+            temp = temp->left;
+        it.ptr = temp;
         return it;
     }
     iterator end()
@@ -382,15 +382,16 @@ public:
         mnode<key_type, T> *current = nn->parent;
         while (current != H)
         {
-            current = Balance_Node(current);
-            if (current->parent == H)
-            {
-                H->parent = current;
-            }
+            mnode<key_type, T> *balanced = Balance_Node(current);
+
+            if (balanced->parent == H)
+                H->parent = balanced;
+            else if (balanced->data.first < balanced->parent->data.first)
+                balanced->parent->left = balanced;
             else
-            {
-                current = current->parent;
-            }
+                balanced->parent->right = balanced;
+
+            current = balanced->parent;
         }
 
         iterator it;
