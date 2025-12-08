@@ -121,10 +121,53 @@ private:
 public:
     map()
     {
+        // TODO destructor make later
         H = new mnode<key_type, T>;
         n = 0;
         H->left = H->right = H->parent = H;
         H->is_nill = true;
+    }
+
+    map(const map &other)
+    {
+        H = new mnode<key_type, T>;
+        H->left = H->right = H->parent = H;
+        H->is_nill = true;
+        n = 0;
+        typename map<key_type, T>::iterator it;
+        it = other.begin();
+        while (it != other.end())
+        {
+            insert(*it);
+            ++it;
+        }
+    }
+
+    map &operator=(const map &other)
+    {
+        if (this != &other)
+        {
+            ();
+            typename map<key_type, T>::iterator it;
+            it = other.begin();
+            while (it != other.end())
+            {
+                insert(*it);
+                ++it;
+            }
+        }
+        return *this;
+    }
+
+    void clear()
+    {
+        iterator it;
+        it = begin();
+        while (it != end())
+        {
+            erase(it);
+            it = begin();
+        }
     }
     class iterator
     {
@@ -449,6 +492,25 @@ public:
 
         return r;
     }
+
+    int count(const key_type &key)
+    {
+        iterator it;
+        it = find(key);
+        if (it != end())
+        {
+            return 1;
+        }
+        else
+        {
+            return 0;
+        }
+    }
+
+    bool contains(const key_type &key)
+    {
+        return find(key) != end();
+    }
     T &at(const key_type &key)
     {
         iterator it;
@@ -462,5 +524,11 @@ public:
         std::pair<iterator, bool> res;
         res = insert({key, T()});
         return res.first.ptr->data.second;
+    }
+
+    ~map()
+    {
+        clear();
+        delete H;
     }
 };
