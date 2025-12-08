@@ -6,6 +6,43 @@ private:
     mnode<key_type, T> *H;
     int n;
 
+    int get_Height(mnode<key_type, T> *p)
+    {
+        if (p == H || p == nullptr)
+        {
+            return 0;
+        }
+        else
+        {
+            return p->height;
+        }
+    }
+
+    void change_Height(mnode<key_type, T> *p)
+    {
+
+        if (p == H)
+            return;
+        int left_height, right_height;
+        left_height = get_Height(p->left);
+        right_height = get_Height(p->right);
+
+        if (left_height > right_height)
+        {
+            p->height = left_height + 1;
+        }
+        else
+        {
+            p->height = right_height + 1;
+        }
+    }
+    int get_balance(mnode<key_type, T> *p)
+    {
+        if (p == H)
+            return 0;
+        return get_Height(p->left) - get_Height(p->right);
+    }
+
     mnode<key_type, T> *successor(mnode<key_type, T> *ptr)
     {
         mnode<key_type, T> *temp = ptr->right;
