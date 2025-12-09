@@ -345,7 +345,7 @@ public:
             else
                 to_del->parent->right = succ;
 
-            // agar successor direct right child hai ro_del ka
+            // agar successor direct right child hai to_del ka
             if (succ == to_del->right)
             {
                 succ->left = to_del->left;
