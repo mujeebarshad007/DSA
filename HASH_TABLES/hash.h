@@ -41,6 +41,7 @@ public:
 
         iterator &operator++()
         {
+
             ++it_list;
             if (it_list == um->table[idx].end())
             {
@@ -115,24 +116,23 @@ public:
 
     std::pair<iterator, bool> insert(const std::pair<const K, T> &p)
     {
+
         int h = hash(p.first);
         typename std::list<std::pair<const K, T>>::iterator it_list;
         it_list = find(table[h], p.first);
         iterator it;
         it.um = this;
         it.idx = h;
-
         if (it_list == table[h].end())
         {
             table[h].push_back(p);
-            it.it_list = --table[h].end();
             ++n;
             return {it, true};
         }
         else
         {
             it.it_list = it_list;
-            return {it, false};
+            return {it, true};
         }
     }
     void clear()
