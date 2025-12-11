@@ -1,4 +1,5 @@
 #include "tnode.h"
+#include <utility>
 template <typename key_type>
 class set
 {
@@ -36,13 +37,18 @@ private:
     }
     tnode<key_type> *successor(tnode<key_type> *ptr)
     {
-        tnode<key_type> = ptr->right;
-        while (->left != H)
+        if (!ptr || ptr->right == H)
+            return H;
+
+        tnode<key_type> *temp;
+        temp = ptr->right;
+        while (temp->left != H)
         {
             temp = temp->left;
         }
-        return;
+        return temp;
     }
+
     int Node_Height(tnode<key_type> *ptr)
     {
         int hl, hr;
@@ -89,7 +95,7 @@ private:
             hr = 0;
         }
 
-        return hl - hr
+        return hl - hr;
     }
     tnode<key_type> *LL_Rotation(tnode<key_type> *ptr)
     {
@@ -109,15 +115,15 @@ private:
     }
     tnode<key_type> *LR_Rotation(tnode<key_type> *ptr)
     {
-        ptr = NULL;
+        return ptr = NULL;
     }
     tnode<key_type> *RR_Rotation(tnode<key_type> *ptr)
     {
-        ptr = NULL;
+        return ptr = NULL;
     }
     tnode<key_type> *RL_Rotation(tnode<key_type> *ptr)
     {
-        ptr = NULL;
+        return ptr = NULL;
     }
 
 public:
@@ -174,6 +180,10 @@ public:
         {
             return (this->ptr == rhs.ptr);
         }
+        key_type *operator->() const
+        {
+            return &(ptr->key);
+        }
     };
     class reverse_iterator
     {
@@ -225,13 +235,13 @@ public:
     reverse_iterator r_begin()
     {
         reverse_iterator it;
-        tnode<key_type> * = H->right;
-        if (== H)
+        tnode<key_type> *temp = H->right;
+        if (temp == H)
         {
             it.ptr = H;
             return it;
         }
-        it.ptr = ;
+        it.ptr = temp;
         return it;
     }
     reverse_iterator r_end()
@@ -263,7 +273,7 @@ public:
         return n;
     }
 
-    pair<iterator, bool> insert(const key_type &key)
+    std::pair<iterator, bool> insert(const key_type &key)
     {
         tnode<key_type> *nn;
         nn = new tnode<key_type>;
@@ -371,20 +381,20 @@ public:
             return;
         }
         H->parent = insert_rec(H->parent, key);
-        tnode<key_type> * = H->parent;
-        while (->left != H)
-            =->left;
-        H->left = ;
-        = H->parent;
-        while (->right != H)
-            =->right;
-        H->right = ;
+        tnode<key_type> *temp = H->parent;
+        while (temp->left != H)
+            temp = temp->left;
+        H->left = temp;
+        temp = H->parent;
+        while (temp->right != H)
+            temp = temp->right;
+        H->right = temp;
     }
     iterator erase(iterator pos) // pahle void se kia tha
     {
         iterator ret;
-        ret.ptr = successor(to_del);
         tnode<key_type> *to_del, *lc, *rc, *succ, *succ_p, *succ_r;
+        ret.ptr = successor(to_del);
         to_del = pos.ptr;
         // case 1: Delteing Leaf node
         if (to_del->left == H && to_del->right == H)

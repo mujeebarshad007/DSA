@@ -29,7 +29,6 @@ public:
         n = 0;
         table = new std::list<std::pair<const K, T>>[s];
     }
-
     class iterator
     {
         int idx;
