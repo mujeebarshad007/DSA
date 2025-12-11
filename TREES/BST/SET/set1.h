@@ -43,6 +43,32 @@ private:
         }
         return;
     }
+    int Node_Height(tnode<key_type> *ptr)
+    {
+        int hl, hr;
+        if (ptr && ptr->left)
+        {
+            hl = ptr->left->height;
+        }
+        else
+        {
+            hl = 0;
+        }
+        if (ptr && ptr->right)
+        {
+            hr = ptr->right->height;
+        }
+        else
+        {
+            hr = 0;
+        }
+
+        if (hl > hr)
+        {
+            return hl + 1;
+        }
+        return hr + 1;
+    }
 
 public:
     set()
@@ -193,6 +219,7 @@ public:
         nn = new tnode<key_type>;
         nn->left = nn->right = nn->parent = H;
         nn->key = key;
+        nn->height = 1;
         nn->is_nill = false;
 
         if (H->parent == H)
@@ -252,6 +279,7 @@ public:
         else if (key > H->right->key)
             H->right = nn;
 
+        nn->height = Node_Height(nn);
         ++n;
 
         iterator it;
