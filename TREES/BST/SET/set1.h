@@ -69,6 +69,56 @@ private:
         }
         return hr + 1;
     }
+    int Balance_Factor(tnode<key_type> *ptr)
+    {
+        int hl, hr;
+        if (ptr && ptr->left)
+        {
+            hl = ptr->left->height;
+        }
+        else
+        {
+            hl = 0;
+        }
+        if (ptr && ptr->right)
+        {
+            hr = ptr->right->height;
+        }
+        else
+        {
+            hr = 0;
+        }
+
+        return hl - hr
+    }
+    tnode<key_type> *LL_Rotation(tnode<key_type> *ptr)
+    {
+        tnode<key_type> *ptr_l = ptr->left;
+        tnode<key_type> *ptr_left_r = ptr_l->right;
+
+        ptr_l->right = ptr;
+        ptr->left = ptr_left_r;
+        ptr->height = Node_Height(ptr);
+        ptr->height = Node_Height(ptr_l);
+
+        if (H->parent == ptr)
+        {
+            H->parent = ptr_l;
+        }
+        return ptr_l;
+    }
+    tnode<key_type> *LR_Rotation(tnode<key_type> *ptr)
+    {
+        ptr = NULL;
+    }
+    tnode<key_type> *RR_Rotation(tnode<key_type> *ptr)
+    {
+        ptr = NULL;
+    }
+    tnode<key_type> *RL_Rotation(tnode<key_type> *ptr)
+    {
+        ptr = NULL;
+    }
 
 public:
     set()
@@ -215,14 +265,14 @@ public:
 
     pair<iterator, bool> insert(const key_type &key)
     {
-        tnode<key_type> *nn, *temp;
+        tnode<key_type> *nn;
         nn = new tnode<key_type>;
         nn->left = nn->right = nn->parent = H;
         nn->key = key;
         nn->height = 1;
         nn->is_nill = false;
 
-        if (H->parent == H)
+        if (H->parent == H) // empty tree
         {
             nn->parent = H;
             H->left = nn;
@@ -235,16 +285,13 @@ public:
             return {it, true};
         }
 
-        temp = H->parent;
-
-        while (1)
+        tnode<key_type> *temp = H->parent;
+        while (true)
         {
             if (key < temp->key)
             {
                 if (temp->left != H)
-                {
                     temp = temp->left;
-                }
                 else
                 {
                     temp->left = nn;
@@ -255,9 +302,7 @@ public:
             else if (key > temp->key)
             {
                 if (temp->right != H)
-                {
                     temp = temp->right;
-                }
                 else
                 {
                     temp->right = nn;
@@ -267,7 +312,7 @@ public:
             }
             else
             {
-                delete nn;
+                delete nn; // duplicate
                 iterator it;
                 it.ptr = temp;
                 return {it, false};
@@ -276,12 +321,37 @@ public:
 
         if (key < H->left->key)
             H->left = nn;
-        else if (key > H->right->key)
+        if (key > H->right->key)
             H->right = nn;
 
-        nn->height = Node_Height(nn);
-        ++n;
+        // **AVL balancing**: traverse up from parent
+        temp = nn->parent;
+        while (temp != H)
+        {
+            temp->height = Node_Height(temp); // update height
+            int bf = Balance_Factor(temp);
 
+            if (bf == 2 && Balance_Factor(temp->left) >= 0)
+            {
+                LL_Rotation(temp);
+            }
+            else if (bf == 2 && Balance_Factor(temp->left) < 0)
+            {
+                LR_Rotation(temp);
+            }
+            else if (bf == -2 && Balance_Factor(temp->right) <= 0)
+            {
+                RR_Rotation(temp);
+            }
+            else if (bf == -2 && Balance_Factor(temp->right) > 0)
+            {
+                RL_Rotation(temp);
+            }
+
+            temp = temp->parent; // go up to check for other imbalances
+        }
+
+        ++n;
         iterator it;
         it.ptr = nn;
         return {it, true};
