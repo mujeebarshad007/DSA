@@ -112,7 +112,15 @@ public:
     {
         return n == 0;
     }
-
+    iterator erase(iterator pos)
+    {
+        iterator it = pos;
+        iterator it2;
+        it2 = pos;
+        it2++;
+        table[it.idx].erase(it.it_list);
+        return it2;
+    }
     std::pair<iterator, bool> insert(const std::pair<const K, T> &p)
     {
 
