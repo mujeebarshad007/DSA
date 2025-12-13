@@ -6,41 +6,114 @@ private:
     mnode<key_type, T> *H;
     int n;
 
-    int get_Height(mnode<key_type, T> *p)
+    // AVL BALANCING FUNCTIONS
+    int Node_Height(mnode<key_type, T> *ptr) // making it to just return node height
     {
-        if (p == H || p == nullptr)
+        int hl, hr;
+        if (ptr && ptr->left) // means k if node exists && node ka left exist
         {
-            return 0;
+            hl = ptr->left->height;
         }
         else
         {
-            return p->height;
+            hl = 0;
         }
-    }
-
-    void change_Height(mnode<key_type, T> *p)
-    {
-
-        if (p == H)
-            return;
-        int left_height, right_height;
-        left_height = get_Height(p->left);
-        right_height = get_Height(p->right);
-
-        if (left_height > right_height)
+        if (ptr && ptr->right)
         {
-            p->height = left_height + 1;
+            hr = ptr->right->height;
         }
         else
         {
-            p->height = right_height + 1;
+            hr = 0;
         }
+
+        if (hl > hr)
+        {
+            return hl + 1; // adding 1 because always height will be +1
+        }
+        return hr + 1;
     }
-    int get_balance(mnode<key_type, T> *p)
+
+    int Balance_Node(mnode<key_type, T> *ptr)
     {
-        if (p == H)
-            return 0;
-        return get_Height(p->left) - get_Height(p->right);
+        int hl, hr;
+        if (ptr && ptr->left)
+        {
+            hl = ptr->left->height;
+        }
+        else
+        {
+            hl = 0;
+        }
+        if (ptr && ptr->right)
+        {
+            hr = ptr->right->height;
+        }
+        else
+        {
+            hr = 0;
+        }
+
+        return hl - hr; // returning height difference for balancing
+    }
+
+    // LL Rotation
+    mnode<key_type, T> *LL_Rotation(mnode<key_type, T> *ptr)
+    {
+        mnode<key_type, T> *ptr_l = ptr->left;         // left child
+        mnode<key_type, T> *ptr_left_r = ptr_l->right; // left child's right
+
+        ptr_l->right = ptr;     // left child becomes new root
+        ptr->left = ptr_left_r; // attach subtree
+
+        // update heights
+        ptr->height = Node_Height(ptr);
+        ptr_l->height = Node_Height(ptr_l);
+
+        // if root was ptr, update root
+        if (H->parent == ptr)
+            H->parent = ptr_l;
+
+        return ptr_l;
+    }
+
+    // RR Rotation (Right-Right)
+    mnode<key_type, T> *RR_Rotation(mnode<key_type, T> *ptr)
+    {
+        mnode<key_type, T> *ptr_r = ptr->right;        // right child
+        mnode<key_type, T> *ptr_right_l = ptr_r->left; // right child's left
+
+        ptr_r->left = ptr;        // right child becomes new root of this subtree
+        ptr->right = ptr_right_l; // attach subtree
+
+        // update heights
+        ptr->height = Node_Height(ptr);
+        ptr_r->height = Node_Height(ptr_r);
+
+        if (H->parent == ptr)
+            H->parent = ptr_r;
+
+        return ptr_r;
+    }
+
+    // LR Rotation (Left-Right)
+    mnode<key_type, T> *LR_Rotation(mnode<key_type, T> *ptr)
+    {
+        // first rotate left child with RR rotation
+        ptr->left = RR_Rotation(ptr->left);
+
+        // then do LL rotation on ptr
+        return LL_Rotation(ptr);
+    }
+
+    // RL Rotation (Right-Left)
+    mnode<key_type, T> *RL_Rotation(mnode<key_type, T> *ptr)
+    {
+        // first rotate right child with LL rotation
+        ptr->right = LL_Rotation(ptr->right);
+
+        // then do RR rotation on ptr
+        return RR_Rotation(ptr);
     }
 
     mnode<key_type, T> *successor(mnode<key_type, T> *ptr)
@@ -51,61 +124,6 @@ private:
             temp = temp->left;
         }
         return temp;
-    }
-    mnode<key_type, T> *right_Rotate(mnode<key_type, T> *y)
-    {
-        mnode<key_type, T> *x = y->left;
-        mnode<key_type, T> *T2 = x->right;
-
-        x->right = y;
-        y->left = T2;
-
-        x->parent = y->parent;
-        y->parent = x;
-        if (T2 != H)
-            T2->parent = y;
-        change_Height(y);
-        change_Height(x);
-        return x;
-    }
-
-    mnode<key_type, T> *left_Rotate(mnode<key_type, T> *x)
-    {
-        mnode<key_type, T> *y = x->right;
-        mnode<key_type, T> *T2 = y->left;
-        y->left = x;
-        x->right = T2;
-
-        y->parent = x->parent;
-        x->parent = y;
-
-        if (T2 != H)
-            T2->parent = x;
-        change_Height(x);
-        change_Height(y);
-        return y;
-    }
-    mnode<key_type, T> *Balance_Node(mnode<key_type, T> *p)
-    {
-        change_Height(p);
-        int bf = get_balance(p);
-
-        // if the left is heavy then
-        if (bf > 1)
-        {
-            if (get_balance(p->left) < 0)
-                p->left = left_Rotate(p->left);
-            return right_Rotate(p);
-        }
-
-        // if the left is heavy then
-        if (bf < -1)
-        {
-            if (get_balance(p->right) > 0)
-                p->right = right_Rotate(p->right);
-            return left_Rotate(p);
-        }
-        return p;
     }
 
 public:
@@ -142,7 +160,8 @@ public:
             it = other.begin();
             while (it != other.end())
             {
-                insert(*it);
+                insert({it->first, it->second});
+
                 ++it;
             }
         }
@@ -210,6 +229,86 @@ public:
             return (this->ptr == rhs.ptr);
         }
     };
+    iterator begin()
+    {
+        iterator it;
+        mnode<key_type, T> *temp = H->parent;
+        if (temp == H)
+        {
+            it.ptr = H;
+            return it;
+        }
+        while (!temp->left->is_nill)
+            temp = temp->left;
+        it.ptr = temp;
+        return it;
+    }
+    iterator end()
+    {
+        iterator it;
+        it.ptr = H;
+        return it;
+    }
+    iterator find(const key_type &key)
+    {
+        iterator r;
+        r.ptr = H->parent; // start from root
+
+        while (r.ptr != H)
+        {
+            if (key == r.ptr->data.first)
+                break;
+            else if (key < r.ptr->data.first)
+                r.ptr = r.ptr->left;
+            else
+                r.ptr = r.ptr->right;
+        }
+
+        return r;
+    }
+
+    int count(const key_type &key)
+    {
+        iterator it;
+        it = find(key);
+        if (it != end())
+        {
+            return 1;
+        }
+        else
+        {
+            return 0;
+        }
+    }
+
+    bool contains(const key_type &key)
+    {
+        return find(key) != end();
+        // find(key) will give if value exist ,and end() will tell it doesnot exist
+    }
+    T &at(const key_type &key)
+    {
+        iterator it;
+        it = find(key);
+        if (it == end())
+            throw("out of range");
+        return it.ptr->data.second;
+    }
+    T &operator[](const key_type &key)
+    {
+        std::pair<iterator, bool> res;
+        res = insert({key, T()});
+        return res.first.ptr->data.second;
+    }
+    bool empty() const
+    {
+        return (H->parent == H);
+    }
+
+    int size() const
+    {
+        return n;
+    }
     class reverse_iterator
     {
     private:
@@ -247,10 +346,12 @@ public:
         {
             return this->ptr->data;
         }
+
         bool operator==(const reverse_iterator &rhs) const
         {
             return (this->ptr == rhs.ptr);
         }
+
         std::pair<key_type, T> *operator->() const
         {
             return &(ptr->data);
@@ -281,36 +382,6 @@ public:
         it.ptr = H;
         return it;
     }
-    iterator begin()
-    {
-        iterator it;
-        mnode<key_type, T> *temp = H->parent;
-        if (temp == H)
-        {
-            it.ptr = H;
-            return it;
-        }
-        while (!temp->left->is_nill)
-            temp = temp->left;
-        it.ptr = temp;
-        return it;
-    }
-    iterator end()
-    {
-        iterator it;
-        it.ptr = H;
-        return it;
-    }
-
-    bool empty() const
-    {
-        return (H->parent == H);
-    }
-
-    int size() const
-    {
-        return n;
-    }
 
     std::pair<iterator, bool> insert(const std::pair<key_type, T> &data)
     {
@@ -321,6 +392,7 @@ public:
         nn->data = data;
         nn->is_nill = false;
         nn->height = 1;
+        // Agar tree empty hai
 
         if (H->parent == H)
         {
@@ -334,6 +406,7 @@ public:
             it.ptr = nn;
             return {it, true};
         }
+        // Tree mein insertion
 
         temp = H->parent;
         while (1)
@@ -362,8 +435,9 @@ public:
             }
             else
             {
+                // duplicate key, update value
 
-                temp->data.second = data.second;
+                temp->data.second = data.second; // duplicate value handling
                 delete nn;
                 iterator it;
                 it.ptr = temp;
@@ -382,17 +456,44 @@ public:
         mnode<key_type, T> *current = nn->parent;
         while (current != H)
         {
-            mnode<key_type, T> *balanced = Balance_Node(current);
+            current->height = Node_Height(current);
+            int bf = Balance_Node(current);
 
-            if (balanced->parent == H)
-                H->parent = balanced;
-            else if (balanced->data.first < balanced->parent->data.first)
-                balanced->parent->left = balanced;
-            else
-                balanced->parent->right = balanced;
+            // LL case
+            if (bf > 1 && Balance_Node(current->left) >= 0)
+                current = LL_Rotation(current);
 
-            current = balanced->parent;
+            // LR case
+            else if (bf > 1 && Balance_Node(current->left) < 0)
+                current = LR_Rotation(current);
+
+            // RR case
+            else if (bf < -1 && Balance_Node(current->right) <= 0)
+                current = RR_Rotation(current);
+
+            // RL case
+            else if (bf < -1 && Balance_Node(current->right) > 0)
+                current = RL_Rotation(current);
+
+            // update root if needed
+            if (current->parent == H)
+                H->parent = current;
+
+            current = current->parent;
         }
+
+        // now to fix minimum and maximum value
+        //  update H->left (min)
+        mnode<key_type, T> *tmp = H->parent;
+        while (!tmp->left->is_nill)
+            tmp = tmp->left;
+        H->left = tmp;
+
+        // update H->right (max)
+        tmp = H->parent;
+        while (!tmp->right->is_nill)
+            tmp = tmp->right;
+        H->right = tmp;
 
         iterator it;
         it.ptr = nn;
@@ -401,133 +502,117 @@ public:
 
     iterator erase(iterator pos)
     {
-        mnode<key_type, T> *to_del, *lc, *rc, *succ, *succ_p, *succ_r;
-        to_del = pos.ptr;
+        if (pos.ptr == H)
+            return end();
 
-        mnode<key_type, T> *start_balance = to_del->parent; // balancing from parent
-        // case 1: Deleteing Leaf node
+        iterator next = pos; // next iterator for returning next
+        ++next;
+
+        mnode<key_type, T> *to_del = pos.ptr;
+
+        // Case 1: leaf
         if (to_del->left == H && to_del->right == H)
         {
-            if (to_del->parent->left == to_del)
+            if (to_del->parent == H)
+            {
+                H->parent = H;
+                H->left = H;
+                H->right = H;
+            }
+            else if (to_del->parent->left == to_del)
             {
                 to_del->parent->left = H;
             }
             else
+            {
                 to_del->parent->right = H;
+            }
             delete to_del;
         }
-        // CASE 2: Node Having one Child->Having left only
+        // Case 2: one child (left)
         else if (to_del->left != H && to_del->right == H)
         {
-            lc = to_del->left;
-            if (to_del->parent->left == to_del)
+            mnode<key_type, T> *lc = to_del->left;
+            if (to_del->parent == H)
+            {
+                H->parent = lc;
+                lc->parent = H;
+            }
+            else if (to_del->parent->left == to_del)
             {
                 to_del->parent->left = lc;
+                lc->parent = to_del->parent;
             }
             else
             {
                 to_del->parent->right = lc;
+                lc->parent = to_del->parent;
             }
-            lc->parent = to_del->parent;
             delete to_del;
         }
-        // CASE 3: Node Having one Child-> Having Right Child
+        // Case 3: one child (right)
         else if (to_del->left == H && to_del->right != H)
         {
-            rc = to_del->right;
-            if (to_del->parent->left == to_del)
+            mnode<key_type, T> *rc = to_del->right;
+            if (to_del->parent == H)
             {
-
+                H->parent = rc;
+                rc->parent = H;
+            }
+            else if (to_del->parent->left == to_del)
+            {
                 to_del->parent->left = rc;
+                rc->parent = to_del->parent;
             }
             else
             {
                 to_del->parent->right = rc;
+                rc->parent = to_del->parent;
             }
-            rc->parent = to_del->parent;
             delete to_del;
         }
-        // CASE 4: NODE HAVING BOTH CHILDS
+        // Case 4: two children
         else
         {
-            succ = successor(to_del);
+            mnode<key_type, T> *succ = successor(to_del); // leftmost of right
             to_del->data = succ->data;
-            succ_p = succ->parent;
-            succ_r = succ->right;
+
+            mnode<key_type, T> *succ_p = succ->parent;
+            mnode<key_type, T> *succ_r = succ->right;
 
             if (succ_p->left == succ)
-                succ_p->left = succ_r;
+                succ_p->left = (succ_r != H ? succ_r : H);
             else
-                succ_p->right = succ_r;
+                succ_p->right = (succ_r != H ? succ_r : H);
+            if (succ_r != H)
+                succ_r->parent = succ_p;
 
             delete succ;
-            mnode<key_type, T> *current = succ_p;
-            while (current != H)
-            {
-                current = Balance_Node(current);
-                if (current->parent == H)
-                    H->parent = current;
-                current = current->parent;
-            }
         }
+
         --n;
-        iterator ret;
-        ret.ptr = H;
-        return ret;
-    }
-
-    iterator find(const key_type &key)
-    {
-        iterator r;
-        r.ptr = H->parent; // start from root
-
-        while (r.ptr != H)
+        // updating  minimum and maximum value again
+        if (H->parent == H)
         {
-            if (key == r.ptr->data.first)
-                break;
-            else if (key < r.ptr->data.first)
-                r.ptr = r.ptr->left;
-            else
-                r.ptr = r.ptr->right;
+            H->left = H;
+            H->right = H;
+            return end();
         }
+        // minimum
+        mnode<key_type, T> *temp = H->parent;
+        while (temp->left != H)
+            temp = temp->left;
+        H->left = temp;
+        // maximum
+        mnode<key_type, T> *temp2 = H->parent;
+        while (temp2->right != H)
+            temp2 = temp2->right;
+        H->right = temp2;
 
-        return r;
-    }
-
-    int count(const key_type &key)
-    {
-        iterator it;
-        it = find(key);
-        if (it != end())
-        {
-            return 1;
-        }
-        else
-        {
-            return 0;
-        }
+        return next;
     }
 
-    bool contains(const key_type &key)
-    {
-        return find(key) != end();
-    }
-    T &at(const key_type &key)
-    {
-        iterator it;
-        it = find(key);
-        if (it == end())
-            throw("out of range");
-        return it.ptr->data.second;
-    }
-    T &operator[](const key_type &key)
-    {
-        std::pair<iterator, bool> res;
-        res = insert({key, T()});
-        return res.first.ptr->data.second;
-    }
-
-    ~map()
+    ~map() // destructor
     {
         clear();
         delete H;

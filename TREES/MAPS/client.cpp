@@ -3,52 +3,33 @@
 
 int main()
 {
-
     map<int, std::string> m;
 
+    // Insert some key-value pairs
     m.insert({1, "Mujeeb"});
     m.insert({3, "Niko"});
     m.insert({2, "Dangling"});
     m.insert({4, "Ptr"});
+
     std::cout << "Size: " << m.size() << std::endl;
 
-    try
-    {
-        std::cout << "Key 3: " << m.at(3) << std::endl;
-        std::cout << "Key 5: " << m.at(5) << std::endl;
-    }
-    catch (const char *msg)
-    {
-        std::cout << msg << std::endl;
-    }
-
-    m[5] = "ALi";
-    std::cout << "Key 5 is  " << m.at(5) << std::endl;
-
+    std::cout << "\nAll elements in map:" << std::endl;
     map<int, std::string>::iterator it;
     it = m.begin();
-
-    while (it != m.end())
-    {
-
-        std::cout << it->first << " => " << it->second << std::endl;
-        ++it;
-    }
-    // value ko erase karna
-    map<int, std::string>::iterator eraseIt;
-    eraseIt = m.find(2);
-    if (eraseIt != m.end())
-    {
-        m.erase(eraseIt);
-    }
-
-    std::cout << "After erasing key 2:" << std::endl;
-    it = m.begin();
     while (it != m.end())
     {
         std::cout << it->first << " => " << it->second << std::endl;
         ++it;
     }
+    m[2] = "Ali"; // inserts key 5 if missing
+    std::cout << "Key 2 is: " << m[2] << std::endl;
+
+    // Check contains / find
+    if (m.contains(3))
+        std::cout << "\nKey 3 exists in the map." << std::endl;
+
+    if (!m.contains(6))
+        std::cout << "Key 6 does NOT exist in the map." << std::endl;
 
     return 0;
 }

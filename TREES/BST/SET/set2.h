@@ -105,13 +105,29 @@ private:
         ptr_l->right = ptr;
         ptr->left = ptr_left_r;
         ptr->height = Node_Height(ptr);
-        ptr->height = Node_Height(ptr_l);
+        ptr_l->height = Node_Height(ptr_l);
 
         if (H->parent == ptr)
         {
             H->parent = ptr_l;
         }
         return ptr_l;
+    }
+    tnode<key_type> *RR_Rotation(tnode<key_type> *ptr)
+    {
+        tnode<key_type> *ptr_r = ptr->right;
+        tnode<key_type> *ptr_rl = ptr_r->left;
+
+        ptr_r->left = ptr;
+        ptr->right = ptr_rl;
+        ptr->height = Node_Height(ptr);
+        ptr_r->height = Node_Height(ptr_r);
+
+        if (H->parent == ptr)
+        {
+            H->parent = ptr_r;
+        }
+        return ptr_r;
     }
     tnode<key_type> *LR_Rotation(tnode<key_type> *ptr)
     {
@@ -334,7 +350,6 @@ public:
         if (key > H->right->key)
             H->right = nn;
 
-        // **AVL balancing**: traverse up from parent
         temp = nn->parent;
         while (temp != H)
         {
