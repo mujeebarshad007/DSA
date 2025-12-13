@@ -156,7 +156,7 @@ public:
         it = other.begin();
         while (it != other.end())
         {
-            insert(*it);
+            insert({it->first, it->second});
             ++it;
         }
     }
