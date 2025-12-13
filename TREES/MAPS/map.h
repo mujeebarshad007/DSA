@@ -60,12 +60,17 @@ private:
     // LL Rotation
     mnode<key_type, T> *LL_Rotation(mnode<key_type, T> *ptr)
     {
-        mnode<key_type, T> *ptr_l = ptr->left;         // left child
-        mnode<key_type, T> *ptr_left_r = ptr_l->right; // left child's right
+        mnode<key_type, T> *ptr_l = ptr->left;
+        mnode<key_type, T> *ptr_left_r = ptr_l->right;
 
-        ptr_l->right = ptr;     // left child becomes new root
-        ptr->left = ptr_left_r; // attach subtree
+        ptr_l->right = ptr;
+        ptr->left = ptr_left_r;
 
+        // Update parent pointers
+        ptr_l->parent = ptr->parent;
+        ptr->parent = ptr_l;
+        if (ptr_left_r != H)
+            ptr_left_r->parent = ptr;
         // update heights
         ptr->height = Node_Height(ptr);
         ptr_l->height = Node_Height(ptr_l);
@@ -80,12 +85,17 @@ private:
     // RR Rotation (Right-Right)
     mnode<key_type, T> *RR_Rotation(mnode<key_type, T> *ptr)
     {
-        mnode<key_type, T> *ptr_r = ptr->right;        // right child
-        mnode<key_type, T> *ptr_right_l = ptr_r->left; // right child's left
+        mnode<key_type, T> *ptr_r = ptr->right;
+        mnode<key_type, T> *ptr_right_l = ptr_r->left;
 
-        ptr_r->left = ptr;        // right child becomes new root of this subtree
-        ptr->right = ptr_right_l; // attach subtree
+        ptr_r->left = ptr;
+        ptr->right = ptr_right_l;
 
+        // Update parent pointers
+        ptr_r->parent = ptr->parent;
+        ptr->parent = ptr_r;
+        if (ptr->right_l != H)
+            ptr->right_l->parent = ptr;
         // update heights
         ptr->height = Node_Height(ptr);
         ptr_r->height = Node_Height(ptr_r);
@@ -161,7 +171,6 @@ public:
             while (it != other.end())
             {
                 insert({it->first, it->second});
-
                 ++it;
             }
         }
