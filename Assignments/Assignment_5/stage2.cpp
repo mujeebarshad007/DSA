@@ -13,7 +13,6 @@ int main(int argc, char *argv[])
         std::cout << "Enter the file name: ";
         std::cin >> filename;
     }
-
     std::ifstream stopwords_file("stopwords.txt");
     if (!stopwords_file)
     {
