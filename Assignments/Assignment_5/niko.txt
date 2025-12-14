@@ -1,4 +1,6 @@
-Science is amazing. Science is fun! The world of science is full of discoveries.
-Learning science and technology helps us understand the world better.
-Science, technology, and mathematics are the keys to progress.
-
+My name is Niko. I love coding, but DSA makes me question my life choices.  
+Everyone says DSA is fun, but sometimes it feels like an endless maze.  
+Cool, right? You write one function, and the next day, you forget why you even wrote it.  
+But hey, mastering DSA is the ultimate flex in coding world.  
+Some people think recursion is magical, others think it's just a cruel trick.  
+Anyway, I try, I fail, I debug, and I repeat. Such is the thrilling life of a programmer.  

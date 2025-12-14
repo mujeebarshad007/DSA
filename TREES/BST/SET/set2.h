@@ -49,10 +49,11 @@ private:
         return temp;
     }
 
-    int Node_Height(tnode<key_type> *ptr)
+    // AVL BALANCING FUNCTIONS
+    int Node_Height(mnode<key_type, T> *ptr) // making it to just return node height
     {
         int hl, hr;
-        if (ptr && ptr->left)
+        if (ptr && ptr->left) // means k if node exists && node ka left exist
         {
             hl = ptr->left->height;
         }
@@ -71,11 +72,12 @@ private:
 
         if (hl > hr)
         {
-            return hl + 1;
+            return hl + 1; // adding 1 because always height will be +1
         }
         return hr + 1;
     }
-    int Balance_Factor(tnode<key_type> *ptr)
+
+    int Balance_Node(mnode<key_type, T> *ptr)
     {
         int hl, hr;
         if (ptr && ptr->left)
@@ -95,51 +97,160 @@ private:
             hr = 0;
         }
 
-        return hl - hr;
+        return hl - hr; // returning height difference for balancing
     }
-    tnode<key_type> *LL_Rotation(tnode<key_type> *ptr)
+
+    // LL Rotation
+    mnode<key_type, T> *LL_Rotation(mnode<key_type, T> *ptr)
     {
-        tnode<key_type> *ptr_l = ptr->left;
-        tnode<key_type> *ptr_left_r = ptr_l->right;
+        mnode<key_type, T> *ptr_l = ptr->left;
+        mnode<key_type, T> *ptr_left_r = ptr_l->right;
 
         ptr_l->right = ptr;
         ptr->left = ptr_left_r;
+
+        // Update parent pointers
+        ptr_l->parent = ptr->parent;
+        ptr->parent = ptr_l;
+        if (ptr_left_r != H)
+            ptr_left_r->parent = ptr;
+
+        // updating ptr->parents children
+        if (ptr_l->parent != H)
+        {
+            if (ptr_l->parent->left == ptr)
+                ptr_l->parent->left = ptr_l;
+            else
+                ptr_l->parent->right = ptr_l;
+        }
+        else
+            H->parent = ptr_l; // make ptr_r root if ptr was root
+
+        // update heights
         ptr->height = Node_Height(ptr);
         ptr_l->height = Node_Height(ptr_l);
 
-        if (H->parent == ptr)
-        {
-            H->parent = ptr_l;
-        }
         return ptr_l;
     }
-    tnode<key_type> *RR_Rotation(tnode<key_type> *ptr)
+
+    // RR Rotation (Right-Right)
+    mnode<key_type, T> *RR_Rotation(mnode<key_type, T> *ptr)
     {
-        tnode<key_type> *ptr_r = ptr->right;
-        tnode<key_type> *ptr_rl = ptr_r->left;
+        mnode<key_type, T> *ptr_r = ptr->right;
+        mnode<key_type, T> *ptr_right_l = ptr_r->left;
 
         ptr_r->left = ptr;
-        ptr->right = ptr_rl;
+        ptr->right = ptr_right_l;
+
+        // Update parent pointers
+        ptr_r->parent = ptr->parent;
+        ptr->parent = ptr_r;
+        if (ptr_right_l != H)
+            ptr_right_l->parent = ptr;
+
+        // updating ptr->parents children
+        if (ptr_r->parent != H)
+        {
+            if (ptr_r->parent->left == ptr)
+                ptr_r->parent->left = ptr_r;
+            else
+                ptr_r->parent->right = ptr_r;
+        }
+        else
+            H->parent = ptr_r; // make ptr_r root if ptr was root
+
+        // update heights
         ptr->height = Node_Height(ptr);
         ptr_r->height = Node_Height(ptr_r);
 
-        if (H->parent == ptr)
-        {
-            H->parent = ptr_r;
-        }
         return ptr_r;
     }
-    tnode<key_type> *LR_Rotation(tnode<key_type> *ptr)
+
+    // LR Rotation (Left-Right)
+    mnode<key_type, T> *LR_Rotation(mnode<key_type, T> *ptr)
     {
-        return ptr = NULL;
+
+        mnode<key_type, T> *ptr_l;
+        mnode<key_type, T> *ptr_l_r;
+
+        ptr_l = ptr->left;
+        ptr_l_r = ptr_l->right;
+
+        // rotation performing and updating parent of childs of third node
+        ptr_l->right = ptr_l_r->left;
+        if (ptr_l_r->left != H)
+            ptr_l_r->left->parent = ptr_l;
+        ptr->left = ptr_l_r->right;
+        if (ptr_l_r->right != H)
+            ptr_l_r->right->parent = ptr;
+
+        // main rotation
+        ptr_l_r->left = ptr_l;
+        ptr_l_r->right = ptr;
+
+        // updating parents
+        ptr_l_r->parent = ptr->parent;
+        ptr_l->parent = ptr_l_r;
+        ptr->parent = ptr_l_r;
+
+        // updating ptr->parents children
+        if (ptr_l_r->parent != H)
+        {
+            if (ptr_l_r->parent->left == ptr)
+                ptr_l_r->parent->left = ptr_l_r;
+            else
+                ptr_l_r->parent->right = ptr_l_r;
+        }
+        else
+            H->parent = ptr_l_r; // make ptr_l_r root if ptr was root
+
+        // Updating heights again
+        ptr_l->height = Node_Height(ptr_l);
+        ptr->height = Node_Height(ptr);
+        ptr_l_r->height = Node_Height(ptr_l_r);
+
+        return ptr_l_r;
     }
-    tnode<key_type> *RR_Rotation(tnode<key_type> *ptr)
+
+    // RL Rotation (Right-Left)
+    mnode<key_type, T> *RL_Rotation(mnode<key_type, T> *ptr)
     {
-        return ptr = NULL;
-    }
-    tnode<key_type> *RL_Rotation(tnode<key_type> *ptr)
-    {
-        return ptr = NULL;
+        mnode<key_type, T> *ptr_r = ptr->right;
+        mnode<key_type, T> *ptr_r_l = ptr_r->left;
+
+        // move subtrees
+        ptr_r->left = ptr_r_l->right;
+        if (ptr_r_l->right != H)
+            ptr_r_l->right->parent = ptr_r;
+
+        ptr->right = ptr_r_l->left;
+        if (ptr_r_l->left != H)
+            ptr_r_l->left->parent = ptr;
+
+        // rotation
+        ptr_r_l->left = ptr;
+        ptr_r_l->right = ptr_r;
+
+        // updating parents
+        ptr_r_l->parent = ptr->parent;
+        ptr->parent = ptr_r_l;
+        ptr_r->parent = ptr_r_l;
+        // updating ptr->parents children
+        if (ptr_r_l->parent != H)
+        {
+            if (ptr_r_l->parent->left == ptr)
+                ptr_r_l->parent->left = ptr_r_l;
+            else
+                ptr_r_l->parent->right = ptr_r_l;
+        }
+        else
+            H->parent = ptr_r_l; // make ptr_r_l root if ptr was root
+
+        ptr->height = Node_Height(ptr);
+        ptr_r->height = Node_Height(ptr_r);
+        ptr_r_l->height = Node_Height(ptr_r_l);
+
+        return ptr_r_l;
     }
 
 public:
@@ -350,6 +461,7 @@ public:
         if (key > H->right->key)
             H->right = nn;
 
+        ++n;
         temp = nn->parent;
         while (temp != H)
         {
@@ -376,7 +488,24 @@ public:
             temp = temp->parent; // go up to check for other imbalances
         }
 
-        ++n;
+        // updating  minimum and maximum value again
+        if (H->parent == H)
+        {
+            H->left = H;
+            H->right = H;
+            return end();
+        }
+        // minimum
+        mnode<key_type, T> *temp = H->parent;
+        while (temp->left != H)
+            temp = temp->left;
+        H->left = temp;
+        // maximum
+        mnode<key_type, T> *temp2 = H->parent;
+        while (temp2->right != H)
+            temp2 = temp2->right;
+        H->right = temp2;
+
         iterator it;
         it.ptr = nn;
         return {it, true};
@@ -407,8 +536,10 @@ public:
     }
     iterator erase(iterator pos) // pahle void se kia tha
     {
-        iterator ret;
         tnode<key_type> *to_del, *lc, *rc, *succ, *succ_p, *succ_r;
+        tnode<key_type> *next;
+        next = pos.ptr;
+        ++next;
         ret.ptr = successor(to_del);
         to_del = pos.ptr;
         // case 1: Delteing Leaf node
@@ -506,6 +637,48 @@ public:
             }
         }
         --n;
-        return ret;
+        // AVL BALANCING OF ERASE
+        while (rebalance != H)
+        {
+            rebalance->height = Node_Height(rebalance);
+            int bf = Balance_Node(rebalance);
+
+            if (bf > 1)
+            {
+                if (Balance_Node(rebalance->left) >= 0)
+                    rebalance = LL_Rotation(rebalance);
+                else
+                    rebalance = LR_Rotation(rebalance);
+            }
+            else if (bf < -1)
+            {
+                if (Balance_Node(rebalance->right) <= 0)
+                    rebalance = RR_Rotation(rebalance);
+                else
+                    rebalance = RL_Rotation(rebalance);
+            }
+
+            rebalance = rebalance->parent;
+        }
+
+        // updating  minimum and maximum value again
+        if (H->parent == H)
+        {
+            H->left = H;
+            H->right = H;
+            return end();
+        }
+        // minimum
+        mnode<key_type, T> *temp = H->parent;
+        while (temp->left != H)
+            temp = temp->left;
+        H->left = temp;
+        // maximum
+        mnode<key_type, T> *temp2 = H->parent;
+        while (temp2->right != H)
+            temp2 = temp2->right;
+        H->right = temp2;
+
+        return next;
     }
 };
