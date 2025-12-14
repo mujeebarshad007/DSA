@@ -71,6 +71,8 @@ private:
         ptr->parent = ptr_l;
         if (ptr_left_r != H)
             ptr_left_r->parent = ptr;
+
+        // updating ptr->parents children
         if (ptr_l->parent != H)
         {
             if (ptr_l->parent->left == ptr)
@@ -79,7 +81,7 @@ private:
                 ptr_l->parent->right = ptr_l;
         }
         else
-            H->parent = ptr_l;
+            H->parent = ptr_l; // make ptr_r root if ptr was root
 
         // update heights
         ptr->height = Node_Height(ptr);
@@ -102,6 +104,8 @@ private:
         ptr->parent = ptr_r;
         if (ptr_right_l != H)
             ptr_right_l->parent = ptr;
+
+        // updating ptr->parents children
         if (ptr_r->parent != H)
         {
             if (ptr_r->parent->left == ptr)
@@ -110,7 +114,8 @@ private:
                 ptr_r->parent->right = ptr_r;
         }
         else
-            H->parent = ptr_r;
+            H->parent = ptr_r; // make ptr_r root if ptr was root
+
         // update heights
         ptr->height = Node_Height(ptr);
         ptr_r->height = Node_Height(ptr_r);
@@ -145,6 +150,7 @@ private:
         ptr_l->parent = ptr_l_r;
         ptr->parent = ptr_l_r;
 
+        // updating ptr->parents children
         if (ptr_l_r->parent != H)
         {
             if (ptr_l_r->parent->left == ptr)
@@ -153,7 +159,7 @@ private:
                 ptr_l_r->parent->right = ptr_l_r;
         }
         else
-            H->parent = ptr_l_r; // make ptr_l_r root node
+            H->parent = ptr_l_r; // make ptr_l_r root if ptr was root
 
         // Updating heights again
         ptr_l->height = Node_Height(ptr_l);
@@ -178,15 +184,15 @@ private:
         if (ptr_r_l->left != H)
             ptr_r_l->left->parent = ptr;
 
-        // main rotation
+        // rotation
         ptr_r_l->left = ptr;
         ptr_r_l->right = ptr_r;
 
-        // fix parents
+        // updating parents
         ptr_r_l->parent = ptr->parent;
         ptr->parent = ptr_r_l;
         ptr_r->parent = ptr_r_l;
-
+        // updating ptr->parents children
         if (ptr_r_l->parent != H)
         {
             if (ptr_r_l->parent->left == ptr)
@@ -195,7 +201,7 @@ private:
                 ptr_r_l->parent->right = ptr_r_l;
         }
         else
-            H->parent = ptr_r_l;
+            H->parent = ptr_r_l; // make ptr_r_l root if ptr was root
 
         ptr->height = Node_Height(ptr);
         ptr_r->height = Node_Height(ptr_r);
