@@ -116,16 +116,19 @@ private:
         ptr_l = ptr->left;
         ptr_l_r = ptr_l->right;
 
+        // rotation performing
         ptr_l->right = ptr_l_r->left;
         ptr->left = ptr_l_r->right;
 
         ptr_l_r->left = ptr_l;
         ptr_l_r->right = ptr;
 
+        // Updating heights again
         ptr->height = Node_Height(ptr);
         ptr_l->height = Node_Height(ptr_l);
         ptr_l_r->height = Node_Height(ptr_l_r);
 
+        // if balancing node was root
         if (H->parent == ptr)
         {
             H->parent = ptr_l_r
@@ -136,27 +139,25 @@ private:
     // RL Rotation (Right-Left)
     mnode<key_type, T> *RL_Rotation(mnode<key_type, T> *ptr)
     {
-        mnode<key_type, T> *ptr_l;
-        mnode<key_type, T> *ptr_l_r;
+        mnode<key_type, T> *ptr_r = ptr->right;
+        mnode<key_type, T> *ptr_r_l = ptr_r->left;
 
-        ptr_l = ptr->left;
-        ptr_l_r = ptr_l->right;
+        // performinh rotations
+        ptr_r->left = ptr_r_l->right;
+        ptr->right = ptr_r_l->left;
 
-        ptr_l->right = ptr_l_r->left;
-        ptr->left = ptr_l_r->right;
+        ptr_r_l->right = ptr_r;
+        ptr_r_l->left = ptr;
 
-        ptr_l_r->left = ptr_l;
-        ptr_l_r->right = ptr;
-
+        // update heights
         ptr->height = Node_Height(ptr);
-        ptr_l->height = Node_Height(ptr_l);
-        ptr_l_r->height = Node_Height(ptr_l_r);
+        ptr_r->height = Node_Height(ptr_r);
+        ptr_r_l->height = Node_Height(ptr_r_l);
 
         if (H->parent == ptr)
-        {
-            H->parent = ptr_l_r
-        }
-        return ptr_l_r;
+            H->parent = ptr_r_l;
+
+        return ptr_r_l;
     }
 
     mnode<key_type, T> *successor(mnode<key_type, T> *ptr)
