@@ -71,13 +71,19 @@ private:
         ptr->parent = ptr_l;
         if (ptr_left_r != H)
             ptr_left_r->parent = ptr;
+        if (ptr_l->parent != H)
+        {
+            if (ptr_l->parent->left == ptr)
+                ptr_l->parent->left = ptr_l;
+            else
+                ptr_l->parent->right = ptr_l;
+        }
+        else
+            H->parent = ptr_l;
+
         // update heights
         ptr->height = Node_Height(ptr);
         ptr_l->height = Node_Height(ptr_l);
-
-        // if root was ptr, update root
-        if (H->parent == ptr)
-            H->parent = ptr_l;
 
         return ptr_l;
     }
@@ -94,14 +100,20 @@ private:
         // Update parent pointers
         ptr_r->parent = ptr->parent;
         ptr->parent = ptr_r;
-        if (ptr->right_l != H)
-            ptr->right_l->parent = ptr;
+        if (ptr_right_l != H)
+            ptr_right_l->parent = ptr;
+        if (ptr_r->parent != H)
+        {
+            if (ptr_r->parent->left == ptr)
+                ptr_r->parent->left = ptr_r;
+            else
+                ptr_r->parent->right = ptr_r;
+        }
+        else
+            H->parent = ptr_r;
         // update heights
         ptr->height = Node_Height(ptr);
         ptr_r->height = Node_Height(ptr_r);
-
-        if (H->parent == ptr)
-            H->parent = ptr_r;
 
         return ptr_r;
     }
@@ -116,23 +128,38 @@ private:
         ptr_l = ptr->left;
         ptr_l_r = ptr_l->right;
 
-        // rotation performing
+        // rotation performing and updating parent of childs of third node
         ptr_l->right = ptr_l_r->left;
+        if (ptr_l_r->left != H)
+            ptr_l_r->left->parent = ptr_l;
         ptr->left = ptr_l_r->right;
+        if (ptr_l_r->right != H)
+            ptr_l_r->right->parent = ptr;
 
+        // main rotation
         ptr_l_r->left = ptr_l;
         ptr_l_r->right = ptr;
 
+        // updating parents
+        ptr_l_r->parent = ptr->parent;
+        ptr_l->parent = ptr_l_r;
+        ptr->parent = ptr_l_r;
+
+        if (ptr_l_r->parent != H)
+        {
+            if (ptr_l_r->parent->left == ptr)
+                ptr_l_r->parent->left = ptr_l_r;
+            else
+                ptr_l_r->parent->right = ptr_l_r;
+        }
+        else
+            H->parent = ptr_l_r; // make ptr_l_r root node
+
         // Updating heights again
-        ptr->height = Node_Height(ptr);
         ptr_l->height = Node_Height(ptr_l);
+        ptr->height = Node_Height(ptr);
         ptr_l_r->height = Node_Height(ptr_l_r);
 
-        // if balancing node was root
-        if (H->parent == ptr)
-        {
-            H->parent = ptr_l_r
-        }
         return ptr_l_r;
     }
 
@@ -142,20 +169,37 @@ private:
         mnode<key_type, T> *ptr_r = ptr->right;
         mnode<key_type, T> *ptr_r_l = ptr_r->left;
 
-        // performinh rotations
+        // move subtrees
         ptr_r->left = ptr_r_l->right;
+        if (ptr_r_l->right != H)
+            ptr_r_l->right->parent = ptr_r;
+
         ptr->right = ptr_r_l->left;
+        if (ptr_r_l->left != H)
+            ptr_r_l->left->parent = ptr;
 
-        ptr_r_l->right = ptr_r;
+        // main rotation
         ptr_r_l->left = ptr;
+        ptr_r_l->right = ptr_r;
 
-        // update heights
+        // fix parents
+        ptr_r_l->parent = ptr->parent;
+        ptr->parent = ptr_r_l;
+        ptr_r->parent = ptr_r_l;
+
+        if (ptr_r_l->parent != H)
+        {
+            if (ptr_r_l->parent->left == ptr)
+                ptr_r_l->parent->left = ptr_r_l;
+            else
+                ptr_r_l->parent->right = ptr_r_l;
+        }
+        else
+            H->parent = ptr_r_l;
+
         ptr->height = Node_Height(ptr);
         ptr_r->height = Node_Height(ptr_r);
         ptr_r_l->height = Node_Height(ptr_r_l);
-
-        if (H->parent == ptr)
-            H->parent = ptr_r_l;
 
         return ptr_r_l;
     }
