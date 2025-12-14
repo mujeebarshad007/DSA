@@ -109,21 +109,54 @@ private:
     // LR Rotation (Left-Right)
     mnode<key_type, T> *LR_Rotation(mnode<key_type, T> *ptr)
     {
-        // first rotate left child with RR rotation
-        ptr->left = RR_Rotation(ptr->left);
 
-        // then do LL rotation on ptr
-        return LL_Rotation(ptr);
+        mnode<key_type, T> *ptr_l;
+        mnode<key_type, T> *ptr_l_r;
+
+        ptr_l = ptr->left;
+        ptr_l_r = ptr_l->right;
+
+        ptr_l->right = ptr_l_r->left;
+        ptr->left = ptr_l_r->right;
+
+        ptr_l_r->left = ptr_l;
+        ptr_l_r->right = ptr;
+
+        ptr->height = Node_Height(ptr);
+        ptr_l->height = Node_Height(ptr_l);
+        ptr_l_r->height = Node_Height(ptr_l_r);
+
+        if (H->parent == ptr)
+        {
+            H->parent = ptr_l_r
+        }
+        return ptr_l_r;
     }
 
     // RL Rotation (Right-Left)
     mnode<key_type, T> *RL_Rotation(mnode<key_type, T> *ptr)
     {
-        // first rotate right child with LL rotation
-        ptr->right = LL_Rotation(ptr->right);
+        mnode<key_type, T> *ptr_l;
+        mnode<key_type, T> *ptr_l_r;
 
-        // then do RR rotation on ptr
-        return RR_Rotation(ptr);
+        ptr_l = ptr->left;
+        ptr_l_r = ptr_l->right;
+
+        ptr_l->right = ptr_l_r->left;
+        ptr->left = ptr_l_r->right;
+
+        ptr_l_r->left = ptr_l;
+        ptr_l_r->right = ptr;
+
+        ptr->height = Node_Height(ptr);
+        ptr_l->height = Node_Height(ptr_l);
+        ptr_l_r->height = Node_Height(ptr_l_r);
+
+        if (H->parent == ptr)
+        {
+            H->parent = ptr_l_r
+        }
+        return ptr_l_r;
     }
 
     mnode<key_type, T> *successor(mnode<key_type, T> *ptr)
