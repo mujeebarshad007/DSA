@@ -293,7 +293,12 @@ public:
             }
             return *this;
         }
-
+        iterator operator++(int)
+        {
+            iterator temp = *this;
+            ++(*this);
+            return temp;
+        }
         key_type &operator*() const
         {
             return this->ptr->key;

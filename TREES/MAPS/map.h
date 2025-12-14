@@ -150,7 +150,7 @@ private:
         ptr_l->parent = ptr_l_r;
         ptr->parent = ptr_l_r;
 
-        // updating ptr->parents children
+        // updating ptr->parents k children
         if (ptr_l_r->parent != H)
         {
             if (ptr_l_r->parent->left == ptr)
@@ -232,7 +232,7 @@ public:
 
     map(const map &other)
     {
-        H = new mnode<key_type, T>;
+        this->H = new mnode<key_type, T>;
         H->left = H->right = H->parent = H;
         H->is_nill = true;
         n = 0;
@@ -249,7 +249,7 @@ public:
     {
         if (this != &other)
         {
-            clear();
+            this->clear();
             typename map<key_type, T>::iterator it;
             it = other.begin();
             while (it != other.end())
@@ -303,7 +303,12 @@ public:
             }
             return *this;
         }
-
+        iterator operator++(int)
+        {
+            iterator temp = *this;
+            ++(*this);
+            return temp;
+        }
         std::pair<key_type, T> &operator*() const
         {
             return this->ptr->data;
@@ -346,7 +351,6 @@ public:
     {
         iterator r;
         r.ptr = H->parent; // start from root
-
         while (r.ptr != H)
         {
             if (key == r.ptr->data.first)
