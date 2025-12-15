@@ -316,7 +316,7 @@ public:
 
         std::pair<key_type, T> *operator->() const
         {
-            return &(ptr->l);
+            return &(ptr->data);
         }
         bool operator!=(const iterator &rhs) const
         {
@@ -543,7 +543,7 @@ public:
             {
                 // duplicate key, update value
 
-                temp->data.second = data.second; // duplicate value handling
+                temp->data.second = data.second;
                 delete nn;
                 iterator it;
                 it.ptr = temp;
@@ -569,15 +569,15 @@ public:
             if (bf > 1 && Balance_Node(current->left) >= 0)
                 current = LL_Rotation(current);
 
-            // LR case
+            // LR
             else if (bf > 1 && Balance_Node(current->left) < 0)
                 current = LR_Rotation(current);
 
-            // RR case
+            // RR
             else if (bf < -1 && Balance_Node(current->right) <= 0)
                 current = RR_Rotation(current);
 
-            // RL case
+            // RL
             else if (bf < -1 && Balance_Node(current->right) > 0)
                 current = RL_Rotation(current);
 
