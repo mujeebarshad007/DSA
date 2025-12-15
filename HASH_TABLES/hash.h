@@ -114,19 +114,20 @@ public:
     }
     iterator erase(iterator pos)
     {
-        iterator it = pos;
-        iterator it2;
-        it2 = pos;
-        it2++;
-        table[it.idx].erase(it.it_list);
-        return it2;
+        iterator next = pos;
+        ++next;
+        table[pos.idx].erase(pos.it_list);
+        --n;
+        return next;
     }
+
     std::pair<iterator, bool> insert(const std::pair<const K, T> &p)
     {
 
         int h = hash(p.first);
         typename std::list<std::pair<const K, T>>::iterator it_list;
         it_list = find(table[h], p.first);
+
         iterator it;
         it.um = this;
         it.idx = h;
@@ -134,12 +135,14 @@ public:
         {
             table[h].push_back(p);
             ++n;
+
+            it.it_list = --table[h].end();
             return {it, true};
         }
         else
         {
             it.it_list = it_list;
-            return {it, true};
+            return {it, false};
         }
     }
     void clear()

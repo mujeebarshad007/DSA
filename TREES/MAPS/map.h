@@ -316,7 +316,7 @@ public:
 
         std::pair<key_type, T> *operator->() const
         {
-            return &(ptr->data);
+            return &(ptr->l);
         }
         bool operator!=(const iterator &rhs) const
         {
@@ -330,7 +330,8 @@ public:
     iterator begin()
     {
         iterator it;
-        mnode<key_type, T> *temp = H->parent;
+        S
+            mnode<key_type, T> *temp = H->parent;
         if (temp == H)
         {
             it.ptr = H;
@@ -564,7 +565,7 @@ public:
             current->height = Node_Height(current);
             int bf = Balance_Node(current);
 
-            // LL case
+            // LL
             if (bf > 1 && Balance_Node(current->left) >= 0)
                 current = LL_Rotation(current);
 

@@ -2,9 +2,7 @@
 #include <fstream>
 #include <string>
 #include <curl/curl.h>
-
 using namespace std;
-
 size_t writeCallback(void *contents, size_t size, size_t nmemb, string *output)
 {
     int total = size * nmemb;
