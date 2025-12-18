@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>NIKO'S ATM - Fixed Voice & Styles</title>
+        <style>
+        /* [Standard CSS Setup] */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .atm-machine {
+            width: 100%;
+            max-width: 900px; 
+            background: #2c3e50;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+            transition: all 0.3s ease;
+            border: 4px solid #1a252f;
+            position: relative;
+        }
+        .atm-header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            padding: 20px;
+            text-align: center;
+            color: white;
+            border-bottom: 4px solid #1a252f;
+        }
+        .atm-header h1 { font-size: 28px; font-weight: 600; letter-spacing: 2px; }
+        .atm-screen {
+            background: #34495e;
+            min-height: 550px;
+            padding: 40px;
+            position: relative;
+        }
+        .screen {
+            display: none;
+            animation: fadeIn 0.3s ease-in;
+            height: 100%;
+            width: 100%;
+        }
+        .screen.active { display: block; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .content-wrapper { max-width: 500px; margin: 0 auto; width: 100%; }
+        .btn {
+            width: 100%; padding: 18px; margin: 12px 0; border: none; border-radius: 8px;
+            font-size: 18px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;
+            text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        .btn-primary { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4); }
+        .btn-secondary { background: #95a5a6; color: #2c3e50; font-weight: bold; }
+        .btn-secondary:hover { background: #bdc3c7; }
+        .btn-success { background: #27ae60; color: white; }
+        .btn-success:hover { background: #229954; }
+        .btn-danger { background: #e74c3c; color: white; }
+        .btn-danger:hover { background: #c0392b; }
+        .btn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .screen-title { color: #ecf0f1; font-size: 32px; margin-bottom: 30px; text-align: center; font-weight: 600; text-shadow: 0 2px 4px rgba(0,0,0,0.3); }
+        .screen-text { color: #bdc3c7; font-size: 18px; margin-bottom: 25px; text-align: center; line-height: 1.6; }
+        .balance-display {
+            background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
+            color: white; padding: 30px; border-radius: 12px; text-align: center; margin: 20px auto; max-width: 500px;
+        }
+        .balance-amount { font-size: 42px; font-weight: bold; margin-top: 10px; }
+        .input-field {
+            width: 100%; padding: 15px; border: 2px solid #7f8c8d; border-radius: 8px;
+            font-size: 24px; background: #2c3e50; color: #ecf0f1; text-align: center; margin-bottom: 20px;
+        }
+        .pin-display {
+            background: #2c3e50; border: 2px solid #7f8c8d; border-radius: 8px; padding: 20px;
+            text-align: center; font-size: 40px; letter-spacing: 15px; color: #ecf0f1;
+            margin: 20px auto; max-width: 400px; min-height: 80px;
+        }
+        .keypad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin: 20px auto; max-width: 400px; }
+        .keypad-btn {
+            padding: 20px; font-size: 24px; font-weight: bold; border: none; border-radius: 8px;
+            background: #2c3e50; color: #ecf0f1; cursor: pointer; transition: all 0.2s;
+            box-shadow: 0 4px 0 #1a252f; border: 1px solid #7f8c8d;
+        }
+        .keypad-btn:hover { background: #4a5f7f; transform: translateY(-2px); }
+        .keypad-btn:active { transform: translateY(2px); box-shadow: none; }
+        
+        /* --- KIDS MODE --- */
+        .kids-mode .atm-screen { background: #34495e; border: 5px solid #f39c12; }
+        .kids-mode .btn { font-size: 22px; padding: 20px; border-radius: 15px; }
+        .kids-mode .screen-title { font-size: 36px; color: #f39c12; text-shadow: 2px 2px #333; }
+        .kids-mode .btn-primary { background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%); }
+        .kids-mode .atm-header { background: linear-gradient(135deg, #f1c40f 0%, #e67e22 100%); }
+
+        /* --- SPECIAL MODE --- */
+        .special-mode .btn { font-size: 28px; padding: 30px; border: 4px solid #fff; background: #000; color: #fff; margin-bottom: 20px; }
+        .special-mode .screen-title { font-size: 42px; font-weight: bold; color: #fff; text-decoration: underline; }
+        .special-mode .screen-text { font-size: 28px; font-weight: 600; color: #ffff00; }
+        .special-mode .atm-screen { background: #000; }
+        .special-mode .keypad-btn { background: #333; color: #fff; border: 2px solid #fff; font-size: 32px; }
+        .special-mode .input-field { font-size: 32px; border-width: 4px; }
+
+        .divider { height: 2px; background: #7f8c8d; margin: 20px auto; max-width: 500px; }
+        .message-box, .success-box { padding: 20px; border-radius: 8px; margin: 20px auto; text-align: center; color: white; max-width: 600px; }
+        .message-box { background: #e74c3c; }
+        .success-box { background: #27ae60; }
+        .receipt {
+            background: white; color: #2c3e50; padding: 30px; border-radius: 8px; margin: 20px auto;
+            font-family: 'Courier New', monospace; box-shadow: 0 5px 15px rgba(0,0,0,0.3); max-width: 400px;
+        }
+        .receipt-line { display: flex; justify-content: space-between; margin: 10px 0; padding: 5px 0; border-bottom: 1px dashed #bdc3c7; }
+        .hidden { display: none !important; }
+
+        /* --- VOICE INDICATOR (Visible whenever space is pressed) --- */
+        #voiceIndicator {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: #e74c3c;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            box-shadow: 0 0 20px rgba(231, 76, 60, 0.6);
+            display: none; /* Hidden by default */
+            z-index: 100;
+            animation: pulse 1.5s infinite;
+        }
+        
+        #globalInstruction {
+            position: absolute;
+            bottom: 10px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            color: #bdc3c7;
+            font-size: 14px;
+            opacity: 0.7;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.2); opacity: 0.8; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+    </style>
+    </head>
+    <body>
+        <div class="atm-machine" id="atmMachine">
+            <div id="voiceIndicator">🎤</div>
+
+            <div class="atm-header">
+                <h1>🏦 NIKO'S ATM</h1>
+            </div>
+
+            <div class="atm-screen" id="atmScreen">
+
+                <div class="screen active" id="welcomeScreen">
+                    <div class="content-wrapper">
+                        <h2 class="screen-title">Welcome to NIKO's ATM</h2>
+                        <p class="screen-text">Please select your preferred
+                            language</p>
+                        <button class="btn btn-primary"
+                            onclick="selectLanguage('english')">🇬🇧
+                            English</button>
+                        <button class="btn btn-primary"
+                            onclick="selectLanguage('urdu')">🇵🇰 اردو
+                            (Urdu)</button>
+                    </div>
+                </div>
+
+                <div class="screen" id="modeScreen">
+                    <div class="content-wrapper">
+                        <h2 class="screen-title" id="modeTitle">Select Mode</h2>
+                        <button class="btn btn-primary"
+                            onclick="selectMode('standard')">👤 <span
+                                id="standardText">Standard Mode</span></button>
+                        <button class="btn btn-primary"
+                            onclick="selectMode('kids')">🎨 <span
+                                id="kidsText">Kids Mode</span></button>
+                        <button class="btn btn-primary"
+                            onclick="selectMode('special')">♿ <span
+                                id="specialText">Special Mode (Reads
+                                Text)</span></button>
+                        <button class="btn btn-secondary"
+                            onclick="goToScreen('welcomeScreen')">←
+                            Back</button>
+                    </div>
+                </div>
+
+                <div class="screen" id="pinScreen">
+                    <h2 class="screen-title" id="pinTitle">Enter Your 4-Digit
+                        PIN</h2>
+                    <div class="pin-display" id="pinDisplay">****</div>
+                    <div class="keypad">
+                        <button class="keypad-btn"
+                            onclick="addPinDigit('1')">1</button>
+                        <button class="keypad-btn"
+                            onclick="addPinDigit('2')">2</button>
+                        <button class="keypad-btn"
+                            onclick="addPinDigit('3')">3</button>
+                        <button class="keypad-btn"
+                            onclick="addPinDigit('4')">4</button>
+                        <button class="keypad-btn"
+                            onclick="addPinDigit('5')">5</button>
+                        <button class="keypad-btn"
+                            onclick="addPinDigit('6')">6</button>
+                        <button class="keypad-btn"
+                            onclick="addPinDigit('7')">7</button>
+                        <button class="keypad-btn"
+                            onclick="addPinDigit('8')">8</button>
+                        <button class="keypad-btn"
+                            onclick="addPinDigit('9')">9</button>
+                        <button class="keypad-btn"
+                            onclick="clearPin()">CLR</button>
+                        <button class="keypad-btn"
+                            onclick="addPinDigit('0')">0</button>
+                        <button class="keypad-btn"
+                            onclick="submitPin()">✓</button>
+                    </div>
+                    <div class="divider"></div>
+                    <div class="content-wrapper">
+                        <p class="screen-text" id="orUseText">Or Use</p>
+                        <button class="btn btn-secondary"
+                            onclick="fingerprintAuth()">👆 <span
+                                id="fingerprintText">Fingerprint
+                                Access</span></button>
+
+                        <button class="btn btn-secondary"
+                            onclick="resetToModeScreen()">← Back</button>
+                    </div>
+                </div>
+
+                <div class="screen" id="mainMenuScreen">
+                    <div class="content-wrapper">
+                        <h2 class="screen-title" id="mainMenuTitle">Main
+                            Menu</h2>
+                        <div class="btn-grid">
+                            <button class="btn btn-primary"
+                                onclick="goToScreen('withdrawScreen')">💵 <span
+                                    id="withdrawText">Withdraw</span></button>
+                            <button class="btn btn-primary"
+                                onclick="goToScreen('depositScreen')">💰 <span
+                                    id="depositText">Deposit</span></button>
+                            <button class="btn btn-primary"
+                                onclick="goToScreen('transferScreen')"
+                                id="transferBtn">🔄 <span
+                                    id="transferText">Transfer</span></button>
+                            <button class="btn btn-primary"
+                                onclick="checkBalance()">📊 <span
+                                    id="balanceText">Balance
+                                    Check</span></button>
+                        </div>
+                        <button class="btn btn-primary"
+                            onclick="goToScreen('otherServicesScreen')"
+                            id="otherServicesBtn">⚙️ <span id="otherText">Other
+                                Services</span></button>
+                        <button class="btn btn-danger" onclick="exitATM()">🚪
+                            <span id="exitText">Exit</span></button>
+                    </div>
+                </div>
+
+                <div class="screen" id="withdrawScreen">
+                    <div class="content-wrapper">
+                        <h2 class="screen-title" id="withdrawAmountTitle">Select
+                            Amount</h2>
+                        <div class="btn-grid">
+                            <button class="btn btn-success"
+                                onclick="selectWithdrawAmount(1000)">1,000</button>
+                            <button class="btn btn-success"
+                                onclick="selectWithdrawAmount(2000)">2,000</button>
+                            <button class="btn btn-success"
+                                onclick="selectWithdrawAmount(3000)">3,000</button>
+                            <button class="btn btn-success"
+                                onclick="selectWithdrawAmount(5000)">5,000</button>
+                        </div>
+                        <button class="btn btn-primary"
+                            onclick="goToScreen('customAmountScreen')">✏️ <span
+                                id="otherAmountText">Other
+                                Amount</span></button>
+                        <button class="btn btn-secondary"
+                            onclick="goToScreen('mainMenuScreen')">←
+                            Back</button>
+                    </div>
+                </div>
+
+                <div class="screen" id="customAmountScreen">
+                    <div class="content-wrapper">
+                        <h2 class="screen-title" id="customAmountTitle">Enter
+                            Amount</h2>
+                        <input type="number" class="input-field"
+                            id="customAmountInput" placeholder="Enter amount">
+                        <button class="btn btn-success"
+                            onclick="confirmCustomAmount()">✓ Continue</button>
+                        <button class="btn btn-secondary"
+                            onclick="goToScreen('withdrawScreen')">←
+                            Back</button>
+                    </div>
+                </div>
+
+                <div class="screen" id="insufficientScreen">
+                    <div class="content-wrapper">
+                        <h2 class="screen-title">⚠️ Insufficient Balance</h2>
+                        <div class="message-box">
+                            <p id="insufficientMessage">You do not have
+                                sufficient balance. Do you want to make another
+                                transaction?</p>
+                        </div>
+                        <button class="btn btn-success"
+                            onclick="goToScreen('withdrawScreen')">✓
+                            Yes</button>
+                        <button class="btn btn-danger"
+                            onclick="goToScreen('mainMenuScreen')">✗ No</button>
+                    </div>
+                </div>
+
+                <div class="screen" id="confirmScreen">
+                    <div class="content-wrapper">
+                        <h2 class="screen-title" id="confirmTitle">Confirm
+                            Transaction</h2>
+                        <p class="screen-text" id="confirmQuestion">Do you want
+                            to proceed?</p>
+                        <div class="balance-display">
+                            <p style="font-size: 18px;">Amount</p>
+                            <p class="balance-amount" id="confirmAmount">Rs.
+                                0</p>
+                        </div>
+                        <button class="btn btn-success"
+                            onclick="proceedTransaction()">✓ Yes,
+                            Proceed</button>
+                        <button class="btn btn-danger"
+                            onclick="cancelTransaction()">✗ No, Cancel</button>
+                    </div>
+                </div>
+
+                <div class="screen" id="receiptScreen">
+                    <div class="content-wrapper">
+                        <h2 class="screen-title" id="receiptTitle">Receipt</h2>
+                        <p class="screen-text" id="receiptQuestion">Do you want
+                            a receipt?</p>
+                        <button class="btn btn-success"
+                            onclick="printReceipt()">✓ Yes</button>
+                        <button class="btn btn-secondary"
+                            onclick="completeWithdraw()">✗ No</button>
+                    </div>
+                </div>
+
+                <div class="screen" id="receiptDisplayScreen">
+                    <div class="content-wrapper">
+                        <h2 class="screen-title">📄 Transaction Receipt</h2>
+                        <div class="receipt" id="receiptContent">
+                            <div
+                                style="text-align: center; font-weight: bold; margin-bottom: 15px;">NIKO'S
+                                ATM</div>
+                            <div class="receipt-line"><span>Date:</span> <span
+                                    id="receiptDate"></span></div>
+                            <div class="receipt-line"><span>Transaction:</span>
+                                <span id="receiptType"></span></div>
+                            <div class="receipt-line"><span>Amount:</span> <span
+                                    id="receiptAmount"></span></div>
+                            <div class="receipt-line"><span>Balance:</span>
+                                <span id="receiptBalance"></span></div>
+                            <div
+                                style="text-align: center; margin-top: 15px; font-size: 12px;">Thank
+                                you!</div>
+                        </div>
+                        <button class="btn btn-primary"
+                            onclick="completeWithdraw()">Continue</button>
+                    </div>
+                </div>
+
+                <div class="screen" id="takeCashScreen">
+                    <div class="content-wrapper">
+                        <h2 class="screen-title">✅ Transaction Complete</h2>
+                        <div class="success-box">
+                            <p style="font-size: 40px;">💵</p>
+                            <p id="takeCashMessage"
+                                style="font-size: 20px; margin-top: 10px;">Please
+                                take your cash</p>
+                        </div>
+                        <button class="btn btn-primary"
+                            onclick="goToScreen('mainMenuScreen')">🏠 Main
+                            Menu</button>
+                        <button class="btn btn-danger" onclick="exitATM()">🚪
+                            Exit</button>
+                    </div>
+                </div>
+
+                <div class="screen" id="balanceScreen">
+                    <div class="content-wrapper">
+                        <h2 class="screen-title" id="balanceCheckTitle">Your
+                            Balance</h2>
+                        <div class="balance-display">
+                            <p style="font-size: 18px;">Current Balance</p>
+                            <p class="balance-amount" id="balanceAmount">Rs.
+                                0</p>
+                        </div>
+                        <button class="btn btn-primary"
+                            onclick="goToScreen('mainMenuScreen')">← Back to
+                            Main Menu</button>
+                    </div>
+                </div>
+
+                <div class="screen" id="depositScreen">
+                    <div class="content-wrapper">
+                        <h2 class="screen-title" id="depositTitle">Enter Deposit
+                            Amount</h2>
+                        <input type="number" class="input-field"
+                            id="depositAmountInput" placeholder="Enter amount">
+                        <button class="btn btn-success"
+                            onclick="confirmDeposit()">✓ Continue</button>
+                        <button class="btn btn-secondary"
+                            onclick="goToScreen('mainMenuScreen')">←
+                            Back</button>
+                    </div>
+                </div>
+
+                <div class="screen" id="depositConfirmScreen">
+                    <div class="content-wrapper">
+                        <h2 class="screen-title">Confirm Deposit</h2>
+                        <div class="balance-display">
+                            <p style="font-size: 18px;">Deposit Amount</p>
+                            <p class="balance-amount"
+                                id="depositConfirmAmount">Rs. 0</p>
+                        </div>
+                        <button class="btn btn-success"
+                            onclick="processDeposit()">✓ Yes, Deposit</button>
+                        <button class="btn btn-danger"
+                            onclick="goToScreen('depositScreen')">✗
+                            Cancel</button>
+                    </div>
+                </div>
+
+                <div class="screen" id="depositSuccessScreen">
+                    <div class="content-wrapper">
+                        <h2 class="screen-title">✅ Deposit Successful</h2>
+                        <div class="success-box">
+                            <p id="depositSuccessMessage">Deposit successful.
+                                Thank you!</p>
+                        </div>
+                        <p class="screen-text">Do you want a receipt?</p>
+                        <button class="btn btn-success"
+                            onclick="printDepositReceipt()">✓ Yes</button>
+                        <button class="btn btn-secondary"
+                            onclick="goToScreen('mainMenuScreen')">✗ No, Main
+                            Menu</button>
+                    </div>
+                </div>
+
+                <div class="screen" id="transferScreen">
+                    <div class="content-wrapper">
+                        <h2 class="screen-title">Transfer Money</h2>
+                        <p class="screen-text">This feature is coming soon!</p>
+                        <button class="btn btn-primary"
+                            onclick="goToScreen('mainMenuScreen')">←
+                            Back</button>
+                    </div>
+                </div>
+
+                <div class="screen" id="otherServicesScreen">
+                    <div class="content-wrapper">
+                        <h2 class="screen-title">Other Services</h2>
+                        <p class="screen-text">Additional services coming
+                            soon!</p>
+                        <button class="btn btn-primary"
+                            onclick="goToScreen('mainMenuScreen')">←
+                            Back</button>
+                    </div>
+                </div>
+
+                <div class="screen" id="exitScreen">
+                    <div class="content-wrapper">
+                        <h2 class="screen-title" id="exitTitle">Thank You!</h2>
+                        <div class="success-box">
+                            <p style="font-size: 40px;">👋</p>
+                            <p id="thankYouMessage"
+                                style="font-size: 18px; margin-top: 10px;">Thank
+                                you for using NIKO's ATM</p>
+                        </div>
+                        <button class="btn btn-primary" onclick="resetATM()">🔄
+                            Start New Session</button>
+                    </div>
+                </div>
+
+                <div id="globalInstruction">Press SPACEBAR at any time to
+                    speak</div>
+
+            </div>
+        </div>
+
+        <script>
+    // --- Global Variables ---
+    let currentLanguage = 'english';
+    let currentMode = 'standard';
+    let userPin = '';
+    let accountBalance = 50000;
+    let withdrawAmount = 0;
+    let depositAmount = 0;
+    let transactionType = '';
+    let currentScreenId = 'welcomeScreen'; 
+    
+    // Voice Variables
+    let textToSpeechEnabled = false; // Only enables computer speaking back
+    let synth = window.speechSynthesis;
+    let recognition;
+    
+    // Initialize Speech Recognition (Web Speech API) - WORKS GLOBALLY
+    if ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window) {
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        recognition = new SpeechRecognition();
+        recognition.continuous = false; 
+        recognition.lang = 'en-US';
+        recognition.interimResults = false;
+
+        recognition.onstart = function() {
+            document.getElementById('voiceIndicator').style.display = 'flex';
+        };
+
+        recognition.onend = function() {
+            document.getElementById('voiceIndicator').style.display = 'none';
+        };
+
+        recognition.onresult = function(event) {
+            const transcript = event.results[0][0].transcript.toLowerCase();
+            console.log("Heard:", transcript);
+            handleVoiceCommand(transcript);
+        };
+    } else {
+        console.log("Browser does not support Speech Recognition");
+    }
+
+    // --- Translations ---
+    const translations = {
+        english: {
+            modeTitle: 'Select Mode', standardText: 'Standard Mode', kidsText: 'Kids Mode', specialText: 'Special Mode (Accessible)',
+            pinTitle: 'Enter Your 4-Digit PIN', orUseText: 'Or Use', fingerprintText: 'Fingerprint Access',
+            mainMenuTitle: 'Main Menu', withdrawText: 'Withdraw', depositText: 'Deposit', transferText: 'Transfer',
+            balanceText: 'Balance Check', otherText: 'Other Services', exitText: 'Exit',
+            withdrawAmountTitle: 'Select Amount', otherAmountText: 'Other Amount', customAmountTitle: 'Enter Amount',
+            insufficientMessage: 'You do not have sufficient balance. Do you want to make another transaction?',
+            confirmTitle: 'Confirm Transaction', confirmQuestion: 'Do you want to proceed?',
+            receiptTitle: 'Receipt', receiptQuestion: 'Do you want a receipt?', takeCashMessage: 'Please take your cash',
+            balanceCheckTitle: 'Your Balance', depositTitle: 'Enter Deposit Amount', depositSuccessMessage: 'Deposit successful. Thank you!',
+            exitTitle: 'Thank You!', thankYouMessage: "Thank you for using NIKO's ATM"
+        },
+        urdu: {
+            modeTitle: 'موڈ منتخب کریں', standardText: 'معیاری موڈ', kidsText: 'بچوں کا موڈ', specialText: 'خصوصی موڈ',
+            pinTitle: 'اپنا 4 ہندسوں کا PIN درج کریں', orUseText: 'یا استعمال کریں', fingerprintText: 'فنگر پرنٹ',
+            mainMenuTitle: 'مین مینو', withdrawText: 'رقم نکالیں', depositText: 'رقم جمع کریں', transferText: 'منتقلی',
+            balanceText: 'بیلنس چیک', otherText: 'دیگر خدمات', exitText: 'باہر نکلیں',
+            withdrawAmountTitle: 'رقم منتخب کریں', otherAmountText: 'دوسری رقم', customAmountTitle: 'رقم درج کریں',
+            insufficientMessage: 'آپ کے پاس کافی بیلنس نہیں ہے۔', confirmTitle: 'تصدیق کریں', confirmQuestion: 'کیا آپ آگے بڑھنا چاہتے ہیں؟',
+            receiptTitle: 'رسید', receiptQuestion: 'کیا آپ رسید چاہتے ہیں؟', takeCashMessage: 'براہ کرم اپنی رقم لیں',
+            balanceCheckTitle: 'آپ کا بیلنس', depositTitle: 'رقم درج کریں', depositSuccessMessage: 'رقم جمع ہو گئی۔ شکریہ!',
+            exitTitle: 'شکریہ!', thankYouMessage: 'NIKO کے ATM استعمال کرنے کا شکریہ'
+        }
+    };
+
+    // --- Core Functions ---
+    function goToScreen(screenId) {
+        currentScreenId = screenId; 
+        const screens = document.querySelectorAll('.screen');
+        screens.forEach(screen => screen.classList.remove('active'));
+        document.getElementById(screenId).classList.add('active');
+        
+        // Only speak if Text-to-Speech is enabled (Special Mode)
+        if (textToSpeechEnabled) {
+            setTimeout(() => { announceScreen(screenId); }, 300);
+        }
+    }
+
+    function selectLanguage(language) {
+        currentLanguage = language;
+        if(recognition) {
+            recognition.lang = (language === 'urdu') ? 'ur-PK' : 'en-US';
+        }
+        updateLanguage();
+        goToScreen('modeScreen');
+    }
+
+    function updateLanguage() {
+        const lang = translations[currentLanguage];
+        const elements = {
+            modeTitle: 'modeTitle', standardText: 'standardText', kidsText: 'kidsText', specialText: 'specialText',
+            pinTitle: 'pinTitle', orUseText: 'orUseText', fingerprintText: 'fingerprintText',
+            mainMenuTitle: 'mainMenuTitle', withdrawText: 'withdrawText', depositText: 'depositText',
+            transferText: 'transferText', balanceText: 'balanceText', otherText: 'otherText', exitText: 'exitText',
+            withdrawAmountTitle: 'withdrawAmountTitle', otherAmountText: 'otherAmountText', customAmountTitle: 'customAmountTitle',
+            insufficientMessage: 'insufficientMessage', confirmTitle: 'confirmTitle', confirmQuestion: 'confirmQuestion',
+            receiptTitle: 'receiptTitle', receiptQuestion: 'receiptQuestion', takeCashMessage: 'takeCashMessage',
+            balanceCheckTitle: 'balanceCheckTitle', depositTitle: 'depositTitle', depositSuccessMessage: 'depositSuccessMessage',
+            exitTitle: 'exitTitle', thankYouMessage: 'thankYouMessage'
+        };
+        for (const [key, elementId] of Object.entries(elements)) {
+            const element = document.getElementById(elementId);
+            if (element && lang[key]) element.textContent = lang[key];
+        }
+    }
+
+    // --- MODE SELECTION AND RESET LOGIC ---
+    function selectMode(mode) {
+        currentMode = mode;
+        const machine = document.getElementById('atmMachine');
+        
+        // Remove old styles first
+        machine.classList.remove('kids-mode', 'special-mode');
+        document.getElementById('transferBtn').classList.remove('hidden');
+        document.getElementById('otherServicesBtn').classList.remove('hidden');
+        
+        // Reset output voice
+        textToSpeechEnabled = false; 
+        stopSpeech();
+
+        if (mode === 'kids') {
+            machine.classList.add('kids-mode');
+            document.getElementById('transferBtn').classList.add('hidden');
+            document.getElementById('otherServicesBtn').classList.add('hidden');
+        } else if (mode === 'special') {
+            machine.classList.add('special-mode');
+            textToSpeechEnabled = true; // Enable Computer Voice
+            speak('Special accessible mode activated. I will read the screen for you.');
+        }
+        goToScreen('pinScreen');
+    }
+
+    // NEW FUNCTION: Completely resets styles when going back to mode selection
+    function resetToModeScreen() {
+        // Clear all styles
+        const machine = document.getElementById('atmMachine');
+        machine.classList.remove('kids-mode', 'special-mode');
+        
+        // Disable voice output
+        textToSpeechEnabled = false;
+        stopSpeech();
+        
+        // Go to screen
+        goToScreen('modeScreen');
+    }
+
+    // --- PIN Functions ---
+    function addPinDigit(digit) {
+        if (userPin.length < 4) {
+            userPin += digit;
+            updatePinDisplay();
+            if(textToSpeechEnabled) speak(digit);
+        }
+    }
+    function clearPin() { userPin = ''; updatePinDisplay(); if(textToSpeechEnabled) speak("Cleared"); }
+    function updatePinDisplay() {
+        const display = document.getElementById('pinDisplay');
+        if (userPin.length === 0) display.textContent = '****';
+        else display.textContent = '•'.repeat(userPin.length) + '*'.repeat(4 - userPin.length);
+    }
+    function submitPin() {
+        if (userPin.length === 4) {
+            if(textToSpeechEnabled) speak("PIN Accepted");
+            goToScreen('mainMenuScreen');
+            userPin = ''; updatePinDisplay();
+        } else {
+            if(textToSpeechEnabled) speak("Please enter 4 digits");
+            alert('Please enter a 4-digit PIN');
+        }
+    }
+    function fingerprintAuth() {
+        if(textToSpeechEnabled) speak("Fingerprint scanned");
+        goToScreen('mainMenuScreen');
+    }
+
+    // --- Transaction Logic ---
+    function checkBalance() {
+        document.getElementById('balanceAmount').textContent = 'Rs. ' + accountBalance.toLocaleString();
+        goToScreen('balanceScreen');
+    }
+    function selectWithdrawAmount(amount) {
+        withdrawAmount = amount;
+        if (currentMode === 'kids' && amount > 5000) {
+            const msg = 'Kid limit is 5000';
+            if(textToSpeechEnabled) speak(msg);
+            alert(msg); return;
+        }
+        checkFundsAndProceed(amount);
+    }
+    function confirmCustomAmount() {
+        const input = document.getElementById('customAmountInput');
+        const amount = parseInt(input.value);
+        if (!amount || amount <= 0) { alert('Invalid amount'); return; }
+        if (currentMode === 'kids' && amount > 5000) { alert('Kid limit is 5000'); return; }
+        withdrawAmount = amount; input.value = '';
+        checkFundsAndProceed(amount);
+    }
+    function checkFundsAndProceed(amount) {
+        if (amount > accountBalance) goToScreen('insufficientScreen');
+        else {
+            transactionType = 'withdraw';
+            document.getElementById('confirmAmount').textContent = 'Rs. ' + amount.toLocaleString();
+            goToScreen('confirmScreen');
+        }
+    }
+    function proceedTransaction() {
+        if (transactionType === 'withdraw') { accountBalance -= withdrawAmount; goToScreen('receiptScreen'); }
+        else if (transactionType === 'deposit') { accountBalance += depositAmount; goToScreen('depositSuccessScreen'); }
+    }
+    function cancelTransaction() {
+        if (transactionType === 'withdraw') goToScreen('withdrawScreen');
+        else if (transactionType === 'deposit') goToScreen('depositScreen');
+    }
+
+    // --- Deposit & Receipt ---
+    function confirmDeposit() {
+        const input = document.getElementById('depositAmountInput');
+        const amount = parseInt(input.value);
+        if (!amount || amount <= 0) { alert('Enter valid amount'); return; }
+        depositAmount = amount; input.value = ''; transactionType = 'deposit';
+        document.getElementById('depositConfirmAmount').textContent = 'Rs. ' + amount.toLocaleString();
+        goToScreen('depositConfirmScreen');
+    }
+    function processDeposit() { accountBalance += depositAmount; goToScreen('depositSuccessScreen'); }
+    function printDepositReceipt() { setupReceipt('DEPOSIT', depositAmount); goToScreen('receiptDisplayScreen'); }
+    function printReceipt() { setupReceipt('WITHDRAWAL', withdrawAmount); goToScreen('receiptDisplayScreen'); }
+    function setupReceipt(type, amount) {
+        const now = new Date();
+        document.getElementById('receiptDate').textContent = now.toLocaleDateString() + ' ' + now.toLocaleTimeString();
+        document.getElementById('receiptType').textContent = type;
+        document.getElementById('receiptAmount').textContent = 'Rs. ' + amount.toLocaleString();
+        document.getElementById('receiptBalance').textContent = 'Rs. ' + accountBalance.toLocaleString();
+    }
+    function completeWithdraw() { goToScreen('takeCashScreen'); setTimeout(() => { withdrawAmount = 0; }, 1000); }
+    function exitATM() { goToScreen('exitScreen'); }
+    
+    // RESET ATM: Fixed to clean styles
+    function resetATM() { 
+        currentLanguage = 'english'; 
+        // Remove Styles manually to ensure cleanliness
+        document.getElementById('atmMachine').classList.remove('kids-mode', 'special-mode');
+        selectMode('standard'); 
+        goToScreen('welcomeScreen'); 
+    }
+
+    // --- Voice Output (Text to Speech) - CONTROLLED BY MODE ---
+    function speak(text) {
+        // ONLY speak if enabled (Special Mode)
+        if (!textToSpeechEnabled) return;
+        
+        if (synth.speaking) synth.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = currentLanguage === 'urdu' ? 'ur-PK' : 'en-US';
+        utterance.rate = 0.9;
+        synth.speak(utterance);
+    }
+    function stopSpeech() { if (synth.speaking) synth.cancel(); }
+    
+    function announceScreen(screenId) {
+        // This is called when screen changes, but speak() checks the flag anyway
+        if (!textToSpeechEnabled) return;
+        
+        let text = '';
+        switch(screenId) {
+            case 'welcomeScreen': text = 'Welcome. Select Language.'; break;
+            case 'modeScreen': text = 'Select Mode.'; break;
+            case 'pinScreen': text = 'Enter 4 digit PIN. Say numbers to type.'; break;
+            case 'mainMenuScreen': text = 'Main Menu. Options are Withdraw, Deposit, Balance, Transfer, Exit.'; break;
+            case 'withdrawScreen': text = 'Select amount. Say 1000, 2000, 3000, or 5000.'; break;
+            case 'confirmScreen': text = 'Confirm Transaction? Say Yes or No.'; break;
+            case 'receiptScreen': text = 'Do you want a receipt? Say Yes or No.'; break;
+            case 'takeCashScreen': text = 'Please take your cash.'; break;
+            case 'balanceScreen': text = 'Your balance is ' + accountBalance + '. Say Main Menu to go back.'; break;
+            default: text = 'Screen updated';
+        }
+        speak(text);
+    }
+
+    // --- GLOBAL VOICE INPUT HANDLING (Speech to Text) ---
+    // This allows you to press SPACEBAR anywhere, in any mode.
+    
+    document.body.onkeyup = function(e){
+        if(e.keyCode == 32){ // 32 is Spacebar
+            startListening();
+        }
+    }
+
+    function startListening() {
+        if (recognition) {
+            stopSpeech(); // Stop ATM speaking so it listens to user
+            recognition.start();
+        }
+    }
+
+    function handleVoiceCommand(cmd) {
+        // --- Navigation Commands (Global) ---
+        if (cmd.includes('exit')) { exitATM(); return; }
+        if (cmd.includes('back')) { 
+             // Simple back logic
+             if(currentScreenId === 'withdrawScreen') goToScreen('mainMenuScreen');
+             else if(currentScreenId === 'pinScreen') resetToModeScreen(); // Special handling for pin screen
+             else if(currentScreenId === 'mainMenuScreen') exitATM();
+             else if(currentScreenId === 'balanceScreen') goToScreen('mainMenuScreen');
+             else goToScreen('mainMenuScreen'); // Default fallback
+             return;
+        }
+
+        // --- Context Sensitive Commands ---
+
+        // FIX: ADDED MODE SCREEN VOICE LOGIC
+        if (currentScreenId === 'modeScreen') {
+            if (cmd.includes('standard') || cmd.includes('normal')) selectMode('standard');
+            else if (cmd.includes('kids') || cmd.includes('child')) selectMode('kids');
+            else if (cmd.includes('special') || cmd.includes('blind') || cmd.includes('voice')) selectMode('special');
+        }
+        
+        // 1. PIN Screen Logic
+        else if (currentScreenId === 'pinScreen') {
+            // Check for numbers
+            if (cmd.includes('one') || cmd.includes('1')) addPinDigit('1');
+            else if (cmd.includes('two') || cmd.includes('2')) addPinDigit('2');
+            else if (cmd.includes('three') || cmd.includes('3')) addPinDigit('3');
+            else if (cmd.includes('four') || cmd.includes('4')) addPinDigit('4');
+            else if (cmd.includes('five') || cmd.includes('5')) addPinDigit('5');
+            else if (cmd.includes('six') || cmd.includes('6')) addPinDigit('6');
+            else if (cmd.includes('seven') || cmd.includes('7')) addPinDigit('7');
+            else if (cmd.includes('eight') || cmd.includes('8')) addPinDigit('8');
+            else if (cmd.includes('nine') || cmd.includes('9')) addPinDigit('9');
+            else if (cmd.includes('zero') || cmd.includes('0')) addPinDigit('0');
+            else if (cmd.includes('clear')) clearPin();
+            else if (cmd.includes('enter') || cmd.includes('ok') || cmd.includes('submit')) submitPin();
+        }
+
+        // 2. Main Menu Logic
+        else if (currentScreenId === 'mainMenuScreen') {
+            if (cmd.includes('withdraw')) goToScreen('withdrawScreen');
+            else if (cmd.includes('deposit')) goToScreen('depositScreen');
+            else if (cmd.includes('balance') || cmd.includes('check')) checkBalance();
+            else if (cmd.includes('transfer')) alert('Feature coming soon');
+        }
+
+        // 3. Withdraw Screen Logic
+        else if (currentScreenId === 'withdrawScreen') {
+            if (cmd.includes('1000') || cmd.includes('one thousand')) selectWithdrawAmount(1000);
+            else if (cmd.includes('2000') || cmd.includes('two thousand')) selectWithdrawAmount(2000);
+            else if (cmd.includes('3000') || cmd.includes('three thousand')) selectWithdrawAmount(3000);
+            else if (cmd.includes('5000') || cmd.includes('five thousand')) selectWithdrawAmount(5000);
+        }
+
+        // 4. Confirmation Screens (Yes/No)
+        else if (['confirmScreen', 'receiptScreen', 'insufficientScreen'].includes(currentScreenId)) {
+            if (cmd.includes('yes') || cmd.includes('proceed') || cmd.includes('sure')) {
+                if(currentScreenId === 'confirmScreen') proceedTransaction();
+                else if(currentScreenId === 'receiptScreen') printReceipt();
+                else if(currentScreenId === 'insufficientScreen') goToScreen('withdrawScreen');
+            }
+            else if (cmd.includes('no') || cmd.includes('cancel')) {
+                if(currentScreenId === 'confirmScreen') cancelTransaction();
+                else if(currentScreenId === 'receiptScreen') completeWithdraw();
+                else if(currentScreenId === 'insufficientScreen') goToScreen('mainMenuScreen');
+            }
+        }
+        
+        // 5. Balance Screen
+        else if (currentScreenId === 'balanceScreen') {
+            if (cmd.includes('menu') || cmd.includes('main')) goToScreen('mainMenuScreen');
+        }
+    }
+
+    document.addEventListener('mouseover', function(e) {
+        // MOUSE HOVER only speaks if textToSpeechEnabled (Special Mode) is true
+        if (textToSpeechEnabled && (e.target.classList.contains('btn') || e.target.classList.contains('keypad-btn'))) {
+            speak(e.target.innerText);
+        }
+    });
+    </script>
+    </body>
+</html>

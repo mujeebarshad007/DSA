@@ -150,7 +150,7 @@ private:
         ptr_l->parent = ptr_l_r;
         ptr->parent = ptr_l_r;
 
-        // updating ptr->parents k children
+        // updating ptr->parents children
         if (ptr_l_r->parent != H)
         {
             if (ptr_l_r->parent->left == ptr)
@@ -232,7 +232,7 @@ public:
 
     map(const map &other)
     {
-        this->H = new mnode<key_type, T>;
+        H = new mnode<key_type, T>;
         H->left = H->right = H->parent = H;
         H->is_nill = true;
         n = 0;
@@ -249,7 +249,7 @@ public:
     {
         if (this != &other)
         {
-            this->clear();
+            clear();
             typename map<key_type, T>::iterator it;
             it = other.begin();
             while (it != other.end())
@@ -351,6 +351,7 @@ public:
     {
         iterator r;
         r.ptr = H->parent; // start from root
+
         while (r.ptr != H)
         {
             if (key == r.ptr->data.first)
@@ -542,7 +543,7 @@ public:
             {
                 // duplicate key, update value
 
-                temp->data.second = data.second;
+                temp->data.second = data.second; // duplicate value handling
                 delete nn;
                 iterator it;
                 it.ptr = temp;
@@ -564,19 +565,19 @@ public:
             current->height = Node_Height(current);
             int bf = Balance_Node(current);
 
-            // LL
+            // LL case
             if (bf > 1 && Balance_Node(current->left) >= 0)
                 current = LL_Rotation(current);
 
-            // LR
+            // LR case
             else if (bf > 1 && Balance_Node(current->left) < 0)
                 current = LR_Rotation(current);
 
-            // RR
+            // RR case
             else if (bf < -1 && Balance_Node(current->right) <= 0)
                 current = RR_Rotation(current);
 
-            // RL
+            // RL case
             else if (bf < -1 && Balance_Node(current->right) > 0)
                 current = RL_Rotation(current);
 
