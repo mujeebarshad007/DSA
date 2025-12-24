@@ -106,7 +106,7 @@ public:
         std::stack<V> s;
         bool *marked;
         marked = new bool[n];
-        marked = {true};
+        marked = {false};
 
         int source_index = get_index(source);
         int destination_index = get_index(destination);
@@ -120,8 +120,9 @@ public:
             if (a == destination_index)
                 return true;
 
-            if (marked[a])
+            if (!marked[a])
             {
+                marked[a] = true;
             }
             std::forward_list<V> f = neighbors(a);
             while (!f.empty())
