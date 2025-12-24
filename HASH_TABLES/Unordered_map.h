@@ -1,5 +1,4 @@
 #include <list>
-#include <utility>
 template <typename K, typename T>
 class unordered_map
 {
@@ -78,7 +77,7 @@ public:
             return (this->idx != rhs.idx || this->it_list != rhs.it_list);
         }
 
-        std::pair<const K, T> *operator->()
+        const std::pair<const K, T> *operator->() const
         {
             return &(*it_list);
         }
@@ -108,6 +107,7 @@ public:
         it.it_list = table[it.idx].end();
         return it;
     }
+
     bool empty() const
     {
         return n == 0;
@@ -119,6 +119,26 @@ public:
         table[pos.idx].erase(pos.it_list);
         --n;
         return next;
+    }
+
+    unordered_map &operator=(const unordered_map &rhs)
+    {
+        if (this != &rhs)
+        {
+            delete[] table;
+            m = rhs.m;
+            n = rhs.n;
+            table = new std::list<std::pair<const K, T>>[m];
+            for (int i = 0; i < m; i++)
+            {
+                table[i] = rhs.table[i];
+            }
+        }
+        return *this;
+    }
+    int size() const
+    {
+        return n;
     }
 
     std::pair<iterator, bool> insert(const std::pair<const K, T> &p)
@@ -145,7 +165,124 @@ public:
             return {it, false};
         }
     }
+    void swap(unordered_map &rhs)
+    {
+        std::list<std::pair<const K, T>> *temp = table;
+        table = rhs.table;
+        rhs.table = temp;
+        int temp2 = m;
+        m = rhs.m;
+        rhs.m = temp2;
+        int temp3 = n;
+        n = rhs.n;
+        rhs.n = temp3;
+    }
+
+    T &at(const K &key)
+    {
+        int h = hash(key);
+        typename std::list<std::pair<const K, T>>::iterator it;
+        it = find(table[h], key);
+        if (it == table[h].end())
+        {
+            throw "key not found";
+        }
+        else
+        {
+            return it->second;
+        }
+    }
+    T &operator[](const K &key)
+    {
+        int h = hash(key);
+        typename std::list<std::pair<const K, T>>::iterator it;
+        it = find(table[h], key);
+        if (it == table[h].end())
+        {
+            table[h].push_back({key, T()});
+            ++n;
+            return table[h].back().second;
+        }
+        return it->second;
+    }
+    int count(const K &key)
+    {
+        int h = hash(key);
+        return (find(table[h], key) != table[h].end());
+    }
+
+    iterator find(const K &key)
+    {
+        int h = hash(key);
+        typename std::list<std::pair<const K, T>>::iterator it_list;
+        it_list = find(table[h], key);
+
+        iterator it;
+        it.um = this;
+        it.idx = h;
+        it.it_list = it_list;
+        return it;
+    }
+
+    bool contains(const K &key)
+    {
+        return count(key) == 1;
+    }
+
+    int bucket_count() const
+    {
+        return m;
+    }
+    int bucket_size(int idx)
+    {
+        return table[idx].size();
+    }
+
+    int bucket(const K &key)
+    {
+        return hash(key);
+    }
+
+    float load_factor() const
+    {
+        return (float)n / m;
+        // used typecast here
+    }
+    float max_load_factor() const
+    {
+        return 1.0;
+    }
+    void rehash(int new_size_m)
+    {
+        unordered_map<K, T> temp(new_size_m);
+        for (int i = 0; i < m; ++i)
+        {
+            typename std::list<std::pair<const K, T>>::iterator it;
+            it = table[i].begin();
+            while (it != table[i].end())
+            {
+                std::pair<const K, T> p(it->first, it->second);
+                temp.insert(p);
+                ++it;
+            }
+        }
+        swap(temp);
+    }
+    void reserve(int count)
+    {
+        if (count > m)
+        {
+            rehash(count);
+        }
+    }
     void clear()
+    {
+        delete[] table;
+        table = new std::list<std::pair<const K, T>>[m];
+        n = 0;
+    }
+    // destructor
+    ~unordered_map()
     {
         delete[] table;
     }

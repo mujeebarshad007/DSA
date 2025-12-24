@@ -1,303 +1,303 @@
-bro <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>NIKO'S REAL ATM - Special Case</title>
         <style>
-        /* --- RESET & BASIC SETUP --- */
-        * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; }
-        
-        body {
-            font-family: 'Segoe UI', sans-serif;
-            background-color: #1a1a1a;
-            background-image: radial-gradient(#2c3e50 15%, #000 100%);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
+        /* --- RESET & BASIC SETUP --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; }
+        
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #1a1a1a;
+            background-image: radial-gradient(#2c3e50 15%, #000 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
 
-        /* --- THE ATM CHASSIS (PHYSICAL MACHINE) --- */
-        .atm-chassis {
-            width: 100%;
-            max-width: 950px;
-            background: linear-gradient(145deg, #bdc3c7, #95a5a6);
-            border-radius: 25px;
-            padding: 30px;
-            box-shadow: 
-                0 30px 60px rgba(0,0,0,0.8),
-                inset 0 2px 5px rgba(255,255,255,0.4);
-            border: 4px solid #7f8c8d;
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 30px;
-        }
+        /* --- THE ATM CHASSIS (PHYSICAL MACHINE) --- */
+        .atm-chassis {
+            width: 100%;
+            max-width: 950px;
+            background: linear-gradient(145deg, #bdc3c7, #95a5a6);
+            border-radius: 25px;
+            padding: 30px;
+            box-shadow: 
+                0 30px 60px rgba(0,0,0,0.8),
+                inset 0 2px 5px rgba(255,255,255,0.4);
+            border: 4px solid #7f8c8d;
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+        }
 
-        @media (max-width: 768px) {
-            .atm-chassis { grid-template-columns: 1fr; }
-        }
+        @media (max-width: 768px) {
+            .atm-chassis { grid-template-columns: 1fr; }
+        }
 
-        /* --- LEFT SIDE: THE MONITOR --- */
-        .monitor-bezel {
-            background: #2c3e50;
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
-            border: 2px solid #34495e;
-            position: relative;
-        }
+        /* --- LEFT SIDE: THE MONITOR --- */
+        .monitor-bezel {
+            background: #2c3e50;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
+            border: 2px solid #34495e;
+            position: relative;
+        }
 
-        .brand-logo {
-            color: white;
-            text-align: center;
-            font-weight: bold;
-            letter-spacing: 2px;
-            margin-bottom: 10px;
-            font-family: 'Courier New', monospace;
-            text-shadow: 0 0 5px rgba(255,255,255,0.5);
-        }
+        .brand-logo {
+            color: white;
+            text-align: center;
+            font-weight: bold;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+            font-family: 'Courier New', monospace;
+            text-shadow: 0 0 5px rgba(255,255,255,0.5);
+        }
 
-        .screen-container {
-            background: #000;
-            height: 480px;
-            width: 100%;
-            position: relative;
-            overflow: hidden;
-            border: 1px solid #555;
-            box-shadow: inset 0 0 30px rgba(0,0,0,0.9);
-            /* Scanline effect */
-            background-image: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
-            background-size: 100% 2px, 3px 100%;
-        }
+        .screen-container {
+            background: #000;
+            height: 480px;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid #555;
+            box-shadow: inset 0 0 30px rgba(0,0,0,0.9);
+            /* Scanline effect */
+            background-image: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            background-size: 100% 2px, 3px 100%;
+        }
 
-        /* --- SCREEN CONTENT STYLING --- */
-        .screen {
-            display: none;
-            padding: 20px;
-            height: 100%;
-            color: #00ff00; /* Classic Terminal Green */
-            font-family: 'Courier New', monospace;
-            text-shadow: 0 0 5px #00ff00;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
+        /* --- SCREEN CONTENT STYLING --- */
+        .screen {
+            display: none;
+            padding: 20px;
+            height: 100%;
+            color: #00ff00; /* Classic Terminal Green */
+            font-family: 'Courier New', monospace;
+            text-shadow: 0 0 5px #00ff00;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
 
-        .screen.active { display: flex; animation: flickOn 0.2s ease-in; }
+        .screen.active { display: flex; animation: flickOn 0.2s ease-in; }
 
-        @keyframes flickOn {
-            0% { opacity: 0; }
-            50% { opacity: 1; }
-            52% { opacity: 0.2; }
-            100% { opacity: 1; }
-        }
+        @keyframes flickOn {
+            0% { opacity: 0; }
+            50% { opacity: 1; }
+            52% { opacity: 0.2; }
+            100% { opacity: 1; }
+        }
 
-        .screen h2 {
-            font-size: 24px;
-            border-bottom: 2px solid #00ff00;
-            margin-bottom: 20px;
-            padding-bottom: 5px;
-            width: 100%;
-            text-align: center;
-        }
+        .screen h2 {
+            font-size: 24px;
+            border-bottom: 2px solid #00ff00;
+            margin-bottom: 20px;
+            padding-bottom: 5px;
+            width: 100%;
+            text-align: center;
+        }
 
-        /* --- SCREEN BUTTONS --- */
-        .screen-btn {
-            background: transparent;
-            border: 2px solid #00ff00;
-            color: #00ff00;
-            padding: 12px 20px;
-            width: 90%;
-            margin: 8px 0;
-            font-family: 'Courier New', monospace;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.2s;
-            text-align: left;
-            position: relative;
-        }
+        /* --- SCREEN BUTTONS --- */
+        .screen-btn {
+            background: transparent;
+            border: 2px solid #00ff00;
+            color: #00ff00;
+            padding: 12px 20px;
+            width: 90%;
+            margin: 8px 0;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+            text-align: left;
+            position: relative;
+        }
 
-        .screen-btn:hover {
-            background: #00ff00;
-            color: #000;
-        }
+        .screen-btn:hover {
+            background: #00ff00;
+            color: #000;
+        }
 
-        .screen-btn::before {
-            content: '>';
-            margin-right: 10px;
-        }
+        .screen-btn::before {
+            content: '>';
+            margin-right: 10px;
+        }
 
-        /* --- RIGHT SIDE: HARDWARE --- */
-        .hardware-panel {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
+        /* --- RIGHT SIDE: HARDWARE --- */
+        .hardware-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
 
-        .slot-group {
-            background: #7f8c8d;
-            padding: 15px;
-            border-radius: 10px;
-            border: 1px solid #95a5a6;
-            box-shadow: inset 0 2px 5px rgba(0,0,0,0.3);
-        }
+        .slot-group {
+            background: #7f8c8d;
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid #95a5a6;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.3);
+        }
 
-        .slot-label { font-size: 12px; font-weight: bold; color: #2c3e50; text-align: center; margin-bottom: 5px; text-transform: uppercase; }
+        .slot-label { font-size: 12px; font-weight: bold; color: #2c3e50; text-align: center; margin-bottom: 5px; text-transform: uppercase; }
 
-        .physical-slot {
-            height: 15px;
-            background: #000;
-            border-radius: 10px;
-            border-bottom: 2px solid #333;
-            position: relative;
-        }
+        .physical-slot {
+            height: 15px;
+            background: #000;
+            border-radius: 10px;
+            border-bottom: 2px solid #333;
+            position: relative;
+        }
 
-        .cash-dispenser {
-            height: 30px;
-            background: #111;
-            border-radius: 4px;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        /* Cash Animation */
-        .cash-bill {
-            width: 80%;
-            height: 90%;
-            background: #27ae60;
-            margin: 0 auto;
-            transform: translateY(-100%);
-            transition: transform 1s ease-out;
-            border: 1px solid #fff;
-        }
-        .cash-bill.eject { transform: translateY(0); }
+        .cash-dispenser {
+            height: 30px;
+            background: #111;
+            border-radius: 4px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* Cash Animation */
+        .cash-bill {
+            width: 80%;
+            height: 90%;
+            background: #27ae60;
+            margin: 0 auto;
+            transform: translateY(-100%);
+            transition: transform 1s ease-out;
+            border: 1px solid #fff;
+        }
+        .cash-bill.eject { transform: translateY(0); }
 
-        /* --- PHYSICAL KEYPAD --- */
-        .keypad-container {
-            background: #ecf0f1;
-            padding: 20px;
-            border-radius: 10px;
-            border: 1px solid #bdc3c7;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        }
+        /* --- PHYSICAL KEYPAD --- */
+        .keypad-container {
+            background: #ecf0f1;
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid #bdc3c7;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
 
-        .pin-screen-mini {
-            background: #aab7b8;
-            height: 40px;
-            margin-bottom: 15px;
-            border: 2px solid #7f8c8d;
-            border-radius: 4px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: monospace;
-            font-size: 24px;
-            letter-spacing: 5px;
-            color: #2c3e50;
-            box-shadow: inset 0 2px 5px rgba(0,0,0,0.2);
-        }
+        .pin-screen-mini {
+            background: #aab7b8;
+            height: 40px;
+            margin-bottom: 15px;
+            border: 2px solid #7f8c8d;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: monospace;
+            font-size: 24px;
+            letter-spacing: 5px;
+            color: #2c3e50;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.2);
+        }
 
-        .keypad-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 12px;
-        }
+        .keypad-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+        }
 
-        .hard-key {
-            padding: 15px 0;
-            font-size: 20px;
-            font-weight: bold;
-            border: none;
-            border-radius: 5px;
-            background: #bdc3c7;
-            color: #2c3e50;
-            cursor: pointer;
-            box-shadow: 0 4px 0 #7f8c8d, 0 5px 5px rgba(0,0,0,0.2);
-            transition: transform 0.1s, box-shadow 0.1s;
-        }
+        .hard-key {
+            padding: 15px 0;
+            font-size: 20px;
+            font-weight: bold;
+            border: none;
+            border-radius: 5px;
+            background: #bdc3c7;
+            color: #2c3e50;
+            cursor: pointer;
+            box-shadow: 0 4px 0 #7f8c8d, 0 5px 5px rgba(0,0,0,0.2);
+            transition: transform 0.1s, box-shadow 0.1s;
+        }
 
-        .hard-key:active {
-            transform: translateY(4px);
-            box-shadow: 0 0 0 #7f8c8d, inset 0 2px 5px rgba(0,0,0,0.2);
-        }
+        .hard-key:active {
+            transform: translateY(4px);
+            box-shadow: 0 0 0 #7f8c8d, inset 0 2px 5px rgba(0,0,0,0.2);
+        }
 
-        .key-clear { background: #f1c40f; color: white; border-bottom-color: #d4ac0d; }
-        .key-cancel { background: #e74c3c; color: white; border-bottom-color: #c0392b; }
-        .key-enter { background: #27ae60; color: white; border-bottom-color: #1e8449; height: 100%; grid-row: span 2; display: flex; align-items: center; justify-content: center; }
-        .key-blank { background: #95a5a6; cursor: default; box-shadow: none; }
+        .key-clear { background: #f1c40f; color: white; border-bottom-color: #d4ac0d; }
+        .key-cancel { background: #e74c3c; color: white; border-bottom-color: #c0392b; }
+        .key-enter { background: #27ae60; color: white; border-bottom-color: #1e8449; height: 100%; grid-row: span 2; display: flex; align-items: center; justify-content: center; }
+        .key-blank { background: #95a5a6; cursor: default; box-shadow: none; }
 
-        .screen-input {
-            background: transparent;
-            border: 2px solid #00ff00;
-            color: #00ff00;
-            font-size: 24px;
-            padding: 10px;
-            width: 80%;
-            text-align: center;
-            font-family: 'Courier New', monospace;
-        }
+        .screen-input {
+            background: transparent;
+            border: 2px solid #00ff00;
+            color: #00ff00;
+            font-size: 24px;
+            padding: 10px;
+            width: 80%;
+            text-align: center;
+            font-family: 'Courier New', monospace;
+        }
 
-        /* --- MODES STYLING --- */
-        
-        /* Kids Mode Override */
-        .screen-container.kids-theme {
-            background: #87CEEB;
-            background-image: none;
-        }
-        .screen-container.kids-theme .screen {
-            color: #fff;
-            text-shadow: 2px 2px 0 #000;
-        }
-        .screen-container.kids-theme .screen-btn {
-            background: #FFD700;
-            color: #d35400;
-            border: 4px solid #fff;
-            border-radius: 20px;
-            font-family: 'Comic Sans MS', sans-serif;
-            box-shadow: 0 4px 0 #d35400;
-            margin-bottom: 15px;
-        }
-        .screen-container.kids-theme .screen h2 { border-color: #fff; }
+        /* --- MODES STYLING --- */
+        
+        /* Kids Mode Override */
+        .screen-container.kids-theme {
+            background: #87CEEB;
+            background-image: none;
+        }
+        .screen-container.kids-theme .screen {
+            color: #fff;
+            text-shadow: 2px 2px 0 #000;
+        }
+        .screen-container.kids-theme .screen-btn {
+            background: #FFD700;
+            color: #d35400;
+            border: 4px solid #fff;
+            border-radius: 20px;
+            font-family: 'Comic Sans MS', sans-serif;
+            box-shadow: 0 4px 0 #d35400;
+            margin-bottom: 15px;
+        }
+        .screen-container.kids-theme .screen h2 { border-color: #fff; }
 
-        /* Special Case Override */
-        .screen-container.special-theme {
-            background: #000;
-            background-image: none;
-        }
-        .screen-container.special-theme .screen {
-            color: #ffff00; /* High Contrast Yellow */
-            text-shadow: none;
-        }
-        .screen-container.special-theme .screen-btn {
-            border: 4px solid #ffff00;
-            color: #ffff00;
-            font-size: 26px; /* Extra Large Text */
-            font-weight: 900;
-        }
-        .screen-container.special-theme h2 { font-size: 34px; text-decoration: underline; border: none; }
+        /* Special Case Override */
+        .screen-container.special-theme {
+            background: #000;
+            background-image: none;
+        }
+        .screen-container.special-theme .screen {
+            color: #ffff00; /* High Contrast Yellow */
+            text-shadow: none;
+        }
+        .screen-container.special-theme .screen-btn {
+            border: 4px solid #ffff00;
+            color: #ffff00;
+            font-size: 26px; /* Extra Large Text */
+            font-weight: 900;
+        }
+        .screen-container.special-theme h2 { font-size: 34px; text-decoration: underline; border: none; }
 
-        /* Receipt */
-        .receipt-paper {
-            position: absolute;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%) translateY(-100%);
-            width: 250px;
-            background: white;
-            padding: 20px;
-            font-family: 'Courier New', monospace;
-            font-size: 12px;
-            color: black;
-            text-shadow: none;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
-            transition: transform 1.5s ease-out;
-            z-index: 10;
-        }
-        .receipt-paper.print { transform: translateX(-50%) translateY(0); }
+        /* Receipt */
+        .receipt-paper {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-100%);
+            width: 250px;
+            background: white;
+            padding: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            color: black;
+            text-shadow: none;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            transition: transform 1.5s ease-out;
+            z-index: 10;
+        }
+        .receipt-paper.print { transform: translateX(-50%) translateY(0); }
 
-    </style>
+    </style>
     </head>
     <body>
 
@@ -481,367 +481,366 @@ bro <!DOCTYPE html>
         </div>
 
         <script>
-        // --- TRANSLATION DATABASE ---
-        const langData = {
-            english: {
-                welcome: "Welcome to NIKO'S ATM",
-                selectLang: "Please select language",
-                selectMode: "SELECT MODE",
-                stdMode: "Standard Mode",
-                kidsMode: "🧸 Kids Mode",
-                specialCase: "👁️ Special Case",
-                enterPin: "ENTER PIN",
-                useKeypad: "Use the Keypad below",
-                or: "OR",
-                scanFinger: "👆 SCAN FINGERPRINT",
-                mainMenu: "MAIN MENU",
-                withdraw: "Withdraw",
-                deposit: "Deposit",
-                balance: "Balance Check",
-                transfer: "Transfer",
-                exit: "EXIT CARD",
-                selectAmount: "SELECT AMOUNT",
-                other: "Other Amount",
-                enterAmount: "ENTER AMOUNT",
-                useKeypadInput: "Use Keypad to type",
-                confirm: "Confirm",
-                back: "Back",
-                cancel: "Cancel",
-                processing: "PROCESSING...",
-                wait: "Please wait",
-                insufficient: "Insufficient Balance",
-                takeCash: "Please take your cash",
-                balanceMsg: "Your Balance is Rs. "
-            },
-            urdu: {
-                welcome: "خوش آمدید",
-                selectLang: "زبان منتخب کریں",
-                selectMode: "موڈ منتخب کریں",
-                stdMode: "معیاری موڈ",
-                kidsMode: "بچوں کا موڈ",
-                specialCase: "خصوصی کیس (Special Case)",
-                enterPin: "اپنا کوڈ درج کریں",
-                useKeypad: "کی پیڈ استعمال کریں",
-                or: "یا",
-                scanFinger: "فنگر پرنٹ اسکین کریں",
-                mainMenu: "مین مینو",
-                withdraw: "رقم نکالیں",
-                deposit: "جمع کریں",
-                balance: "بیلنس چیک",
-                transfer: "منتقلی",
-                exit: "کارڈ نکالیں",
-                selectAmount: "رقم منتخب کریں",
-                other: "دوسری رقم",
-                enterAmount: "رقم درج کریں",
-                useKeypadInput: "لکھنے کے لیے کی پیڈ استعمال کریں",
-                confirm: "تصدیق کریں",
-                back: "واپس",
-                cancel: "منسوخ کریں",
-                processing: "کارروائی جاری ہے...",
-                wait: "براہ مہربانی انتظار کریں",
-                insufficient: "ناکافی بیلنس",
-                takeCash: "براہ کرم اپنی رقم وصول کریں",
-                balanceMsg: "آپ کا موجودہ بیلنس ہے: "
-            }
-        };
+        // --- TRANSLATION DATABASE ---
+        const langData = {
+            english: {
+                welcome: "Welcome to NIKO'S ATM",
+                selectLang: "Please select language",
+                selectMode: "SELECT MODE",
+                stdMode: "Standard Mode",
+                kidsMode: "🧸 Kids Mode",
+                specialCase: "👁️ Special Case",
+                enterPin: "ENTER PIN",
+                useKeypad: "Use the Keypad below",
+                or: "OR",
+                scanFinger: "👆 SCAN FINGERPRINT",
+                mainMenu: "MAIN MENU",
+                withdraw: "Withdraw",
+                deposit: "Deposit",
+                balance: "Balance Check",
+                transfer: "Transfer",
+                exit: "EXIT CARD",
+                selectAmount: "SELECT AMOUNT",
+                other: "Other Amount",
+                enterAmount: "ENTER AMOUNT",
+                useKeypadInput: "Use Keypad to type",
+                confirm: "Confirm",
+                back: "Back",
+                cancel: "Cancel",
+                processing: "PROCESSING...",
+                wait: "Please wait",
+                insufficient: "Insufficient Balance",
+                takeCash: "Please take your cash",
+                balanceMsg: "Your Balance is Rs. "
+            },
+            urdu: {
+                welcome: "خوش آمدید",
+                selectLang: "زبان منتخب کریں",
+                selectMode: "موڈ منتخب کریں",
+                stdMode: "معیاری موڈ",
+                kidsMode: "بچوں کا موڈ",
+                specialCase: "خصوصی کیس (Special Case)",
+                enterPin: "اپنا کوڈ درج کریں",
+                useKeypad: "کی پیڈ استعمال کریں",
+                or: "یا",
+                scanFinger: "فنگر پرنٹ اسکین کریں",
+                mainMenu: "مین مینو",
+                withdraw: "رقم نکالیں",
+                deposit: "جمع کریں",
+                balance: "بیلنس چیک",
+                transfer: "منتقلی",
+                exit: "کارڈ نکالیں",
+                selectAmount: "رقم منتخب کریں",
+                other: "دوسری رقم",
+                enterAmount: "رقم درج کریں",
+                useKeypadInput: "لکھنے کے لیے کی پیڈ استعمال کریں",
+                confirm: "تصدیق کریں",
+                back: "واپس",
+                cancel: "منسوخ کریں",
+                processing: "کارروائی جاری ہے...",
+                wait: "براہ مہربانی انتظار کریں",
+                insufficient: "ناکافی بیلنس",
+                takeCash: "براہ کرم اپنی رقم وصول کریں",
+                balanceMsg: "آپ کا موجودہ بیلنس ہے: "
+            }
+        };
 
-        // --- SOUND ENGINE (Web Audio API) ---
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        // --- SOUND ENGINE (Web Audio API) ---
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
-        function playSound(type) {
-            if (audioCtx.state === 'suspended') audioCtx.resume();
-            
-            const osc = audioCtx.createOscillator();
-            const gainNode = audioCtx.createGain();
-            osc.connect(gainNode);
-            gainNode.connect(audioCtx.destination);
+        function playSound(type) {
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            
+            const osc = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            osc.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
 
-            if (type === 'beep') {
-                osc.type = 'square';
-                osc.frequency.setValueAtTime(800, audioCtx.currentTime);
-                osc.frequency.exponentialRampToValueAtTime(300, audioCtx.currentTime + 0.1);
-                gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
-                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
-                osc.start();
-                osc.stop(audioCtx.currentTime + 0.1);
-            } else if (type === 'enter') {
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(1200, audioCtx.currentTime);
-                gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
-                gainNode.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.3);
-                osc.start();
-                osc.stop(audioCtx.currentTime + 0.3);
-            } else if (type === 'error') {
-                osc.type = 'sawtooth';
-                osc.frequency.setValueAtTime(150, audioCtx.currentTime);
-                gainNode.gain.setValueAtTime(0.2, audioCtx.currentTime);
-                gainNode.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.4);
-                osc.start();
-                osc.stop(audioCtx.currentTime + 0.4);
-            }
-        }
+            if (type === 'beep') {
+                osc.type = 'square';
+                osc.frequency.setValueAtTime(800, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(300, audioCtx.currentTime + 0.1);
+                gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.1);
+            } else if (type === 'enter') {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(1200, audioCtx.currentTime);
+                gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                gainNode.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.3);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.3);
+            } else if (type === 'error') {
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(150, audioCtx.currentTime);
+                gainNode.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                gainNode.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.4);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.4);
+            }
+        }
 
-        // --- STATE VARIABLES ---
-        let currentLang = 'english';
-        let currentPin = "";
-        let balance = 50000;
-        let activeInputId = null;
-        let isSpecialMode = false;
-        let synth = window.speechSynthesis;
+        // --- STATE VARIABLES ---
+        let currentLang = 'english';
+        let currentPin = "";
+        let balance = 50000;
+        let activeInputId = null;
+        let isSpecialMode = false;
+        let synth = window.speechSynthesis;
 
-        // --- NAVIGATION & LANGUAGE ---
-        function goToScreen(id) {
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            const activeScreen = document.getElementById(id);
-            activeScreen.classList.add('active');
-            
-            if(id === 'customAmountScreen') activeInputId = 'customInput';
-            else activeInputId = null;
+        // --- NAVIGATION & LANGUAGE ---
+        function goToScreen(id) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            const activeScreen = document.getElementById(id);
+            activeScreen.classList.add('active');
+            
+            if(id === 'customAmountScreen') activeInputId = 'customInput';
+            else activeInputId = null;
 
-            // Announce Screen Title in Special Mode
-            if(isSpecialMode) {
-                const title = activeScreen.querySelector('h2');
-                if (title) {
-                    const txt = title.innerText;
-                    speak(txt);
-                }
-            }
-        }
+            // Announce Screen Title in Special Mode
+            if(isSpecialMode) {
+                const title = activeScreen.querySelector('h2');
+                if (title) {
+                    const txt = title.innerText;
+                    speak(txt);
+                }
+            }
+        }
 
-        function selectLanguage(lang) {
-            currentLang = lang;
-            updateUIText();
-            playSound('enter');
-            goToScreen('modeScreen');
-            if(lang === 'english') speak("Language set to English.");
-            else speak("Zaban Urdu muntakhib ki gayi hai."); // Roman Urdu for immediate feedback
-        }
+        function selectLanguage(lang) {
+            currentLang = lang;
+            updateUIText();
+            playSound('enter');
+            goToScreen('modeScreen');
+            if(lang === 'english') speak("Language set to English.");
+            else speak("Zaban Urdu muntakhib ki gayi hai."); // Roman Urdu for immediate feedback
+        }
 
-        function updateUIText() {
-            const data = langData[currentLang];
-            document.querySelectorAll('[data-key]').forEach(el => {
-                const key = el.getAttribute('data-key');
-                if (data[key]) el.innerText = data[key];
-            });
-        }
+        function updateUIText() {
+            const data = langData[currentLang];
+            document.querySelectorAll('[data-key]').forEach(el => {
+                const key = el.getAttribute('data-key');
+                if (data[key]) el.innerText = data[key];
+            });
+        }
 
-        function selectMode(mode) {
-            playSound('enter');
-            const container = document.getElementById('screenContainer');
-            
-            container.classList.remove('kids-theme', 'special-theme');
-            isSpecialMode = false;
+        function selectMode(mode) {
+            playSound('enter');
+            const container = document.getElementById('screenContainer');
+            
+            container.classList.remove('kids-theme', 'special-theme');
+            isSpecialMode = false;
 
-            if (mode === 'kids') {
-                container.classList.add('kids-theme');
-            } else if (mode === 'special') {
-                container.classList.add('special-theme');
-                isSpecialMode = true;
-                
-                if (currentLang === 'urdu') {
-                    speak("Special Case activate ho gaya hai. Awaz ki madad shuru hai.");
-                } else {
-                    speak("Special Case Activated. Voice guidance enabled.");
-                }
-            }
+            if (mode === 'kids') {
+                container.classList.add('kids-theme');
+            } else if (mode === 'special') {
+                container.classList.add('special-theme');
+                isSpecialMode = true;
+                
+                if (currentLang === 'urdu') {
+                    speak("Special Case activate ho gaya hai. Awaz ki madad shuru hai.");
+                } else {
+                    speak("Special Case Activated. Voice guidance enabled.");
+                }
+            }
 
-            goToScreen('pinScreen');
-        }
+            goToScreen('pinScreen');
+        }
 
-        // --- VOICE ENGINE (With Urdu Support) ---
-        function speak(text) {
-            if(!isSpecialMode) return;
-            
-            synth.cancel(); // Interrupt previous
-            const utterance = new SpeechSynthesisUtterance(text);
-            
-            if (currentLang === 'urdu') {
-                utterance.lang = 'ur-PK'; // Try to set Urdu
-                // If text is pure English numbers (like 5000), it's fine.
-            } else {
-                utterance.lang = 'en-US';
-            }
-            
-            utterance.rate = 0.9;
-            utterance.pitch = 1.0;
-            synth.speak(utterance);
-        }
+        // --- VOICE ENGINE (With Urdu Support) ---
+        function speak(text) {
+            if(!isSpecialMode) return;
+            
+            synth.cancel(); // Interrupt previous
+            const utterance = new SpeechSynthesisUtterance(text);
+            
+            if (currentLang === 'urdu') {
+                utterance.lang = 'ur-PK'; // Try to set Urdu
+                // If text is pure English numbers (like 5000), it's fine.
+            } else {
+                utterance.lang = 'en-US';
+            }
+            
+            utterance.rate = 0.9;
+            utterance.pitch = 1.0;
+            synth.speak(utterance);
+        }
 
-        function voiceHover(element) {
-            if(isSpecialMode) {
-                // Read the text inside the button
-                speak(element.innerText);
-            }
-        }
+        function voiceHover(element) {
+            if(isSpecialMode) {
+                // Read the text inside the button
+                speak(element.innerText);
+            }
+        }
 
-        // --- KEYPAD LOGIC ---
-        function pressKey(key) {
-            playSound('beep');
-            if(isSpecialMode) speak(key); // Echo key press
+        // --- KEYPAD LOGIC ---
+        function pressKey(key) {
+            playSound('beep');
+            if(isSpecialMode) speak(key); // Echo key press
 
-            if (activeInputId) {
-                const input = document.getElementById(activeInputId);
-                input.value += key;
-                return;
-            }
+            if (activeInputId) {
+                const input = document.getElementById(activeInputId);
+                input.value += key;
+                return;
+            }
 
-            const pinScreen = document.getElementById('pinScreen');
-            if (pinScreen.classList.contains('active')) {
-                if (currentPin.length < 4) {
-                    currentPin += key;
-                    updatePinDisplay();
-                }
-            }
-        }
+            const pinScreen = document.getElementById('pinScreen');
+            if (pinScreen.classList.contains('active')) {
+                if (currentPin.length < 4) {
+                    currentPin += key;
+                    updatePinDisplay();
+                }
+            }
+        }
 
-        function keypadAction(action) {
-            if (action === 'clear') {
-                playSound('error');
-                if(isSpecialMode) speak("Clear");
-                if (activeInputId) document.getElementById(activeInputId).value = "";
-                else {
-                    currentPin = "";
-                    updatePinDisplay();
-                }
-            } 
-            else if (action === 'cancel') {
-                playSound('error');
-                if(isSpecialMode) speak("Cancel");
-                currentPin = "";
-                updatePinDisplay();
-                if(activeInputId) goToScreen('withdrawScreen');
-            } 
-            else if (action === 'enter') {
-                playSound('enter');
-                if(isSpecialMode) speak("Enter");
-                const pinScreen = document.getElementById('pinScreen');
-                if (pinScreen.classList.contains('active')) {
-                    if (currentPin.length === 4) {
-                        goToScreen('mainMenuScreen');
-                        currentPin = "";
-                        updatePinDisplay();
-                    } else {
-                        alert("Invalid PIN");
-                        currentPin = "";
-                        updatePinDisplay();
-                    }
-                } else if (activeInputId === 'customInput') {
-                    confirmCustomAmount();
-                }
-            }
-        }
+        function keypadAction(action) {
+            if (action === 'clear') {
+                playSound('error');
+                if(isSpecialMode) speak("Clear");
+                if (activeInputId) document.getElementById(activeInputId).value = "";
+                else {
+                    currentPin = "";
+                    updatePinDisplay();
+                }
+            } 
+            else if (action === 'cancel') {
+                playSound('error');
+                if(isSpecialMode) speak("Cancel");
+                currentPin = "";
+                updatePinDisplay();
+                if(activeInputId) goToScreen('withdrawScreen');
+            } 
+            else if (action === 'enter') {
+                playSound('enter');
+                if(isSpecialMode) speak("Enter");
+                const pinScreen = document.getElementById('pinScreen');
+                if (pinScreen.classList.contains('active')) {
+                    if (currentPin.length === 4) {
+                        goToScreen('mainMenuScreen');
+                        currentPin = "";
+                        updatePinDisplay();
+                    } else {
+                        alert("Invalid PIN");
+                        currentPin = "";
+                        updatePinDisplay();
+                    }
+                } else if (activeInputId === 'customInput') {
+                    confirmCustomAmount();
+                }
+            }
+        }
 
-        function updatePinDisplay() {
-            const screenDisp = document.getElementById('screenPinDisplay');
-            const miniDisp = document.getElementById('miniPinDisplay');
-            
-            let masked = "*".repeat(currentPin.length);
-            screenDisp.innerText = currentPin.length > 0 ? masked : "_ _ _ _";
-            miniDisp.innerText = currentPin; 
-        }
+        function updatePinDisplay() {
+            const screenDisp = document.getElementById('screenPinDisplay');
+            const miniDisp = document.getElementById('miniPinDisplay');
+            
+            let masked = "*".repeat(currentPin.length);
+            screenDisp.innerText = currentPin.length > 0 ? masked : "_ _ _ _";
+            miniDisp.innerText = currentPin; 
+        }
 
-        function fingerprintAuth() {
-            playSound('beep');
-            if(isSpecialMode) speak(currentLang === 'urdu' ? "Fingerprint scan ho raha hai" : "Scanning fingerprint");
-            setTimeout(() => { playSound('enter'); goToScreen('mainMenuScreen'); }, 1000);
-        }
+        function fingerprintAuth() {
+            playSound('beep');
+            if(isSpecialMode) speak(currentLang === 'urdu' ? "Fingerprint scan ho raha hai" : "Scanning fingerprint");
+            setTimeout(() => { playSound('enter'); goToScreen('mainMenuScreen'); }, 1000);
+        }
 
-        // --- TRANSACTION LOGIC ---
-        function checkBalance() {
-            playSound('enter');
-            const msgTitle = document.getElementById('msgTitle');
-            const msgText = document.getElementById('msgText');
-            
-            // Set text manually to ensure dynamic variable included
-            if(currentLang === 'urdu') {
-                msgTitle.innerText = "بیلنس";
-                msgText.innerText = "آپ کا بیلنس ہے: \nRs. " + balance;
-                if(isSpecialMode) speak("Aap ka balance hai " + balance + " rupay");
-            } else {
-                msgTitle.innerText = "BALANCE";
-                msgText.innerText = "Current Balance:\nRs. " + balance;
-                if(isSpecialMode) speak("Your balance is " + balance + " rupees");
-            }
+        // --- TRANSACTION LOGIC ---
+        function checkBalance() {
+            playSound('enter');
+            const msgTitle = document.getElementById('msgTitle');
+            const msgText = document.getElementById('msgText');
+            
+            // Set text manually to ensure dynamic variable included
+            if(currentLang === 'urdu') {
+                msgTitle.innerText = "بیلنس";
+                msgText.innerText = "آپ کا بیلنس ہے: \nRs. " + balance;
+                if(isSpecialMode) speak("Aap ka balance hai " + balance + " rupay");
+            } else {
+                msgTitle.innerText = "BALANCE";
+                msgText.innerText = "Current Balance:\nRs. " + balance;
+                if(isSpecialMode) speak("Your balance is " + balance + " rupees");
+            }
 
-            goToScreen('messageScreen');
-            setTimeout(() => goToScreen('mainMenuScreen'), 3500);
-        }
+            goToScreen('messageScreen');
+            setTimeout(() => goToScreen('mainMenuScreen'), 3500);
+        }
 
-        function selectWithdrawAmount(amount) {
-            processTransaction(amount, 'Withdrawal');
-        }
+        function selectWithdrawAmount(amount) {
+            processTransaction(amount, 'Withdrawal');
+        }
 
-        function confirmCustomAmount() {
-            const val = document.getElementById('customInput').value;
-            if (val > 0) processTransaction(parseInt(val), 'Withdrawal');
-        }
+        function confirmCustomAmount() {
+            const val = document.getElementById('customInput').value;
+            if (val > 0) processTransaction(parseInt(val), 'Withdrawal');
+        }
 
-        function processTransaction(amount, type) {
-            if (amount > balance) {
-                playSound('error');
-                const txt = langData[currentLang].insufficient;
-                if(isSpecialMode) speak(txt);
-                alert(txt);
-                return;
-            }
+        function processTransaction(amount, type) {
+            if (amount > balance) {
+                playSound('error');
+                const txt = langData[currentLang].insufficient;
+                if(isSpecialMode) speak(txt);
+                alert(txt);
+                return;
+            }
 
-            balance -= amount;
-            
-            // Show Processing
-            goToScreen('messageScreen');
-            const data = langData[currentLang];
-            document.getElementById('msgTitle').innerText = data.processing;
-            document.getElementById('msgText').innerText = data.wait;
-            
-            playSound('beep');
-            if(isSpecialMode) speak(data.processing);
+            balance -= amount;
+            
+            // Show Processing
+            goToScreen('messageScreen');
+            const data = langData[currentLang];
+            document.getElementById('msgTitle').innerText = data.processing;
+            document.getElementById('msgText').innerText = data.wait;
+            
+            playSound('beep');
+            if(isSpecialMode) speak(data.processing);
 
-            setTimeout(() => {
-                // Eject Cash
-                document.getElementById('cashBill').classList.add('eject');
-                playSound('enter');
-                if(isSpecialMode) speak(data.takeCash);
+            setTimeout(() => {
+                // Eject Cash
+                document.getElementById('cashBill').classList.add('eject');
+                playSound('enter');
+                if(isSpecialMode) speak(data.takeCash);
 
-                printReceipt(type, amount);
+                printReceipt(type, amount);
 
-                setTimeout(() => {
-                    document.getElementById('cashBill').classList.remove('eject');
-                    document.getElementById('receipt').classList.remove('print');
-                    goToScreen('mainMenuScreen');
-                }, 4000);
-            }, 2000);
-        }
+                setTimeout(() => {
+                    document.getElementById('cashBill').classList.remove('eject');
+                    document.getElementById('receipt').classList.remove('print');
+                    goToScreen('mainMenuScreen');
+                }, 4000);
+            }, 2000);
+        }
 
-        function printReceipt(type, amount) {
-            const r = document.getElementById('receipt');
-            const d = new Date();
-            document.getElementById('rDate').innerText = d.toLocaleTimeString();
-            document.getElementById('rType').innerText = type;
-            document.getElementById('rAmt').innerText = amount;
-            document.getElementById('rBal').innerText = balance;
-            r.classList.add('print');
-        }
+        function printReceipt(type, amount) {
+            const r = document.getElementById('receipt');
+            const d = new Date();
+            document.getElementById('rDate').innerText = d.toLocaleTimeString();
+            document.getElementById('rType').innerText = type;
+            document.getElementById('rAmt').innerText = amount;
+            document.getElementById('rBal').innerText = balance;
+            r.classList.add('print');
+        }
 
-        function exitATM() {
-            playSound('error');
-            const bye = currentLang === 'urdu' ? "Shukriya. Apna card wapis len." : "Thank you. Please take your card.";
-            if(isSpecialMode) speak(bye);
-            
-            document.getElementById('cardSlot').style.backgroundColor = '#2ecc71'; 
-            goToScreen('welcomeScreen');
-            
-            // Reset to English default for next user after delay
-            setTimeout(() => { 
-                currentLang = 'english'; 
-                updateUIText(); 
-                document.getElementById('cardSlot').style.backgroundColor = '#000'; 
-            }, 3000);
-        }
+        function exitATM() {
+            playSound('error');
+            const bye = currentLang === 'urdu' ? "Shukriya. Apna card wapis len." : "Thank you. Please take your card.";
+            if(isSpecialMode) speak(bye);
+            
+            document.getElementById('cardSlot').style.backgroundColor = '#2ecc71'; 
+            goToScreen('welcomeScreen');
+            
+            // Reset to English default for next user after delay
+            setTimeout(() => { 
+                currentLang = 'english'; 
+                updateUIText(); 
+                document.getElementById('cardSlot').style.backgroundColor = '#000'; 
+            }, 3000);
+        }
 
-        // Initialize Text
-        updateUIText();
+        // Initialize Text
+        updateUIText();
 
-    </script>
+    </script>
     </body>
-</html> keep this code just increase screen widths and also like add back option
-only
+</html>
