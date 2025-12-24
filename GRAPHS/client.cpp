@@ -95,4 +95,33 @@ public:
         }
         return;
     }
+
+void bfs(const V &start)
+{
+    bool *visited = new bool[n]{false};
+    std::queue<int> q;
+
+    int start_index = get_index(start);
+    visited[start_index] = true;
+    q.push(start_index);
+
+    while (!q.empty())
+    {
+        int v = q.front();
+        q.pop();
+        std::cout << vertices[v] << " ";
+
+        auto it = edges[v].begin();
+        while (it != edges[v].end())
+        {
+            if (!visited[it->first])
+            {
+                visited[it->first] = true;
+                q.push(it->first);
+            }
+            ++it;
+        }
+    }
+    delete[] visited;
+}
 };
