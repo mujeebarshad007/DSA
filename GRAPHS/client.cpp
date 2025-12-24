@@ -124,4 +124,34 @@ void bfs(const V &start)
     }
     delete[] visited;
 }
+
+void dfs(const V &start)
+{
+    bool *visited = new bool[n]{false};
+    std::stack<int> st;
+
+    int start_index = get_index(start);
+    st.push(start_index);
+
+    while (!st.empty())
+    {
+        int v = st.top();
+        st.pop();
+
+        if (!visited[v])
+        {
+            visited[v] = true;
+            std::cout << vertices[v] << " ";
+
+            auto it = edges[v].begin();
+            while (it != edges[v].end())
+            {
+                if (!visited[it->first])
+                    st.push(it->first);
+                ++it;
+            }
+        }
+    }
+    delete[] visited;
+}
 };
