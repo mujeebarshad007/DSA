@@ -131,4 +131,42 @@ public:
             }
         }
     }
+    
+    bool search_DFS(const V &source, const V &destination)
+{
+    std::stack<int> s;
+
+    bool *marked = new bool[n];
+    for (int i = 0; i < n; i++)
+        marked[i] = false;
+
+    int source_index = get_index(source);
+    int destination_index = get_index(destination);
+
+    s.push(source_index);
+
+    while (!s.empty())
+    {
+        int a = s.top();
+        s.pop();
+
+        if (a == destination_index)
+            return true;
+
+        if (!marked[a])
+        {
+            marked[a] = true;
+
+            std::forward_list<V> f = neighbors(a);
+            for (auto v : f)
+            {
+                int idx = get_index(v);
+                if (!marked[idx])
+                    s.push(idx);
+            }
+        }
+    }
+
+    return false;
+}
 };
