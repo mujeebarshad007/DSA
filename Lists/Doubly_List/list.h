@@ -384,14 +384,13 @@ public:
             dnode<T> *p1 = H->next;
             dnode<T> *p2 = nullptr;
 
-            // Swap next and prev for all nodes
-            do
+            while (p1 != H)
             {
                 p2 = p1->next;
                 p1->next = p1->prev;
                 p1->prev = p2;
                 p1 = p2;
-            } while (p1 != H);
+            }
 
             p2 = H->next;
             H->next = H->prev;
