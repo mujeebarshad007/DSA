@@ -1,6 +1,5 @@
 #pragma once
 #include "node.h"
-
 template <typename T>
 class Forward_list
 {
@@ -210,10 +209,48 @@ public:
         p1->next = first;
         p2->next = nullptr;
     }
+    void unique()
+    {
+        node<T> *p1, *p2;
+        p1 = H->next;
+        while (p1->next != nullptr)
+        {
+            p2 = p1->next;
+            if (p2 == nullptr)
+            {
+                break;
+            }
+            if (p1->value == p2->value)
+            {
+                node<T> *temp;
+                temp = p2->next;
+                p1->next = p2->next;
+                delete p2;
+                p2 = temp;
+            }
+            else
+            {
+                p1 = p1->next;
+            }
+        }
+    }
 
-    // SORT
-    // REVERSE NOT DONE
-    void reverse()
+    void reverse() // reverse implemented using STL SLiding pointers approach
+    {
+        node<T> *p, *q, *r;
+        r = q = nullptr;
+        p = H->next;
+        while (p != nullptr)
+        {
+            r = q;
+            q = p;
+            p = p->next;
+            q->next = r;
+        }
+        H->next = q;
+    }
+
+    void Sort()
     {
     }
 };
