@@ -1,6 +1,7 @@
 #pragma once
 #include <forward_list>
 #include <stack>
+#include <queue>
 // Directed graph
 // Weighted graph
 template <typename V, typename E>
@@ -78,7 +79,7 @@ public:
         int s_i, d_i;
         s_i = get_index(s);
         d_i = get_index(d);
-        auto it = edges[s_i].begin();
+        typename std::forward_list<std::pair<int, E>>::iterator it = edges[s_i].begin();
         while (it != edges[s_i].end())
         {
             if (it->first == d_i)
@@ -92,7 +93,7 @@ public:
         int v_i;
         v_i = get_index(v);
         std::forward_list<V> f;
-        auto it = edges[v_i].begin();
+        typename std::forward_list<std::pair<int, E>>::iterator it = edges[v_i].begin();
         while (it != edges[v_i].end())
         {
             f.push_front(vertices[it->first]);
@@ -100,73 +101,90 @@ public:
         }
         return f;
     }
-
-    bool search_DFS(const V &source, const V &destination)
+    bool DFS_SEARCH(const V &s, const V &d)
     {
-        std::stack<V> s;
-        bool *marked;
-        marked = new bool[n];
-        marked = {false};
+        std::stack<int> s;
 
-        int source_index = get_index(source);
-        int destination_index = get_index(destination);
+        bool *mark = new bool[n];
+        for (int i = 0; i < n; i++)
+            mark[i] = false;
 
-        s.push(source_index);
+        int s_i = get_index(s);
+        int d_i = get_index(d);
+
+        mark[s_i] = true;
+        s.push(s_i);
 
         while (!s.empty())
         {
             int a = s.top();
             s.pop();
-            if (a == destination_index)
+
+            if (a == d_i)
+            {
+                delete[] mark;
                 return true;
-
-            if (!marked[a])
-            {
-                marked[a] = true;
             }
-            std::forward_list<V> f = neighbors(a);
-            while (!f.empty())
+
+            typename std::forward_list<std::pair<int, E>>::iterator it = edges[a].begin();
+
+            while (it != edges[a].end())
             {
-                s.push(f.front());
+                int u = it->first;
+
+                if (!mark[u])
+                {
+                    mark[u] = true;
+                    s.push(u);
+                }
+                ++it;
             }
         }
+
+        delete[] mark;
+        return false;
     }
-    
-    bool search_DFS(const V &source, const V &destination)
-{
-    std::stack<int> s;
-
-    bool *marked = new bool[n];
-    for (int i = 0; i < n; i++)
-        marked[i] = false;
-
-    int source_index = get_index(source);
-    int destination_index = get_index(destination);
-
-    s.push(source_index);
-
-    while (!s.empty())
+    bool BFS_SEARCH(const V &s, const V &d)
     {
-        int a = s.top();
-        s.pop();
+        std::queue<int> q;
 
-        if (a == destination_index)
-            return true;
+        bool *mark = new bool[n];
+        for (int i = 0; i < n; i++)
+            mark[i] = false;
 
-        if (!marked[a])
+        int s_i = get_index(s);
+        int d_i = get_index(d);
+
+        mark[s_i] = true;
+        q.push(s_i);
+
+        while (!q.empty())
         {
-            marked[a] = true;
+            int a = q.front();
+            q.pop();
 
-            std::forward_list<V> f = neighbors(a);
-            for (auto v : f)
+            if (a == d_i)
             {
-                int idx = get_index(v);
-                if (!marked[idx])
-                    s.push(idx);
+                delete[] mark;
+                return true;
+            }
+
+            typename std::forward_list<std::pair<int, E>>::iterator it = edges[a].begin();
+
+            while (it != edges[a].end())
+            {
+                int u = it->first;
+
+                if (!mark[u])
+                {
+                    mark[u] = true;
+                    q.push(u);
+                }
+                ++it;
             }
         }
-    }
 
-    return false;
-}
+        delete[] mark;
+        return false;
+    }
 };
