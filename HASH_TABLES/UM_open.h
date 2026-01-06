@@ -39,6 +39,7 @@ public:
 
         iterator &operator++()
         {
+
             ++it_list;
             if (it_list == um->table[idx].end())
             {
@@ -103,7 +104,7 @@ public:
         iterator it;
         it.um = this;
         it.idx = m - 1;
-        it.it_list = tablebro[it.idx].end();
+        it.it_list = table[it.idx].end();
         return it;
     }
 
@@ -142,26 +143,20 @@ public:
 
     std::pair<iterator, bool> insert(const std::pair<const K, T> &p)
     {
-
+        K key = p.first;
         int h = hash(p.first);
-        typename std::list<std::pair<const K, T>>::iterator it_list;
-        it_list = find(table[h], p.first);
-
-        iterator it;
-        it.um = this;
-        it.idx = h;
-        if (it_list == table[h].end())
+        int idx = h;
+        for (int i = 1; i <= m; ++i)
         {
-            table[h].push_back(p);
-            ++n;
-
-            it.it_list = --table[h].end();
-            return {it, true};
-        }
-        else
-        {
-            it.it_list = it_list;
-            return {it, false};
+            if (table[idx].first == -1 && table[idx].first == -2)
+            {
+                table[idx] = p;
+                break;
+            }
+            else
+            {
+                idx = (h + i) % m;
+            }
         }
     }
     void swap(unordered_map &rhs)
@@ -224,6 +219,7 @@ public:
         int h = hash(key);
         typename std::list<std::pair<const K, T>>::iterator it_list;
         it_list = find(table[h], key);
+
         iterator it;
         it.um = this;
         it.idx = h;

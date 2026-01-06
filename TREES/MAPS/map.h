@@ -685,7 +685,11 @@ public:
         // Case 4: node has two children
         else
         {
-            mnode<key_type, T> *succ = successor(to_del);
+            if (to_del->right != H)
+            {
+
+                mnode<key_type, T> *succ = successor(to_del);
+            }
 
             // copy successor's data
             to_del->data = succ->data;

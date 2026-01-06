@@ -132,7 +132,6 @@ public:
     {
         iterator it;
         it.ptr = H;
-
         return it;
     }
     iterator insert_after(const iterator &pos, const T &val)
@@ -250,6 +249,26 @@ public:
         H->next = q;
     }
 
+    void delete_greater(const T &val)
+    {
+        node<T> *p1 = H->next;
+        node<T> *prev = H;
+
+        while (p1 != nullptr)
+        {
+            if (p1->value > val)
+            {
+                prev->next = p1->next; // unlink p1
+                delete p1;             // delete safely
+                p1 = prev->next;       // move to next
+            }
+            else
+            {
+                prev = p1;     // move prev
+                p1 = p1->next; // move current
+            }
+        }
+    }
     void Sort()
     {
     }

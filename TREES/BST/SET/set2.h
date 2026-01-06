@@ -50,7 +50,7 @@ private:
     }
 
     // AVL BALANCING FUNCTIONS
-    int Node_Height(mnode<key_type, T> *ptr) // making it to just return node height
+    int Node_Height(tnode<key_type> *ptr) // making it to just return node height
     {
         int hl, hr;
         if (ptr && ptr->left) // means k if node exists && node ka left exist
@@ -77,7 +77,7 @@ private:
         return hr + 1;
     }
 
-    int Balance_Node(mnode<key_type, T> *ptr)
+    int Balance_Factor(tnode<key_type> *ptr)
     {
         int hl, hr;
         if (ptr && ptr->left)
@@ -101,10 +101,10 @@ private:
     }
 
     // LL Rotation
-    mnode<key_type, T> *LL_Rotation(mnode<key_type, T> *ptr)
+    tnode<key_type> *LL_Rotation(tnode<key_type> *ptr)
     {
-        mnode<key_type, T> *ptr_l = ptr->left;
-        mnode<key_type, T> *ptr_left_r = ptr_l->right;
+        tnode<key_type> *ptr_l = ptr->left;
+        tnode<key_type> *ptr_left_r = ptr_l->right;
 
         ptr_l->right = ptr;
         ptr->left = ptr_left_r;
@@ -134,10 +134,10 @@ private:
     }
 
     // RR Rotation (Right-Right)
-    mnode<key_type, T> *RR_Rotation(mnode<key_type, T> *ptr)
+    tnode<key_type> *RR_Rotation(tnode<key_type> *ptr)
     {
-        mnode<key_type, T> *ptr_r = ptr->right;
-        mnode<key_type, T> *ptr_right_l = ptr_r->left;
+        tnode<key_type> *ptr_r = ptr->right;
+        tnode<key_type> *ptr_right_l = ptr_r->left;
 
         ptr_r->left = ptr;
         ptr->right = ptr_right_l;
@@ -167,11 +167,11 @@ private:
     }
 
     // LR Rotation (Left-Right)
-    mnode<key_type, T> *LR_Rotation(mnode<key_type, T> *ptr)
+    tnode<key_type> *LR_Rotation(tnode<key_type> *ptr)
     {
 
-        mnode<key_type, T> *ptr_l;
-        mnode<key_type, T> *ptr_l_r;
+        tnode<key_type> *ptr_l;
+        tnode<key_type> *ptr_l_r;
 
         ptr_l = ptr->left;
         ptr_l_r = ptr_l->right;
@@ -213,10 +213,10 @@ private:
     }
 
     // RL Rotation (Right-Left)
-    mnode<key_type, T> *RL_Rotation(mnode<key_type, T> *ptr)
+    tnode<key_type> *RL_Rotation(tnode<key_type> *ptr)
     {
-        mnode<key_type, T> *ptr_r = ptr->right;
-        mnode<key_type, T> *ptr_r_l = ptr_r->left;
+        tnode<key_type> *ptr_r = ptr->right;
+        tnode<key_type> *ptr_r_l = ptr_r->left;
 
         // move subtrees
         ptr_r->left = ptr_r_l->right;
@@ -498,15 +498,14 @@ public:
         {
             H->left = H;
             H->right = H;
-            return end();
         }
         // minimum
-        mnode<key_type, T> *temp = H->parent;
-        while (temp->left != H)
-            temp = temp->left;
-        H->left = temp;
+        tnode<key_type> *temp1 = H->parent;
+        while (temp1->left != H)
+            temp1 = temp1->left;
+        H->left = temp1;
         // maximum
-        mnode<key_type, T> *temp2 = H->parent;
+        tnode<key_type> *temp2 = H->parent;
         while (temp2->right != H)
             temp2 = temp2->right;
         H->right = temp2;
@@ -541,11 +540,10 @@ public:
     }
     iterator erase(iterator pos) // pahle void se kia tha
     {
-        tnode<key_type> *to_del, *lc, *rc, *succ, *succ_p, *succ_r;
+        tnode<key_type> *to_del, *lc, *rc, *succ, *succ_p, *succ_r, rebalance;
         tnode<key_type> *next;
         next = pos.ptr;
         ++next;
-        ret.ptr = successor(to_del);
         to_del = pos.ptr;
         // case 1: Delteing Leaf node
         if (to_del->left == H && to_del->right == H)
@@ -558,6 +556,7 @@ public:
             {
                 to_del->parent->right = H;
             }
+            rebalance = to_del->parent;
             delete to_del;
         }
         // CASE 2: Node Having one Child->Having left only
@@ -574,6 +573,7 @@ public:
                 to_del->parent->right = lc;
             }
             lc->parent = to_del->parent;
+            rebalance = to_del->parent;
             delete to_del;
         }
         // CASE 3: Node Having one Child-> Having Right Child
@@ -590,6 +590,7 @@ public:
                 to_del->parent->right = rc;
             }
             rc->parent = to_del->parent;
+            rebalance = to_del->parent;
             delete to_del;
         }
         // CASE 4: NODE HAVING BOTH CHILDS
@@ -611,6 +612,7 @@ public:
                 if (to_del->left != H)
                     to_del->left->parent = succ;
             }
+
             else
             {
 
@@ -630,7 +632,7 @@ public:
 
             // Finally set successor's parent left
             succ->parent = to_del->parent;
-
+            rebalance = to_del->parent;
             delete to_del;
             if (to_del == H->parent)
             {
@@ -646,18 +648,18 @@ public:
         while (rebalance != H)
         {
             rebalance->height = Node_Height(rebalance);
-            int bf = Balance_Node(rebalance);
+            int bf = Balance_Factor(rebalance);
 
             if (bf > 1)
             {
-                if (Balance_Node(rebalance->left) >= 0)
+                if (Balance_Factor(rebalance->left) >= 0)
                     rebalance = LL_Rotation(rebalance);
                 else
                     rebalance = LR_Rotation(rebalance);
             }
             else if (bf < -1)
             {
-                if (Balance_Node(rebalance->right) <= 0)
+                if (Balance_Factor(rebalance->right) <= 0)
                     rebalance = RR_Rotation(rebalance);
                 else
                     rebalance = RL_Rotation(rebalance);
@@ -674,16 +676,54 @@ public:
             return end();
         }
         // minimum
-        mnode<key_type, T> *temp = H->parent;
+        tnode<key_type> *temp = H->parent;
         while (temp->left != H)
             temp = temp->left;
         H->left = temp;
         // maximum
-        mnode<key_type, T> *temp2 = H->parent;
+        tnode<key_type> *temp2 = H->parent;
         while (temp2->right != H)
             temp2 = temp2->right;
         H->right = temp2;
 
         return next;
+    }
+    int count_leaves()
+    {
+        int count = 0;
+        if (H->parent == H)
+            return 0; // empty tree
+
+        tnode<key_type> *curr = H->left; // minimum node (smallest)
+        while (curr != H)
+        {
+            // leaf check
+            if (curr->left == H && curr->right == H)
+                count++;
+
+            // move to successor
+            tnode<key_type> *succ = nullptr;
+            if (curr->right != H)
+            {
+                succ = curr->right;
+                while (succ->left != H)
+                    succ = succ->left;
+            }
+            else
+            {
+                tnode<key_type> *p = curr->parent;
+                tnode<key_type> *ch = curr;
+                while (p != H && ch == p->right)
+                {
+                    ch = p;
+                    p = p->parent;
+                }
+                succ = p;
+            }
+
+            curr = succ;
+        }
+
+        return count;
     }
 };

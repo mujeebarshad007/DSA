@@ -12,7 +12,7 @@ int main()
     s.insert(80);
 
     int a;
-    a = s.countleaves(s);
+    a = s.count_leaves();
     std::cout << a << std::endl;
     return 0;
 }

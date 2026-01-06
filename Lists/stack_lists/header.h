@@ -92,7 +92,8 @@ public:
             return 0;
         }
     }
-    Optional Added ~stack()
+    // Optional Added
+    ~stack()
     {
 
         while (!empty())

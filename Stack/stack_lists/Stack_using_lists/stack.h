@@ -33,10 +33,8 @@ public:
 
     void push(const T &x)
     {
-
         node<T> *temp;
         temp = new node<T>;
-
         temp->value = x;
         temp->next = top;
         top = temp;
@@ -57,28 +55,24 @@ public:
             temp = top;
             top = top->next;
             delete temp;
-            n--;
+            --n;
         }
     }
 
     stack &operator=(const stack &rhs)
     {
-        // 1️⃣ Self-assignment check
         if (this == &rhs)
             return *this;
 
-        // 2️⃣ Clear current stack
         while (!empty())
             pop();
 
-        // 3️⃣ If rhs stack is empty
         if (rhs.top == nullptr)
         {
             top = nullptr;
             return *this;
         }
 
-        // 4️⃣ Start copying nodes
         node *rtemp = rhs.top; // pointer to walk through rhs
         node *prev = nullptr;  // track the last created node
 
@@ -92,10 +86,10 @@ public:
         // 6️⃣ Copy rest of nodes
         while (rtemp != nullptr)
         {
+
             node *nn = new node;
             nn->val = rtemp->val;
             nn->link = nullptr;
-
             prev->link = nn; // connect new node
             prev = nn;       // move forward
             rtemp = rtemp->link;

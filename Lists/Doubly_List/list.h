@@ -23,7 +23,7 @@ public:
     }
     int back() const
     {
-        return H->next->value;
+        return H->prev->value;
     }
     bool empty() const
     {
@@ -475,4 +475,5 @@ public:
             clear();
             delete H;
         }
-    };
+    }
+};
