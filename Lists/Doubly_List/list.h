@@ -17,11 +17,11 @@ public:
         n = 0;
         // Will make A Destructor Also
     }
-    int front() const
+    T& front() const
     {
         return H->next->value;
     }
-    int back() const
+    T& back() const
     {
         return H->prev->value;
     }
@@ -40,8 +40,7 @@ public:
             pop_front();
         }
     }
-    void push_front(const T &val)
-    {
+    void push_front(const T &val){
         if (!empty())
         {
 
@@ -56,9 +55,9 @@ public:
             // else
             //     throw "list is Empty";
         }
+    }
 
-        void push_back(const T &val)
-        {
+    void push_back(const T &val) {
             // if (!empty())
             // {
             dnode<T> *nn;
@@ -73,8 +72,7 @@ public:
             //     throw "list is Empty";
         }
 
-        void pop_front()
-        {
+        void pop_front(){
             // if (!empty())
             // {
             dnode<T> *temp;
@@ -89,8 +87,7 @@ public:
             // throw "list is Empty";
             // }
         }
-        void pop_back()
-        {
+        void pop_back(){
 
             if (!empty())
             {
@@ -215,8 +212,11 @@ public:
             nn->prev = pos.ptr->prev;
             nn->prev->next = nn;
             nn->next->prev = nn;
-            --pos;
-            return pos;
+            // --pos;
+            iterator it; // this function does not alters arguments, bcz they are provided as const
+            it.ptr = nn;
+            ++n;
+            return it;
         }
         iterator erase(iterator pos)
         {
@@ -260,7 +260,7 @@ public:
                     temp1 = p1->next;
                     temp2 = p2->next->next;
 
-                    p1->nex->prev = p2->next;
+                    p1->next->prev = p2->next;
                     p1->next = p2->next;
                     p2->next->next = temp1;
                     p2->next->prev = p1;
@@ -326,6 +326,7 @@ public:
 
                 temp = temp2;
             }
+            --n;
         }
         void unique()
         {
